@@ -4,7 +4,7 @@ from typing import Optional
 class Cipher(BaseModel):
     cipher_id: int
     cipher_game_id: int
-    cipher_cipher_id: int
+    req_cipher_id: int
     name: str
     description: str
     solution: Optional[str]
