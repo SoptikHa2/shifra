@@ -26,7 +26,7 @@ CREATE TABLE cipher (
     description VARCHAR(256) NOT NULL,
     solution VARCHAR(256),
     judge VARCHAR(256),
-    file VARCHAR(256),
+    cipher_file VARCHAR(256),
     img VARCHAR(256),
     success_msg VARCHAR(256) NOT NULL,
     cooldown INTEGER NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE hint (
     cipher_id INTEGER NOT NULL,
     msg VARCHAR(256) NOT NULL,
     img VARCHAR(256),
-    file VARCHAR(256),
+    hint_file VARCHAR(256),
     score_cost DOUBLE PRECISION NOT NULL,
     time_cost INTEGER NOT NULL
 );
