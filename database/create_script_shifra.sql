@@ -21,7 +21,7 @@ ALTER TABLE attempt ADD CONSTRAINT pk_attempt PRIMARY KEY (cipher_id, team_id);
 CREATE TABLE cipher (
     cipher_id SERIAL NOT NULL,
     cipher_game_id INTEGER NOT NULL,
-    cipher_cipher_id INTEGER NOT NULL,
+    req_cipher_id INTEGER NOT NULL,
     name VARCHAR(256) NOT NULL,
     description VARCHAR(256) NOT NULL,
     solution VARCHAR(256),
@@ -103,7 +103,7 @@ ALTER TABLE attempt ADD CONSTRAINT fk_attempt_cipher FOREIGN KEY (cipher_id) REF
 ALTER TABLE attempt ADD CONSTRAINT fk_attempt_team FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
 
 ALTER TABLE cipher ADD CONSTRAINT fk_cipher_cipher_game FOREIGN KEY (cipher_game_id) REFERENCES cipher_game (cipher_game_id) ON DELETE CASCADE;
-ALTER TABLE cipher ADD CONSTRAINT fk_cipher_cipher FOREIGN KEY (cipher_cipher_id) REFERENCES cipher (cipher_id) ON DELETE CASCADE;
+ALTER TABLE cipher ADD CONSTRAINT fk_cipher_cipher FOREIGN KEY (req_cipher_id) REFERENCES cipher (cipher_id) ON DELETE CASCADE;
 
 ALTER TABLE cipher_game ADD CONSTRAINT fk_cipher_game_cipher FOREIGN KEY (cipher_id) REFERENCES cipher (cipher_id) ON DELETE CASCADE;
 
