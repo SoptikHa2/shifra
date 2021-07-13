@@ -50,7 +50,6 @@ CREATE TABLE cipher_game (
     autoapprove BOOLEAN NOT NULL
 );
 ALTER TABLE cipher_game ADD CONSTRAINT pk_cipher_game PRIMARY KEY (cipher_game_id);
-ALTER TABLE cipher_game ADD CONSTRAINT u_fk_cipher_game_cipher UNIQUE (cipher_id);
 
 CREATE TABLE hint (
     hint_id SERIAL NOT NULL,
