@@ -38,7 +38,7 @@ ALTER TABLE cipher ADD CONSTRAINT pk_cipher PRIMARY KEY (cipher_id);
 
 CREATE TABLE cipher_game (
     cipher_game_id SERIAL NOT NULL,
-    cipher_id INTEGER NOT NULL,
+    cipher_id INTEGER,
     name VARCHAR(256) NOT NULL,
     description VARCHAR(256) NOT NULL,
     visible_from TIMESTAMP NOT NULL,
@@ -50,7 +50,6 @@ CREATE TABLE cipher_game (
     autoapprove BOOLEAN NOT NULL
 );
 ALTER TABLE cipher_game ADD CONSTRAINT pk_cipher_game PRIMARY KEY (cipher_game_id);
-ALTER TABLE cipher_game ADD CONSTRAINT u_fk_cipher_game_cipher UNIQUE (cipher_id);
 
 CREATE TABLE hint (
     hint_id SERIAL NOT NULL,
