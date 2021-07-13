@@ -38,7 +38,7 @@ ALTER TABLE cipher ADD CONSTRAINT pk_cipher PRIMARY KEY (cipher_id);
 
 CREATE TABLE cipher_game (
     cipher_game_id SERIAL NOT NULL,
-    cipher_id INTEGER NOT NULL,
+    cipher_id INTEGER,
     name VARCHAR(256) NOT NULL,
     description VARCHAR(256) NOT NULL,
     visible_from TIMESTAMP NOT NULL,
