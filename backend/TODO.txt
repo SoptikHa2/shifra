@@ -1,0 +1,10 @@
+TODO:
+    -> Rework URL ( discussion between Damian, Marek, Pavel )
+    -> Look on deleteCipherGame ( it does not work even though SQL is correct and it works for all the other classes )
+    -> deleteCipher just won't show ( I have no idea why )
+    -> Discuss updateObject scenarios   -> discussion between Pavel, Marek, Damian
+                                        -> Damian will rework this
+    -> Look into connection ( how with works and how to eliminate multiple connection opening or too much modifying of the connection ) -> consult with Soptík
+    -> Make database connection data less vulnerable ( moving it all to json file settings.json )
+
+All the mistakes I found so far, this version shall be uploaded to github and reworked.
