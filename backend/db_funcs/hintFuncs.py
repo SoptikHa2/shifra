@@ -6,14 +6,13 @@ from routes import Hint
 router = APIRouter()
 
 connection = DB_conn
-DB_conn.chooseDB(connection)
 
 
 @router.post("/api/cipher/{cipherGame_id}/ciphers/{cipher_id}/hint")
 def insertHint(newHint: Hint):
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
-            success = cur.execute("INSERT INTO hint(cipher_id, msg, img, hint_file, score_cost, time_cost) VALUES(%s, %s, %s, %s, %s, %s);",
+            cur.execute("INSERT INTO hint(cipher_id, msg, img, hint_file, score_cost, time_cost) VALUES(%s, %s, %s, %s, %s, %s);",
                                   (newHint.cipher_id, newHint.msg, newHint.img, newHint.hint_file, newHint.score_cost, newHint.time_cost))
             return {"result": success}
 

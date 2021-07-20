@@ -4,7 +4,7 @@
 from fastapi import FastAPI
 from db_funcs import *
 connection = config.DB_conn
-config.DB_conn.chooseDB(connection)  # change db (dev, prod, or local) -> set up in config.py
+# config.DB_conn.chooseDB(connection)  # change db (dev, prod, or local) -> set up in config.py
 
 app = FastAPI()
 app.include_router(teamFuncs.router)

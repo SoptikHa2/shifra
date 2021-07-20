@@ -2,12 +2,9 @@ from .config import *
 from fastapi import APIRouter
 from routes import Cipher
 
-
 router = APIRouter()
 
 connection = DB_conn
-DB_conn.chooseDB(connection)
-
 
 # INSERT cipher
 # TODO add return of the id of the inserted item
@@ -15,7 +12,7 @@ DB_conn.chooseDB(connection)
 def insertCipher(cipherGame_id: int, newCipher: Cipher):
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
-            success = cur.execute("INSERT INTO cipher(name, cipher_game_id, req_cipher_id, description, solution, judge, cipher_file, img, success_msg, cooldown, attempts, score, reference_solution) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+            cur.execute("INSERT INTO cipher(name, cipher_game_id, req_cipher_id, description, solution, judge, cipher_file, img, success_msg, cooldown, attempts, score, reference_solution) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
                                   , (newCipher.name, cipherGame_id, newCipher.req_cipher_id, newCipher.description, newCipher.solution, newCipher.judge, newCipher.cipher_file, newCipher.img, newCipher.succes_msg, newCipher.cooldown, newCipher.attempts, newCipher.score, newCipher.reference_solution))
             return {"result": success}
 

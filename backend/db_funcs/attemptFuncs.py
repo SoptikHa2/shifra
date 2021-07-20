@@ -6,8 +6,6 @@ from routes import Attempt
 router = APIRouter()
 
 connection = DB_conn
-DB_conn.chooseDB(connection)
-
 
 @router.post("/api/cipher/{cipher_id}/team/{team_id}/attempt")
 def insertAttempt(newAttempt: Attempt):

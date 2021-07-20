@@ -4,10 +4,7 @@ from routes import Cipher_game
 
 
 router = APIRouter()
-
-connection = DB_conn
-DB_conn.chooseDB(connection)
-
+connection = DB_conn()
 
 @router.post("/api/cipher/{cipherGame_id}/ciphers/{cipher_id}")  # return id of inserted item
 def insertCipherGame(newCipherGame: Cipher_game):
