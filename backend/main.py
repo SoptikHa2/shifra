@@ -2,15 +2,7 @@
 # safe to use, code is under unlicense license (https://unlicense.org)
 
 from fastapi import FastAPI
-
-import cipherFuncs
-import config
-import teamFuncs
-import cipherGameFuncs
-import personFuncs
-import hintFuncs
-import attemptFuncs
-
+from db_funcs import *
 connection = config.DB_conn
 config.DB_conn.chooseDB(connection)  # change db (dev, prod, or local) -> set up in config.py
 

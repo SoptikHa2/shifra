@@ -16,7 +16,7 @@ class DB_conn:
         self.chooseDB()
 
     def chooseDB(self):
-        with open('insert absolute path to settings.json', 'r') as dbFile:
+        with open('insert absolute path to settings.json file', 'r') as dbFile:
             data = dbFile.read()
 
         obj = json.loads(data)
