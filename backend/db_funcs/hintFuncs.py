@@ -5,8 +5,7 @@ from routes import Hint
                                         # All hints are under ciphers under cipherGames
 router = APIRouter()
 
-connection = DB_conn
-
+connection = ""
 
 @router.post("/api/cipher/{cipherGame_id}/ciphers/{cipher_id}/hint")
 def insertHint(newHint: Hint):

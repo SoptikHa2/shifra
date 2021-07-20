@@ -4,7 +4,7 @@ from routes import Cipher
 
 router = APIRouter()
 
-connection = DB_conn
+connection = ""
 
 # INSERT cipher
 # TODO add return of the id of the inserted item

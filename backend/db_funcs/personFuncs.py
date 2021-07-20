@@ -5,12 +5,16 @@ from routes import Person
 
 router = APIRouter()
 
-connection = DB_conn
-DB_conn.chooseDB(connection)
+connection = ""
 
 
 @router.post("/api/person")  # return id of inserted item
 def insertPerson(newPerson: Person):
+    """
+
+    :param newPerson: person, that should be inserted into database
+    :return: person_id - id of inserted person in database
+    """
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
             cur.execute("INSERT INTO person(is_root, nickname, session_cookie, mail, password) VALUES(%s, %s, %s, %s, %s);", (newPerson.is_root, newPerson.nickname, newPerson.session_cookie, newPerson.mail, newPerson.password))
@@ -36,6 +40,11 @@ def updatePerson(person_id: int, updated_person: Person):
 
 @router.delete("/api/person/{person_id}")  # return id of inserted item
 def deletePerson(person_id: int):
+    """
+
+    :param team_id: id of team, which should be deleted
+    :return: --What to return? consult with Pavel--
+    """
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
             cur.execute("DELETE FROM person WHERE person_id=%s;", (person_id,))
@@ -44,6 +53,11 @@ def deletePerson(person_id: int):
 
 @router.get("/api/person/{person_id}")
 def getPerson(person_id: int):
+    """
+
+    :param person_id: id of wanted person
+    :return: person returned by select
+    """
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
             cur.execute("SELECT * FROM person WHERE person_id = %s;", (person_id,))
@@ -53,6 +67,10 @@ def getPerson(person_id: int):
 
 @router.get("/api/person")
 def getPersons():
+    """
+
+    :return: persons returned by select
+    """
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
             cur.execute("SELECT * FROM person;")

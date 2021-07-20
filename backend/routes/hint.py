@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 class Hint(BaseModel):
-    hint_id: int
+    hint_id: Optional[int] = None
     cipher_id: int
     msg: str
     img: Optional[str] = None

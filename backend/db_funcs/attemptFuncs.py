@@ -5,7 +5,8 @@ from routes import Attempt
                                         # All hints are under ciphers under cipherGames
 router = APIRouter()
 
-connection = DB_conn
+connection = ""
+                            # This file needs to be updated after talkie about database entity keys
 
 @router.post("/api/cipher/{cipher_id}/team/{team_id}/attempt")
 def insertAttempt(newAttempt: Attempt):
@@ -15,6 +16,7 @@ def insertAttempt(newAttempt: Attempt):
             cur.execute("SELECT * FROM team_team_id_seq;")
             team_id = cur.fetchone()[0]
     return {"result": team_id}
+
 
 # works
 @router.put("/api/cipher/{cipher_id}/team/{team_id}/attempt")

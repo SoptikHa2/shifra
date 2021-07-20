@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
+
 class Team(BaseModel):
     team_id: Optional[int] = None
     name: str
