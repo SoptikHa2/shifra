@@ -32,7 +32,6 @@ def deleteTeam(team_id: int):
             cur.execute("DELETE FROM team WHERE team_id=%s;", (team_id,))
     return {"result": "removed"}
 
-
 @router.get("/api/team/{team_id}")
 def getTeam(team_id: int):
     with DB_conn.getConn(connection):

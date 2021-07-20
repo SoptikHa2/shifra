@@ -13,7 +13,7 @@ class DB_conn:
     DB_NAME = ""
     DB_USER = ""
     DB_PASS = ""
-    conn: connection
+    conn = ""
 
     def __init__(self):
         self.chooseDB()
@@ -48,7 +48,6 @@ class DB_conn:
         else:
             return False
 
-        #DB_conn.changeConn(self)
         return True
 
     def create_connection(self, data_file_path, db_name):

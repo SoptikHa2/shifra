@@ -17,11 +17,15 @@ def insertCipherGame(newCipherGame: Cipher_game):
 
 
 @router.put("/api/cipher/{cipherGame_id}")
-def updateCipherGame(cipherGame_id: int):
+def updateCipherGame(cipherGame_id: int, updated_cipher_game: Cipher_game ):
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
-            success = cur.execute("....................")   # what should be updated?
-    return {"result": success}
+            cur.execute(
+                "UPDATE cipher_game SET cipher_id=%s, name=%s, description=%s, visible_from=%s, deadline_signup=%s, deadline_event=%s, capacity=%s, teammax=%s, password=%s, autoapprove=%s WHERE cipher_game_id=%s;",
+                (updated_cipher_game.cipher_id, updated_cipher_game.name, updated_cipher_game.description, updated_cipher_game.visible_from, updated_cipher_game.deadline_signup,
+                 updated_cipher_game.deadline_event, updated_cipher_game.capacity, updated_cipher_game.teammax, updated_cipher_game.password, updated_cipher_game.autoapprove,
+                 cipherGame_id ))
+    return {"result": "updated"}
 
 
 # TODO WHY THIS FUCKER DOES NOT WORK ?????

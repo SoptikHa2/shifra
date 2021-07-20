@@ -12,7 +12,7 @@ class Cipher(BaseModel):
     judge: Optional[str] = None
     cipher_file: Optional[str] = None
     img: Optional[str] = None
-    succes_msg: str
+    success_msg: str
     cooldown: int
     attempts: Optional[int] = None
     score: float

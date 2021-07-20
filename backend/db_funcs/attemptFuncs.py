@@ -16,13 +16,13 @@ def insertAttempt(newAttempt: Attempt):
             team_id = cur.fetchone()[0]
     return {"result": team_id}
 
-
+# works
 @router.put("/api/cipher/{cipher_id}/team/{team_id}/attempt")
-def updateAttempt(cipher_id: int, team_id: int):
+def updateAttempt(cipher_id: int, team_id: int, updatedAttempt: Attempt):
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
-            success = cur.execute("....................")   # what should be updated?
-    return {"result": success}
+            cur.execute("UPDATE attempt SET time=%s, is_successful=%s WHERE cipher_id=%s AND team_id=%s;", (updatedAttempt.time, updatedAttempt.is_successful, cipher_id, team_id))   # what should be updated?
+    return {"result": "updated"}
 
 
 @router.delete("/api/cipher/{cipher_id}/team/{team_id}/attempt")  # return id of inserted item

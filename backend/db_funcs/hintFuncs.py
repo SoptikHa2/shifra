@@ -20,11 +20,13 @@ def insertHint(newHint: Hint):
 
 
 @router.put("/api/cipher/{cipherGame_id}/ciphers/{cipher_id}/hint/{hint_id}")
-def updateHint(cipherGame_id: int, cipher_id: int, hint_id: int):
+def updateHint(hint_id: int, updated_hint: Hint):
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
-            success = cur.execute("....................")   # what should be updated?
-    return {"result": success}
+            cur.execute(
+                "UPDATE hint SET cipher_id=%s, msg=%s, img=%s, hint_file=%s, score_cost=%s, time_cost=%s WHERE hint_id=%s;",
+                (updated_hint.cipher_id, updated_hint.msg, updated_hint.img, updated_hint.hint_file, updated_hint.score_cost, updated_hint.time_cost, hint_id))
+    return {"result": "updated"}
 
 
 @router.delete("/api/cipher/{cipherGame_id}/ciphers/{cipher_id}/hint/{hint_id}")  # return id of inserted item
