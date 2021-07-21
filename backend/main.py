@@ -4,8 +4,7 @@
 from fastapi import FastAPI
 from db_funcs import *
 
-
-connection = config.DB_conn()
+connection = DB_conn()
 
 cipherFuncs.connection = connection
 teamFuncs.connection = connection
@@ -26,3 +25,9 @@ app.include_router(attemptFuncs.router)
 @app.get('/')
 def root():
     return {"message": "root"}
+
+
+#@app.get('/close')
+#def close():
+#    DB_conn.closeConnection(connection)
+#    return {"message": "closed"}

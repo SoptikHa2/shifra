@@ -19,24 +19,12 @@ class DB_conn:
 
         if obj['database'] == 'dev':
             DB_conn.create_connection(self, 'database.ini', 'dev')
-            #self.DB_HOST = ""
-            #self.DB_NAME = ""
-            #self.DB_USER = ""
-            #self.DB_PASS = ""
 
         elif obj['database'] == 'prod':
             DB_conn.create_connection(self, 'database.ini', 'prod')
-            #self.DB_HOST = ""
-            #self.DB_NAME = ""
-            #self.DB_USER = ""
-            #self.DB_PASS = ""
 
         elif obj['database'] == 'local':
             DB_conn.create_connection(self, 'database.ini', 'local')
-            #self.DB_HOST = ""
-            #self.DB_NAME = ""
-            #self.DB_USER = ""
-            #self.DB_PASS = ""
 
         else:
             return False
@@ -51,19 +39,14 @@ class DB_conn:
         config_parser.read(data_file_path)
 
         if config_parser.has_section(db_name):
-            config_parameters = config_parser.items(db_name)
-            db_conn_dict = {}
-            for config_param in config_parameters:
-                key = config_param[0]
-                value = config_param[1]
-                db_conn_dict[key] = value
-            self.conn = psycopg2.connect(**db_conn_dict)
-
-    def changeConn(self):
-        self.conn = psycopg2.connect(dbname=self.DB_NAME, user=self.DB_USER, password=self.DB_PASS, host=self.DB_HOST)
+            header = config_parser[db_name]
+            self.conn = psycopg2.connect(dbname=header['database'], user=header['user'], password=header['password'], host=header['host'])
 
     def getConn(self):
         return self.conn
 
     def getCursor(self):
         return DB_conn.getConn(self).cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    def closeConnection(self):
+        self.conn.close()

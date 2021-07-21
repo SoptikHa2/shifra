@@ -1,7 +1,7 @@
 from .config import *
 from fastapi import APIRouter
 from routes import Person
-
+import hashlib
 
 router = APIRouter()
 
@@ -54,11 +54,15 @@ def deletePerson(person_id: int):
     :param team_id: id of team, which should be deleted
     :return: --What to return? consult with Pavel--
     """
-    with DB_conn.getConn(connection):
-        with DB_conn.getCursor(connection) as cur:
-            cur.execute("DELETE FROM person WHERE person_id=%s;", (person_id,))
-    return {"result": "removed"}
+    try:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("DELETE FROM person WHERE person_id=%s;", (person_id,))
 
+    except:
+        return {"result": "error"}
+
+    return {"result": "removed"}
 
 @router.get("/api/person/{person_id}")
 def getPerson(person_id: int):
@@ -67,10 +71,15 @@ def getPerson(person_id: int):
     :param person_id: id of wanted person
     :return: person returned by select
     """
-    with DB_conn.getConn(connection):
-        with DB_conn.getCursor(connection) as cur:
-            cur.execute("SELECT * FROM person WHERE person_id = %s;", (person_id,))
-            result = cur.fetchall()
+    try:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("SELECT * FROM person WHERE person_id = %s;", (person_id,))
+                result = cur.fetchall()
+
+    except:
+        return {"result": "error"}
+
     return result
 
 
@@ -80,8 +89,12 @@ def getPersons():
 
     :return: persons returned by select
     """
-    with DB_conn.getConn(connection):
-        with DB_conn.getCursor(connection) as cur:
-            cur.execute("SELECT * FROM person;")
-            result = cur.fetchall()
+    try:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("SELECT * FROM person;")
+                result = cur.fetchall()
+
+    except:
+        return {"result": "error"}
     return result
