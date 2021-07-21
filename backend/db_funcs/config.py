@@ -1,6 +1,3 @@
-# Code for database connection was partly inspired by: https://www.dev2qa.com/how-to-connect-postgresql-server-use-configuration-file-in-python/
-# We thank the author for the inspiration.
-
 import json
 from configparser import ConfigParser
 import psycopg2
@@ -9,17 +6,13 @@ from psycopg2._psycopg import connection
 
 
 class DB_conn:
-    DB_HOST = ""
-    DB_NAME = ""
-    DB_USER = ""
-    DB_PASS = ""
     conn = ""
 
     def __init__(self):
         self.chooseDB()
 
     def chooseDB(self):
-        with open('/home/babranik/Desktop/shifra/backend/settings.json', 'r') as dbFile:
+        with open('absolute path to settings.json', 'r') as dbFile:
             data = dbFile.read()
 
         obj = json.loads(data)
