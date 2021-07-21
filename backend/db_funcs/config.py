@@ -7,24 +7,26 @@ from psycopg2._psycopg import connection
 
 class DB_conn:
     conn = ""
+    INI_FILENAME = 'database.ini'
+    SETTINGS_FILENAME = 'settings.json'
 
     def __init__(self):
         self.chooseDB()
 
     def chooseDB(self):
-        with open('absolute path to settings.json', 'r') as dbFile:
+        with open(self.SETTINGS_FILENAME, 'r') as dbFile:
             data = dbFile.read()
 
         obj = json.loads(data)
 
         if obj['database'] == 'dev':
-            DB_conn.create_connection(self, 'database.ini', 'dev')
+            DB_conn.create_connection(self, self.INI_FILENAME, 'dev')
 
         elif obj['database'] == 'prod':
-            DB_conn.create_connection(self, 'database.ini', 'prod')
+            DB_conn.create_connection(self, self.INI_FILENAME, 'prod')
 
         elif obj['database'] == 'local':
-            DB_conn.create_connection(self, 'database.ini', 'local')
+            DB_conn.create_connection(self, self.INI_FILENAME, 'local')
 
         else:
             return False
