@@ -2,12 +2,11 @@ from .config import *
 from fastapi import APIRouter
 from routes import Hint
 
-                                        # All hints are under ciphers under cipherGames
 router = APIRouter()
 
 connection = ""
 
-@router.post("/api/cipher/{cipherGame_id}/ciphers/{cipher_id}/hint")
+@router.post("/api/hint")
 def insertHint(newHint: Hint):
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
@@ -18,7 +17,7 @@ def insertHint(newHint: Hint):
     return {"result": hint_id}
 
 
-@router.put("/api/cipher/{cipherGame_id}/ciphers/{cipher_id}/hint/{hint_id}")
+@router.put("/api/hint/{hint_id}")
 def updateHint(hint_id: int, updated_hint: Hint):
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
@@ -28,16 +27,16 @@ def updateHint(hint_id: int, updated_hint: Hint):
     return {"result": "updated"}
 
 
-@router.delete("/api/cipher/{cipherGame_id}/ciphers/{cipher_id}/hint/{hint_id}")  # return id of inserted item
-def deleteHint(cipherGame_id: int, cipher_id: int, hint_id: int):
+@router.delete("/api/hint/{hint_id}")  # return id of inserted item
+def deleteHint(hint_id: int):
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
             cur.execute("DELETE FROM hint WHERE hint_id=%s;", (hint_id,))
     return {"result": "removed"}
 
-# Confused as for what cipherGame_id serves for tbh
-@router.get("/api/cipher/{cipherGame_id}/ciphers/{cipher_id}/hint/{hint_id}")
-def getHint(cipherGame_id: int, cipher_id: int, hint_id: int):
+
+@router.get("/api/hint/{hint_id}")
+def getHint(hint_id: int):
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
             cur.execute("SELECT * FROM hint WHERE hint_id = %s;", (hint_id,))
@@ -45,8 +44,7 @@ def getHint(cipherGame_id: int, cipher_id: int, hint_id: int):
     return result
 
 
-# Changed so that it return hints only, not the whole table ( it was confusing )
-@router.get("/api/cipher/{cipherGame_id}/ciphers/{cipher_id}/hint")
+@router.get("/api/ciphers/{cipher_id}/hint")
 def getHints():
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
