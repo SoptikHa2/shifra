@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .config import *
+from .DBConn import *
 from routes import Team
 
 router = APIRouter()

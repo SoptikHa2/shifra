@@ -1,4 +1,4 @@
-from .config import *
+from .DBConn import *
 from fastapi import APIRouter
 from routes import Attempt
 

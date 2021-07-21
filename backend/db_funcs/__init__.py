@@ -1,4 +1,4 @@
-from .config import *
+from .DBConn import *
 from .teamFuncs import *
 from .attemptFuncs import *
 from .personFuncs import *
