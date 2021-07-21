@@ -24,10 +24,4 @@ app.include_router(attemptFuncs.router)
 
 @app.get('/')
 def root():
-    return {"message": "root"}
-
-
-#@app.get('/close')
-#def close():
-#    DB_conn.closeConnection(connection)
-#    return {"message": "closed"}
+    return {"version": "1"}
