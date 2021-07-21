@@ -9,7 +9,7 @@ Prepinače:  --host [address]    ( Bind socket to this host )
           
 Ukážka spustenia:
 ```
-      uvicorn main:api --reload
+      uvicorn main:app --reload
                 |   |      |
                 |   |      +--> prepínače
                 |   +--> názov FastAPI v .py subory
