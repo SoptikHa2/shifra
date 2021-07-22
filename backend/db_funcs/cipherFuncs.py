@@ -4,7 +4,7 @@ from routes import Cipher
 
 router = APIRouter()
 
-connection = ""
+connection = None
 
 
 # INSERT cipher

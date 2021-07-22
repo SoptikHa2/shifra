@@ -4,7 +4,7 @@ from routes import Cipher_game
 
 
 router = APIRouter()
-connection = ""
+connection = None
 
 @router.post("/api/game")
 def insertCipherGame(newCipherGame: Cipher_game):

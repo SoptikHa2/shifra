@@ -4,7 +4,7 @@ from routes import Hint
 
 router = APIRouter()
 
-connection = ""
+connection = None
 
 @router.post("/api/hint")
 def insertHint(newHint: Hint):

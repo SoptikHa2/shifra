@@ -4,7 +4,7 @@ from routes import Team
 
 router = APIRouter()
 
-connection = ""
+connection = None
 
 
 @router.post("/api/team")

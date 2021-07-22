@@ -4,7 +4,13 @@
 from fastapi import FastAPI
 from db_funcs import *
 
-connection = DB_conn()
+try:
+    connection = DB_conn()
+    if connection.conn is None:
+        raise Exception()
+except:
+    print('database info is not correct or wrong database was chosen')
+    exit(-1)
 
 cipherFuncs.connection = connection
 teamFuncs.connection = connection

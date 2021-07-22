@@ -5,7 +5,7 @@ from routes import Attempt
                                         # All hints are under ciphers under cipherGames
 router = APIRouter()
 
-connection = ""
+connection = None
                             # This file needs to be updated after talkie about database entity keys
 
 @router.post("/api/cipher/{cipher_id}/team/{team_id}/attempt")

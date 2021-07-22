@@ -5,7 +5,7 @@ import hashlib
 
 router = APIRouter()
 
-connection = ""
+connection = None
 
 
 @router.post("/api/person")  # return id of inserted item
