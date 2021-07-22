@@ -20,8 +20,8 @@ def insertPerson(newPerson: Person):
             with DB_conn.getCursor(connection) as cur:
                 hash_object = hashlib.sha256(newPerson.password.encode('utf-8'))
                 passHash = hash_object.hexdigest()
-                cur.execute("INSERT INTO person(is_root, nickname, session_cookie, mail, password) VALUES(%s, %s, %s, %s, %s);", (newPerson.is_root, newPerson.nickname, newPerson.session_cookie, newPerson.mail, passHash))
-                cur.execute("SELECT * FROM person_person_id_seq;")
+                cur.execute("INSERT INTO person(is_root, nickname, session_cookie, mail, password) VALUES(%s, %s, %s, %s, %s) RETURNING person_id;",
+                            (newPerson.is_root, newPerson.nickname, newPerson.session_cookie, newPerson.mail, passHash))
                 person_id = cur.fetchone()[0]
     except:
         return {"result": "error"}

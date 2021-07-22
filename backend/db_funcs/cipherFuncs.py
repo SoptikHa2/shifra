@@ -14,9 +14,8 @@ def insertCipher(cipher_game_id: int, newCipher: Cipher):
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
-                cur.execute("INSERT INTO cipher(name, cipher_game_id, req_cipher_id, description, solution, judge, cipher_file, img, success_msg, cooldown, attempts, score, reference_solution) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);",
+                cur.execute("INSERT INTO cipher(name, cipher_game_id, req_cipher_id, description, solution, judge, cipher_file, img, success_msg, cooldown, attempts, score, reference_solution) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING cipher_id;",
                             (newCipher.name, cipher_game_id, newCipher.req_cipher_id, newCipher.description, newCipher.solution, newCipher.judge, newCipher.cipher_file, newCipher.img, newCipher.success_msg, newCipher.cooldown, newCipher.attempts, newCipher.score, newCipher.reference_solution))
-                cur.execute("SELECT * FROM cipher_cipher_id_seq")
                 cipher_id = cur.fetchone()[0]
     except:
         return {"result": "error"}

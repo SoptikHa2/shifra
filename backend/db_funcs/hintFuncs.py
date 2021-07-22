@@ -11,9 +11,8 @@ def insertHint(newHint: Hint):
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
-                cur.execute("INSERT INTO hint(cipher_id, msg, img, hint_file, score_cost, time_cost) VALUES(%s, %s, %s, %s, %s, %s);",
+                cur.execute("INSERT INTO hint(cipher_id, msg, img, hint_file, score_cost, time_cost) VALUES(%s, %s, %s, %s, %s, %s) RETURNING hint_id;",
                                       (newHint.cipher_id, newHint.msg, newHint.img, newHint.hint_file, newHint.score_cost, newHint.time_cost))
-                cur.execute("SELECT * FROM hint_hint_id_seq")
                 hint_id = cur.fetchone()[0]
     except:
         return {"result": "error"}

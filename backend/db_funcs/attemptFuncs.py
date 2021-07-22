@@ -13,12 +13,11 @@ def insertAttempt(newAttempt: Attempt):
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
-                cur.execute("INSERT INTO attempt(cipher_id, team_id, time, is_success) VALUES (newAttempt.cipher_id, newAttempt.team_id, newAttempt.time, newAttempt.is_successful);")
-                cur.execute("SELECT * FROM team_team_id_seq;")
-                team_id = cur.fetchone()[0]
+                cur.execute("INSERT INTO attempt(cipher_id, team_id, time, is_successful) VALUES (%s, %s, %s, %s) RETURNING cipher_id, team_id;", (newAttempt.cipher_id, newAttempt.team_id, newAttempt.time, newAttempt.is_successful))
+                result = cur.fetchone()
     except:
         return {"result": "error"}
-    return {"result": team_id}
+    return {"cipher_id": result[0], "team_id": result[1]}
 
 
 # works

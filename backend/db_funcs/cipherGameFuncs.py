@@ -11,8 +11,9 @@ def insertCipherGame(newCipherGame: Cipher_game):
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
-                cur.execute("INSERT INTO cipher_game (cipher_id, name, description, visible_from, deadline_signup, deadline_event, capacity, teammax, password, autoapprove) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (newCipherGame.cipher_id, newCipherGame.name, newCipherGame.description, newCipherGame.visible_from, newCipherGame.deadline_signup, newCipherGame.deadline_event, newCipherGame.capacity, newCipherGame.teammax, newCipherGame.password, newCipherGame.autoapprove))
-                cur.execute("SELECT * FROM cipher_game_cipher_game_id_seq;")
+                cur.execute("INSERT INTO cipher_game (cipher_id, name, description, visible_from, deadline_signup, deadline_event, capacity, teammax, password, autoapprove) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING cipher_game_id;",
+                            (newCipherGame.cipher_id, newCipherGame.name, newCipherGame.description, newCipherGame.visible_from, newCipherGame.deadline_signup, newCipherGame.deadline_event, newCipherGame.capacity, newCipherGame.teammax,
+                             newCipherGame.password, newCipherGame.autoapprove))
                 cipher_game_id = cur.fetchone()[0]
     except:
         return {"result": "error"}

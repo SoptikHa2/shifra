@@ -17,9 +17,8 @@ def insertTeam(newTeam: Team):
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
-                cur.execute("INSERT INTO team (name, invite_code, approved) VALUES(%s, %s, %s);",
+                cur.execute("INSERT INTO team (name, invite_code, approved) VALUES(%s, %s, %s) RETURNING team_id;",
                             (newTeam.name, newTeam.invite_code, newTeam.approved))
-                cur.execute("SELECT * FROM team_team_id_seq;")
                 team_id = cur.fetchone()[0]
     except:
         return {"result": "error"}
