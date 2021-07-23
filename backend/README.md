@@ -22,6 +22,7 @@ Suggested endpoints:
 
 All endpoints should be prefixed with api/
 
+```
 Public (no auth required)
 /login (POST, username + password, optionally sets cookies and returns success or failure)
 /register (POST, username, email, password, registers (and logs in) an user, or transforms temporary user account into permanent one)
@@ -41,3 +42,4 @@ User (user has to be authenticated)
 
 Admin (user has to be authenticated and either root, or ciphergame admin)
 todo
+```
