@@ -9,12 +9,37 @@ Prepinače:  --host [address]    ( Bind socket to this host )
           
 Ukážka spustenia:
 ```
-      uvicorn main:api --reload
+      uvicorn main:app --reload
                 |   |      |
                 |   |      +--> prepínače
                 |   +--> názov FastAPI v .py subory
                 +--> názov .py suboru s API ( *bez prípony .py* )
 ```
+
+struktura database.ini (specifikace portu není nutná)
+```
+[dev]
+host=
+port=
+database=
+user=
+password=
+
+[local]
+host=
+port=
+database=
+user=
+password=
+
+[prod]
+host=
+port=
+database=
+user=
+password=
+```
+
 
 ---
 
@@ -43,3 +68,4 @@ User (user has to be authenticated)
 Admin (user has to be authenticated and either root, or ciphergame admin)
 todo
 ```
+
