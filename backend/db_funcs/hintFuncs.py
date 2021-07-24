@@ -26,7 +26,7 @@ def updateHint(hint_id: int, updated_hint: Hint):
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
                 cur.execute(
-                    "UPDATE hint SET cipher_id=%s, msg=%s, img=%s, hint_file=%s, score_cost=%s, time_cost=%s WHERE hint_id=%s;",
+                    "UPDATE hint SET cipher_id = %s, msg = %s, img = %s, hint_file = %s, score_cost = %s, time_cost = %s WHERE hint_id = %s;",
                     (updated_hint.cipher_id, updated_hint.msg, updated_hint.img, updated_hint.hint_file, updated_hint.score_cost, updated_hint.time_cost, hint_id))
     except:
         return {"result": "error"}

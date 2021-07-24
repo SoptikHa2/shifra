@@ -29,7 +29,7 @@ def updateCipher(cipher_id: int, updatedCipher: Cipher):
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
-                cur.execute("UPDATE cipher SET cipher_game_id=%s, req_cipher_id=%s, name=%s, description=%s, solution=%s, judge=%s, cipher_file=%s, img=%s, success_msg=%s, cooldown=%s, attempts=%s, score=%s, reference_solution=%s WHERE cipher_id=%s;",
+                cur.execute("UPDATE cipher SET cipher_game_id = %s, req_cipher_id = %s, name = %s, description = %s, solution = %s, judge = %s, cipher_file = %s, img = %s, success_msg = %s, cooldown = %s, attempts = %s, score = %s, reference_solution = %s WHERE cipher_id = %s;",
                             (updatedCipher.cipher_game_id, updatedCipher.req_cipher_id, updatedCipher.name, updatedCipher.description, updatedCipher.solution, updatedCipher.judge, updatedCipher.cipher_file,
                              updatedCipher.img, updatedCipher.success_msg, updatedCipher.cooldown, updatedCipher.attempts, updatedCipher.score, updatedCipher.reference_solution, cipher_id))
     except:
@@ -44,7 +44,7 @@ def deleteCipher(cipher_id: int):
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
-                cur.execute("DELETE FROM cipher WHERE cipher_id=%s;", (cipher_id,))
+                cur.execute("DELETE FROM cipher WHERE cipher_id = %s;", (cipher_id,))
     except:
         return {"result": "error"}
     return {"result": "removed"}

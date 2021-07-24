@@ -39,7 +39,7 @@ def updateTeam(team_id: int, updated_team: Team):
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
                 cur.execute(
-                    "UPDATE team SET name=%s, invite_code=%s, approved=%s WHERE team_id=%s;",
+                    "UPDATE team SET name = %s, invite_code = %s, approved = %s WHERE team_id = %s;",
                     (updated_team.name, updated_team.invite_code, updated_team.approved, team_id ))
     except:
         return {"result": "error"}

@@ -40,7 +40,7 @@ def updatePerson(person_id: int, updated_person: Person):
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
-                cur.execute("UPDATE person SET is_root=%s, nickname=%s, session_cookie=%s, mail=%s, password=%s WHERE person_id=%s;",
+                cur.execute("UPDATE person SET is_root = %s, nickname = %s, session_cookie = %s, mail = %s, password = %s WHERE person_id = %s;",
                             (updated_person.is_root, updated_person.nickname, updated_person.session_cookie, updated_person.mail, updated_person.password, person_id))
     except:
         return {"result": "error"}
@@ -58,7 +58,7 @@ def deletePerson(person_id: int):
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
-                cur.execute("DELETE FROM person WHERE person_id=%s;", (person_id,))
+                cur.execute("DELETE FROM person WHERE person_id = %s;", (person_id,))
 
     except:
         return {"result": "error"}
