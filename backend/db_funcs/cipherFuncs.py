@@ -1,10 +1,11 @@
+from . import DBConn
 from .DBConn import *
 from fastapi import APIRouter
 from routes import Cipher
 
 router = APIRouter()
 
-connection = None
+connection: DBConn = None
 
 
 # INSERT cipher

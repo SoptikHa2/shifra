@@ -1,10 +1,11 @@
+from . import DBConn
 from .DBConn import *
 from fastapi import APIRouter
 from routes import Cipher_game
 
 
 router = APIRouter()
-connection = None
+connection: DBConn = None
 
 @router.post("/api/game")
 def insertCipherGame(newCipherGame: Cipher_game):

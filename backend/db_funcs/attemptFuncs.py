@@ -1,3 +1,4 @@
+from . import DBConn
 from .DBConn import *
 from fastapi import APIRouter
 from routes import Attempt
@@ -5,7 +6,7 @@ from routes import Attempt
                                         # All hints are under ciphers under cipherGames
 router = APIRouter()
 
-connection = None
+connection: DBConn = None
                             # This file needs to be updated after talkie about database entity keys
 
 @router.post("/api/cipher/{cipher_id}/team/{team_id}/attempt")

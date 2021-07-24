@@ -1,10 +1,11 @@
-from fastapi import APIRouter
+from . import DBConn
 from .DBConn import *
+from fastapi import APIRouter
 from routes import Team
 
 router = APIRouter()
 
-connection = None
+connection: DBConn = None
 
 
 @router.post("/api/team")

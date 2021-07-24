@@ -1,10 +1,11 @@
+from . import DBConn
 from .DBConn import *
 from fastapi import APIRouter
 from routes import Hint
 
 router = APIRouter()
 
-connection = None
+connection: DBConn = None
 
 @router.post("/api/hint")
 def insertHint(newHint: Hint):

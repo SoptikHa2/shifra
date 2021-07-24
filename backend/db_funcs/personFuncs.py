@@ -1,3 +1,4 @@
+from . import DBConn
 from .DBConn import *
 from fastapi import APIRouter
 from routes import Person
@@ -5,7 +6,7 @@ import hashlib
 
 router = APIRouter()
 
-connection = None
+connection: DBConn = None
 
 
 @router.post("/api/person")  # return id of inserted item
