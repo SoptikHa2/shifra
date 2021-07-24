@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from enum import Enum
 
 class Hint(BaseModel):
     hint_id: Optional[int] = None
@@ -10,3 +11,7 @@ class Hint(BaseModel):
     score_cost: float
     time_cost: int
 
+class HintStatus(Enum):
+    Locked = 1,
+    Unlocked = 2,
+    Invisible = 3
