@@ -2,6 +2,8 @@
 # safe to use, code is under unlicense license (https://unlicense.org)
 
 from fastapi import FastAPI
+
+from api.endpoints import user
 from db_funcs import *
 
 try:
@@ -27,6 +29,7 @@ app.include_router(personFuncs.router)
 app.include_router(hintFuncs.router)
 app.include_router(attemptFuncs.router)
 
+app.include_router(user.router)
 
 @app.get('/')
 def root():
