@@ -2,7 +2,6 @@ from . import DBConn
 from .DBConn import *
 from fastapi import APIRouter
 from routes import Cipher_game
-from datetime import datetime
 
 
 router = APIRouter()
@@ -70,4 +69,3 @@ def getCipherGame(cipher_game_id: int):
     except:
         return {"result": "error"}
     return result
-
