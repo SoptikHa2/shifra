@@ -72,7 +72,7 @@ def getCipherGame(cipher_game_id: int):
     return result
 
 @router.get('/api/games')
-def visible_games():
+def get_visible_games():
     timestamp = datetime.now()
     try:
         with DB_conn.getConn(connection):
@@ -82,3 +82,16 @@ def visible_games():
     except:
         return {"result": "error occured"}
     return result
+
+
+@router.get('/api/leaderboard/{cipher_game_id}')
+def get_scoreboard(cipher_game_id: int):
+    try:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("SELECT t.team_id, t.name, SUM(c.score) FROM team t JOIN attempt a ON a.team_id = t.team_id AND a.is_successful = TRUE JOIN cipher c ON c.cipher_id = a.cipher_id AND c.cipher_game_id = %s GROUP BY t.team_id, t.name, c.score;", cipher_game_id)
+                result = cur.fetchall()
+    except:
+        return {"result": "error occured"}
+    return result
+
