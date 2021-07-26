@@ -96,3 +96,26 @@ def is_visible(cipher_game_id: int):
         return False
     return True
 
+
+@router.get('/api/ciphers/{cipher_game_id}')
+def get_ciphers(cipher_game_id: int):
+    if # TODO: is root condition
+        try:
+            with DB_conn.getConn(connection):
+                with DB_conn.getCursor(connection) as cur:
+                    cur.execute("SELECT * FROM cipher_game WHERE visible_from >=  %s AND cipher_game_id = %s;", (timestamp,cipher_game_id))
+                    result = cur.fetchall()
+        except:
+            return {"error": "error occured"}
+        return result
+    else:
+        team_id = # TODO: id of the team!!!
+        try:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("SELECT * FROM cipher_game WHERE req_cipher_id IS NULL OR WHERE EXISTS ( SELECT * FROM attempt WHERE team_id = %s AND is_successful = TRUE AND cipher_id = req_cipher_id);", team_id)
+                result = cur.fetchall()
+        except:
+            return {"error": "error occured"}
+        return result
+
