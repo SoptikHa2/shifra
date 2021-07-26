@@ -86,6 +86,8 @@ def get_visible_games():
 
 @router.get('/api/leaderboard/{cipher_game_id}')
 def get_scoreboard(cipher_game_id: int):
+    if not is_visible(cipher_game_id):
+        return {"result": "game is not visible"}
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
@@ -94,4 +96,16 @@ def get_scoreboard(cipher_game_id: int):
     except:
         return {"result": "error occured"}
     return result
+
+
+def is_visible(cipher_game_id: int):
+    timestamp = datetime.now()
+    try:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("SELECT * FROM cipher_game WHERE visible_from >=  %s AND cipher_game_id = %s;", (timestamp,cipher_game_id))
+    except:
+        return False
+    return True
+
 
