@@ -4,6 +4,7 @@
 from fastapi import FastAPI
 
 from api.endpoints import user
+from api.endpoints import misc
 from db_funcs import *
 
 try:
@@ -30,6 +31,7 @@ app.include_router(hintFuncs.router)
 app.include_router(attemptFuncs.router)
 
 app.include_router(user.router)
+app.include_router(misc.router)
 
 @app.get('/')
 def root():
