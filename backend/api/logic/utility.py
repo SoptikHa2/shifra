@@ -5,7 +5,7 @@ from typing import Optional
 from routes.person import Person
 
 
-def hash_password(username: str, password: str) -> bytes:
+def hash_password(username: str, password: str) -> str:
     """
     Hash and salt user password
     :param username: User username, used for salting
@@ -19,7 +19,7 @@ def hash_password(username: str, password: str) -> bytes:
         salt.encode('utf-8'),  # Salt in order to evade rainbow tables
         100000  # Do it few times in order to be slow
     )
-    return key
+    return str(key)
 
 
 def generate_new_access_token() -> str:

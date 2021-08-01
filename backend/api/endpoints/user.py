@@ -62,22 +62,51 @@ def register(username: str, response: Response) -> Optional[Person]:
 
 
 @router.post('/api/register')
-def register(username: str, email: str, password: str, response: Response) -> Optional[Person]:
+def register(username: Optional[str], email: str, password: str, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Person]:
     """
     Register permanent user account.
 
     This fails if username already exists with 409 conflict.
 
     If user is already logged in, this will attempt to upgrade
-    temporary user account. This thus fails, if username does *not* match
-    given session cookie, or the account is already permanent.
+    temporary user account. This thus fails, if the account is already permanent.
     :param username: User username (must be unique unless upgrading into permanent user account)
     :param email: User email
     :param password: User password
-    :return: 200 OK if successful, otherwise some error code (409 conflict if username already exists).
-    If successful, also returns user structure.
+    :return: 201 if brand new user was registered, 200 if user was upgraded, 409 if name collision caused failure
+    to register brand new user and 400 if user is logged in, but upgrade isn't possible.
+    If successful, this also returns user structure.
     """
-    pass
+
+    # Check if user is already logged in
+    logged_in_user = user_management.get_user_by_token(session_cookie)
+
+    if logged_in_user is None:
+        # Username must not be None
+        if username is None:
+            response.status_code = 400
+            return None
+
+        # Just register the user, if possible
+        new_user = user_management.create_user(username, email, password)
+        if new_user is None:
+            response.status_code = 409
+            return None
+        else:
+            response.status_code = 201
+            return strip_user_details(new_user)
+    else:
+        # User already exists, check if it is temp account
+        if logged_in_user.mail is not None and logged_in_user.password is not None:
+            # User can log in! It's not temporary account.
+            response.status_code = 400
+            return strip_user_details(logged_in_user)
+        # User already exists and it is temp account. Provided username will be ignored.
+        # Upgrade user account.
+        logged_in_user.mail = email
+        logged_in_user.password = user_management.hash_password(logged_in_user.nickname, password)
+        user_management.updatePerson(logged_in_user.person_id, logged_in_user)
+        return strip_user_details(logged_in_user)
 
 
 @router.post('/api/logout')
@@ -86,8 +115,11 @@ def logout(response: Response) -> None:
 
 
 @router.get('/api/userInfo')
-def user_info(session_cookie: Optional[str] = Cookie(None)) -> Optional[Person]:
+def user_info(response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Person]:
     """
     Get info about currently logged in user.
     """
-    return strip_user_details(user_management.get_user_by_token(session_cookie))
+    user = strip_user_details(user_management.get_user_by_token(session_cookie))
+    if user is None:
+        response.status_code = 404
+    return user
