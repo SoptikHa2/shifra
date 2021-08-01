@@ -8,9 +8,6 @@ router = APIRouter()
 connection: DBConn = None
 
 
-# INSERT cipher
-# TODO add return of the id of the inserted item
-@router.post("/api/cipher")
 def insertCipher(cipher_game_id: int, newCipher: Cipher):
     try:
         with DB_conn.getConn(connection):
@@ -23,8 +20,6 @@ def insertCipher(cipher_game_id: int, newCipher: Cipher):
     return {"result": cipher_id}
 
 
-# UPDATE cipher
-@router.put("/api/cipher/{cipher_id}")
 def updateCipher(cipher_id: int, updatedCipher: Cipher):
     try:
         with DB_conn.getConn(connection):
@@ -37,9 +32,6 @@ def updateCipher(cipher_id: int, updatedCipher: Cipher):
     return {"result": "updated"}
 
 
-# DELETE cipher
-# TODO add return of the id of the deleted item
-@router.delete("/api/cipher/{cipher_id}")
 def deleteCipher(cipher_id: int):
     try:
         with DB_conn.getConn(connection):
@@ -50,8 +42,6 @@ def deleteCipher(cipher_id: int):
     return {"result": "removed"}
 
 
-# GET ALL ciphers of one cipher game
-@router.get("/api/game/{cipherGame_id}/cipher")
 def getCiphers(cipherGame_id: int):
     try:
         with DB_conn.getConn(connection):
@@ -63,8 +53,6 @@ def getCiphers(cipherGame_id: int):
     return result
 
 
-# GET ONE cipher
-@router.get("/api/cipher/{cipher_id}")
 def getCipher(cipher_id: int):
     try:
         with DB_conn.getConn(connection):

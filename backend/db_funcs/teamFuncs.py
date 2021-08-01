@@ -8,7 +8,6 @@ router = APIRouter()
 connection: DBConn = None
 
 
-@router.post("/api/team")
 def insertTeam(newTeam: Team):
     """
 
@@ -27,7 +26,6 @@ def insertTeam(newTeam: Team):
     return {"result": team_id}
 
 
-@router.put("/api/team/{team_id}")
 def updateTeam(team_id: int, updated_team: Team):
     """
 
@@ -47,7 +45,6 @@ def updateTeam(team_id: int, updated_team: Team):
     return {"result": "updated"}
 
 
-@router.delete("/api/team/{team_id}")  # return id of inserted item
 def deleteTeam(team_id: int):
     """
 
@@ -64,7 +61,6 @@ def deleteTeam(team_id: int):
     return {"result": "removed"}
 
 
-@router.get("/api/team/{team_id}")
 def getTeam(team_id: int):
     """
 
@@ -81,7 +77,6 @@ def getTeam(team_id: int):
     return result
 
 
-@router.get("/api/team")
 def getTeams():
     """
 
