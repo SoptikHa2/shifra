@@ -1,31 +1,33 @@
 from . import DBConn
 from .DBConn import *
 from fastapi import APIRouter
-from routes import Person
+from routes import Person, person_from_db_row
 import hashlib
+from typing import Optional
 
 router = APIRouter()
 
 connection: DBConn = None
 
 
-def insertPerson(newPerson: Person):
+def insertPerson(newPerson: Person) -> Optional[int]:
     """
-
     :param newPerson: person, that should be inserted into database
-    :return: person_id - id of inserted person in database
+    :return: person_id - id of inserted person in database, or None if
+    username already exists in database
     """
-    try:
-        with DB_conn.getConn(connection):
-            with DB_conn.getCursor(connection) as cur:
-                hash_object = hashlib.sha256(newPerson.password.encode('utf-8'))
-                passHash = hash_object.hexdigest()
-                cur.execute("INSERT INTO person(is_root, nickname, session_cookie, mail, password) VALUES(%s, %s, %s, %s, %s) RETURNING person_id;",
-                            (newPerson.is_root, newPerson.nickname, newPerson.session_cookie, newPerson.mail, passHash))
-                person_id = cur.fetchone()[0]
-    except:
-        return {"result": "error"}
-    return {"result": person_id}
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            # Check if there already is the same username
+            cur.execute("SELECT * FROM person where nickname = %s;", (newPerson.nickname,))
+            result = cur.fetchone()
+            if result is not None:
+                return None
+            # If not, create new user
+            cur.execute("INSERT INTO person(is_root, nickname, session_cookie, mail, password) VALUES(%s, %s, %s, %s, %s) RETURNING person_id;",
+                        (newPerson.is_root, newPerson.nickname, newPerson.session_cookie, newPerson.mail, newPerson.password))
+            person_id = cur.fetchone()[0]
+            return person_id
 
 
 def updatePerson(person_id: int, updated_person: Person):
@@ -94,3 +96,30 @@ def getPersons():
     except:
         return {"result": "error"}
     return result
+
+def getPersonByAccessToken(access_token: str) -> Optional[Person]:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT * FROM person WHERE session_cookie = %s;", (access_token,))
+            result = cur.fetchone()
+            if result is None:
+                return None
+            return person_from_db_row(result)
+
+def getPersonByCredentials(username: str, password_hash: str) -> Optional[Person]:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT * FROM person WHERE nickname = %s AND password = %s;", (username, password_hash,))
+            result = cur.fetchone()
+            if result is None:
+                return None
+            return person_from_db_row(result)
+
+def getPersonByUsername(username: str) -> Optional[Person]:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("SELECT * FROM person where nickname = %s;", (username,))
+                result = cur.fetchone()
+                if result is None:
+                    return None
+                return person_from_db_row(result)
