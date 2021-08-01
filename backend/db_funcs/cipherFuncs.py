@@ -62,3 +62,15 @@ def getCipher(cipher_id: int):
     except:
         return {"result": "error"}
     return result
+
+
+def get_cipher_info(cipher_game_id: int, cipher_id: int):
+    try:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("SELECT * FROM cipher WHERE cipher_id = %s AND cipher_game_id = %s;", (cipher_id, cipher_game_id))
+                result = cur.fetchone()[0]
+    except:
+        return None
+    return result
+
