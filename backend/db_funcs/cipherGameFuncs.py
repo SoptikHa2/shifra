@@ -111,4 +111,12 @@ def get_ciphers(cipher_game_id: int):
             return None
         return result
 
-
+def get_cipher_game(cipher_game_id: int):
+    try:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("SELECT * FROM cipher_game WHERE cipher_game_id = %s;", (cipher_game_id,))
+                result = cur.fetchall()
+    except:
+        return None 
+    return result

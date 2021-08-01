@@ -20,3 +20,10 @@ def get_ciphers(cipher_game_id: int):
         return {"error": "occured"}
     return ciphers
 
+
+@router.get("/api/game/{cipher_game_id}")
+def get_cipher_game(cipher_game_id: int):
+    if cipherGameFuncs.get_cipher_game(cipher_game_id)
+        return {"result": "error"}
+    return result
+
