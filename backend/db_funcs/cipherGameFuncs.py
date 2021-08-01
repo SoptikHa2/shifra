@@ -64,3 +64,13 @@ def getCipherGame(cipher_game_id: int):
     except:
         return {"result": "error"}
     return result
+
+def get_all_games(person_id: int):
+    try:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("SELECT DISTINCT * FROM cipher_game WHERE cipher_game_id = %s UNION SELECT DISTINCT cipher_game.* FROM cipher_game JOIN cipher_game_person ON cipher_game_person.cipher_game_id = cipher_game.cipher_game_id JOIN person ON person.person_id = %s AND person.is_root = TRUE AND person.person_id = cipher_game_person.person_id;", (cipher_game_id, person_id))
+                result = cur.fetchall()
+    except:
+        return None
+    return result
