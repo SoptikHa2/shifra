@@ -2,7 +2,6 @@ import hashlib
 import uuid
 from typing import Optional
 
-import routes
 from routes.person import Person
 
 
