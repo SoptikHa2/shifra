@@ -65,4 +65,3 @@ def get_cipher_game(cipher_game_id: int):
         return None
     return result
 
-

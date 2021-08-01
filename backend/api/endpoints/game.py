@@ -12,5 +12,3 @@ def get_game_by_id(cipher_game_id: int):
         return {"result": "error occured"}
     return game
 
-
-
