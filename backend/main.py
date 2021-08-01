@@ -23,12 +23,5 @@ hintFuncs.connection = connection
 attemptFuncs.connection = connection
 
 app = FastAPI()
-app.include_router(teamFuncs.router)
-app.include_router(cipherFuncs.router)
-app.include_router(cipherGameFuncs.router)
-app.include_router(personFuncs.router)
-app.include_router(hintFuncs.router)
-app.include_router(attemptFuncs.router)
-
 app.include_router(user.router)
 app.include_router(misc.router)
