@@ -9,7 +9,6 @@ router = APIRouter()
 connection: DBConn = None
                             # This file needs to be updated after talkie about database entity keys
 
-@router.post("/api/cipher/{cipher_id}/team/{team_id}/attempt")
 def insertAttempt(newAttempt: Attempt):
     try:
         with DB_conn.getConn(connection):
@@ -21,8 +20,6 @@ def insertAttempt(newAttempt: Attempt):
     return {"cipher_id": result[0], "team_id": result[1]}
 
 
-# works
-@router.put("/api/cipher/{cipher_id}/team/{team_id}/attempt")
 def updateAttempt(cipher_id: int, team_id: int, updatedAttempt: Attempt):
     try:
         with DB_conn.getConn(connection):
@@ -33,7 +30,6 @@ def updateAttempt(cipher_id: int, team_id: int, updatedAttempt: Attempt):
     return {"result": "updated"}
 
 
-@router.delete("/api/cipher/{cipher_id}/team/{team_id}/attempt")  # return id of inserted item
 def deleteAttempt(cipher_id: int, team_id: int):
     try:
         with DB_conn.getConn(connection):
@@ -44,7 +40,6 @@ def deleteAttempt(cipher_id: int, team_id: int):
     return {"result": "removed"}
 
 
-@router.get("/api/cipher/{cipher_id}/team/{team_id}/attempt")
 def getAttempt(cipher_id: int, team_id):
     try:
         with DB_conn.getConn(connection):
@@ -56,7 +51,6 @@ def getAttempt(cipher_id: int, team_id):
     return result
 
 
-@router.get("/api/attempt")
 def getAttempts():
     try:
         with DB_conn.getConn(connection):

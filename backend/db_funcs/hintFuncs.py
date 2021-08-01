@@ -7,7 +7,6 @@ router = APIRouter()
 
 connection: DBConn = None
 
-@router.post("/api/hint")
 def insertHint(newHint: Hint):
     try:
         with DB_conn.getConn(connection):
@@ -20,7 +19,6 @@ def insertHint(newHint: Hint):
     return {"result": hint_id}
 
 
-@router.put("/api/hint/{hint_id}")
 def updateHint(hint_id: int, updated_hint: Hint):
     try:
         with DB_conn.getConn(connection):
@@ -33,7 +31,6 @@ def updateHint(hint_id: int, updated_hint: Hint):
     return {"result": "updated"}
 
 
-@router.delete("/api/hint/{hint_id}")  # return id of inserted item
 def deleteHint(hint_id: int):
     try:
         with DB_conn.getConn(connection):
@@ -44,7 +41,6 @@ def deleteHint(hint_id: int):
     return {"result": "removed"}
 
 
-@router.get("/api/hint/{hint_id}")
 def getHint(hint_id: int):
     try:
         with DB_conn.getConn(connection):
@@ -56,7 +52,6 @@ def getHint(hint_id: int):
     return result
 
 
-@router.get("/api/ciphers/{cipher_id}/hint")
 def getHints():
     try:
         with DB_conn.getConn(connection):

@@ -7,7 +7,6 @@ from routes import Cipher_game
 router = APIRouter()
 connection: DBConn = None
 
-@router.post("/api/game")
 def insertCipherGame(newCipherGame: Cipher_game):
     try:
         with DB_conn.getConn(connection):
@@ -21,7 +20,6 @@ def insertCipherGame(newCipherGame: Cipher_game):
     return {"result": cipher_game_id}
 
 
-@router.put("/api/game/{cipher_game_id}")
 def updateCipherGame(cipher_game_id: int, updated_cipher_game: Cipher_game):
     try:
         with DB_conn.getConn(connection):
@@ -36,7 +34,6 @@ def updateCipherGame(cipher_game_id: int, updated_cipher_game: Cipher_game):
     return {"result": "updated"}
 
 
-@router.delete("/api/game/{cipher_game_id}")
 def deleteCipherGame(cipher_game_id: int):
     try:
         with DB_conn.getConn(connection):
@@ -47,7 +44,6 @@ def deleteCipherGame(cipher_game_id: int):
     return {"result": success}
 
 
-@router.get("/api/game")
 def getCipherGames():
     try:
         with DB_conn.getConn(connection):
@@ -59,7 +55,6 @@ def getCipherGames():
     return result
 
 
-@router.get("/api/game/{cipher_game_id}")
 def getCipherGame(cipher_game_id: int):
     try:
         with DB_conn.getConn(connection):
