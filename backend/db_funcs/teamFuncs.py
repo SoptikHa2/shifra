@@ -90,3 +90,25 @@ def getTeams():
     except:
         return {"result": "error"}
     return result
+
+def is_in_team(team_id: int, user_id: int):
+    try:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("SELECT * FROM person_team WHERE person_team.team_id = %s AND person_team.person_id = %s;",(team_id, user_id))
+                result = cur.fetchall()
+    except:
+        return False
+    return bool(result)
+
+def get_team_info(team_id: int, user_id: int, is_root: bool):
+    if not is_root and not is_is_teeam(team_id, user_id):
+        return None
+    try:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("SELECT * FROM team WHERE team.team_id = %s;", team_id)
+                result = cur.fetchall()
+    except:
+        return None
+    return result
