@@ -10,7 +10,10 @@ router = APIRouter()
 @router.get("/api/games")
 def get_all_games(session_cookie: Optional[str] = Cookie(None)):
     user = user_management.get_user_by_token(session_cookie)
-    games = get_all_games(user.person_id)
+    if user.is_root:
+        games = get_games()
+    else:
+        games = get_all_games(user.person_id)
     if games is None:
         return {"result": "error occured"}
     return games
