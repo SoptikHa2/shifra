@@ -16,6 +16,7 @@ def get_all_games(session_cookie: Optional[str] = Cookie(None), response: Respon
         games = get_all_games(user.person_id)
     if games is None:
         response.status_code = 400
+        return {"result": "error occured"}
     else:
         response.status_code = 200
     return games
