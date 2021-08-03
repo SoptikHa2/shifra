@@ -75,8 +75,8 @@ def is_visible(cipher_game_id: int):
         return False
     return True
 
-def get_cipher_info(cipher_game_id: int, cipher_id: int ):
-    if not is_visible(cipher_game_id):
+def get_cipher_info(cipher_game_id: int, cipher_id: int, is_root: bool ):
+    if not is_visible(cipher_game_id) and not is_root:
         return None
     try:
         with DB_conn.getConn(connection):
