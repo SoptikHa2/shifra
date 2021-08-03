@@ -10,6 +10,7 @@ def get_game_by_id(cipher_game_id: int, response: Response):
     game = cipherGameFuncs.get_ciphergame(cipher_game_id)
     if game is None:
         response.status_code = 400
+        return {"result": "error occured"}
     else:
         response.status_code = 200
     return game
