@@ -74,3 +74,13 @@ def get_all_games(person_id: int):
     except:
         return None
     return result
+
+def get_games():
+    try:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("SELECT * FROM cipher_game;")
+                result = cur.fetchall()
+    except:
+        return None
+    return result
