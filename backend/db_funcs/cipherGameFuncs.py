@@ -71,9 +71,10 @@ def is_visible(cipher_game_id: int):
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
                 cur.execute("SELECT * FROM cipher_game WHERE visible_from >=  %s AND cipher_game_id = %s;", (timestamp,cipher_game_id))
+                result = cur.fetchall()
     except:
         return False
-    return True
+    return bool(result)
 
 def get_cipher_info(cipher_game_id: int, cipher_id: int, is_root: bool ):
     if not is_visible(cipher_game_id) and not is_root:
