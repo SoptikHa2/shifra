@@ -10,6 +10,7 @@ def get_leaderboard(cipher_game_id: int, response: Response):
     leaderboard = cipherGameFuncs.get_leaderboard(cipher_game_id)
     if leaderboard is None:
         response.status_code = 400
+        return {"result": "error occured"}
     else:
         response.status_code = 200
     return leaderboard
