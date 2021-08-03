@@ -6,9 +6,11 @@ from db_funcs import cipherGameFuncs
 router = APIRouter()
 
 @router.get("/api/game/{cipher_game_id}")
-def get_game_by_id(cipher_game_id: int):
+def get_game_by_id(cipher_game_id: int, response: Response):
     game = cipherGameFuncs.get_ciphergame(cipher_game_id)
     if game is None:
-        return {"result": "error occured"}
+        response.status_code = 400
+    else:
+        response.status_code = 200
     return game
 
