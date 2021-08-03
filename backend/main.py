@@ -25,3 +25,7 @@ attemptFuncs.connection = connection
 app = FastAPI()
 app.include_router(user.router)
 app.include_router(misc.router)
+
+@app.get('/')
+def root():
+    return {"version": "1"}
