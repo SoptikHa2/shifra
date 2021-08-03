@@ -2,6 +2,8 @@ from fastapi import APIRouter, Response, Cookie
 from typing import Optional
 
 from db_funcs import cipherGameFuncs
+from api.logic import user_management
+from routes import Person
 
 router = APIRouter()
 
