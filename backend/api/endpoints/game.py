@@ -8,7 +8,7 @@ from routes import Person
 router = APIRouter()
 
 @router.get('/api/ciphers/{cipher_game_id}/show/{cipher_id}')
-def get_cipher_info(cipher_game_id: int, cipher_id: int, session_cookie: Optional[str] = Cookie(None)):
+def get_cipher_info(cipher_game_id: int, cipher_id: int, session_cookie: Optional[str] = Cookie(None), response: Response):
     user = user_management.get_user_by_token(session_cookie)
     if user is None:
         response.status_code = 401
