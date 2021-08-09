@@ -41,14 +41,14 @@ def deleteHint(hint_id: int):
     return {"result": "removed"}
 
 
-def getHint(hint_id: int):
+def get_hint(hint_id: int):
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
                 cur.execute("SELECT * FROM hint WHERE hint_id = %s;", (hint_id,))
-                result = cur.fetchall()
+                result = cur.fetchall()[0]
     except:
-        return {"result": "error"}
+        return None
     return result
 
 
