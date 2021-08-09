@@ -8,7 +8,7 @@ from routes import Person
 router = APIRouter()
 
 @router.get('/api/team/{team_id}')
-def get_team_by_id(team_id: int, session_cookie: Optional[str] = Cookie(None)):
+def get_team_by_id(team_id: int, session_cookie: Optional[str] = Cookie(None), response: Response):
     user = user_management.get_user_by_token(session_cookie)
     if user is None:
         response.status_code = 401
