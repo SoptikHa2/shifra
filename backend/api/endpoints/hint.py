@@ -2,7 +2,7 @@ from fastapi import APIRouter, Response, Cookie
 from typing import Optional
 
 from api.logic import user_management
-from routes import Person
+from routes import Hint
 from db_funcs import hintFuncs
 
 router = APIRouter()
