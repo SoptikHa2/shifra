@@ -17,8 +17,6 @@ class CipherGame(BaseModel):
     autoapprove: bool
 
     def strip(self):
-        self.cipher_game_id = None
-        self.cipher_id_to_start_timer = None
         password = None
         autoapprove = False
 
