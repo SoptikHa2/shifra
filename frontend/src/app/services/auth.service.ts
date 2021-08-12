@@ -1,19 +1,25 @@
 import {Injectable} from '@angular/core';
 import {Person} from "../model/person";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {map, tap} from "rxjs/operators";
 import {environment} from "../../environments/environment";
-import * as http from "http";
+
+type userModel = {
+  loggedIn: boolean;
+  person: Person
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  user: BehaviorSubject<Person | null> = new BehaviorSubject<Person | null>(null);
+  // If loggedIn is false, value of person is not defined!
+  user: BehaviorSubject<userModel | null> = new BehaviorSubject<userModel | null>(null);
+  error: "to early" | undefined;
 
   constructor(private http: HttpClient) {
-
+    this.userInfo();
   }
 
   /**
@@ -23,12 +29,15 @@ export class AuthService {
    * @param password
    */
   async login(username: string, password: string): Promise<boolean> {
+    if (this.user.value == null) {
+      this.error = "to early";
+      return new Promise(() => false);
+    }
+
     const response = this.http.post<HttpResponse<Person>>(environment.backendUrl + '/api/auth/login', {username, password});
 
     return response.pipe(
-      tap(r => {
-        if (r.ok) this.user.next(r.body)
-      }),
+      tap(this.evaluatePersonResponse),
       map(r => r.ok))
       .toPromise();
   }
@@ -38,6 +47,11 @@ export class AuthService {
    * @param username
    */
   async checkUserAvailability(username: string): Promise<boolean> {
+    if (this.user.value == null) {
+      this.error = "to early";
+      return new Promise(() => false);
+    }
+
     const result = this.http.get<HttpResponse<any>>(environment.backendUrl + '/api/auth/checkUsernameAvailability', {params: {username}})
     return result.pipe(map(r => r.body)).toPromise();
   }
@@ -47,11 +61,14 @@ export class AuthService {
    * @param username
    */
   async registerTemporary(username: string): Promise<boolean> {
+    if (this.user.value == null) {
+      this.error = "to early";
+      return new Promise(() => false);
+    }
+
     const result = this.http.post<HttpResponse<Person>>(environment.backendUrl + '/api/auth/temporaryRegister', {username});
     return result.pipe(
-      tap(r => {
-        if (r.ok) this.user.next(r.body);
-      }),
+      tap(this.evaluatePersonResponse),
       map(r => r.ok)).toPromise();
   }
 
@@ -78,5 +95,14 @@ export class AuthService {
    */
   userInfo() {
     // todo: implement
+  }
+
+  /**
+   * sets up the user behavior subject.
+   * @param response
+   * @private
+   */
+  private evaluatePersonResponse(response: HttpResponse<Person>) {
+      this.user.next({loggedIn: response.ok, person: response.body as Person});
   }
 }
