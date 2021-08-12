@@ -5,8 +5,12 @@ DROP TABLE IF EXISTS cipher_game CASCADE;
 DROP TABLE IF EXISTS hint CASCADE;
 DROP TABLE IF EXISTS person CASCADE;
 DROP TABLE IF EXISTS team CASCADE;
-DROP TABLE IF EXISTS cipher_game_person CASCADE;
+DROP TABLE IF EXISTS cipher_game_admin CASCADE;
 DROP TABLE IF EXISTS cipher_game_team CASCADE;
+DROP TABLE IF EXISTS team_member CASCADE;
+DROP TABLE IF EXISTS hint_used CASCADE;
+-- Remove legacy tables
+DROP TABLE IF EXISTS cipher_game_person CASCADE;
 DROP TABLE IF EXISTS person_team CASCADE;
 -- End of removing
 
@@ -80,11 +84,11 @@ CREATE TABLE team (
 );
 ALTER TABLE team ADD CONSTRAINT pk_team PRIMARY KEY (team_id);
 
-CREATE TABLE cipher_game_person (
+CREATE TABLE cipher_game_admin (
     cipher_game_id INTEGER NOT NULL,
     person_id INTEGER NOT NULL
 );
-ALTER TABLE cipher_game_person ADD CONSTRAINT pk_cipher_game_person PRIMARY KEY (cipher_game_id, person_id);
+ALTER TABLE cipher_game_admin ADD CONSTRAINT pk_cipher_game_admin PRIMARY KEY (cipher_game_id, person_id);
 
 CREATE TABLE cipher_game_team (
     cipher_game_id INTEGER NOT NULL,
@@ -92,11 +96,17 @@ CREATE TABLE cipher_game_team (
 );
 ALTER TABLE cipher_game_team ADD CONSTRAINT pk_cipher_game_team PRIMARY KEY (cipher_game_id, team_id);
 
-CREATE TABLE person_team (
+CREATE TABLE team_member (
     person_id INTEGER NOT NULL,
     team_id INTEGER NOT NULL
 );
-ALTER TABLE person_team ADD CONSTRAINT pk_person_team PRIMARY KEY (person_id, team_id);
+ALTER TABLE team_member ADD CONSTRAINT pk_team_member PRIMARY KEY (person_id, team_id);
+
+CREATE TABLE hint_used (
+    hint_id INTEGER NOT NULL,
+    team_id INTEGER NOT NULL
+)
+ALTER TABLE hint_used ADD CONSTRAINT pk_hint_used PRIMARY KEY (hint_id, team_id);
 
 ALTER TABLE attempt ADD CONSTRAINT fk_attempt_cipher FOREIGN KEY (cipher_id) REFERENCES cipher (cipher_id) ON DELETE CASCADE;
 ALTER TABLE attempt ADD CONSTRAINT fk_attempt_team FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
@@ -108,11 +118,14 @@ ALTER TABLE cipher_game ADD CONSTRAINT fk_cipher_game_cipher FOREIGN KEY (cipher
 
 ALTER TABLE hint ADD CONSTRAINT fk_hint_cipher FOREIGN KEY (cipher_id) REFERENCES cipher (cipher_id) ON DELETE CASCADE;
 
-ALTER TABLE cipher_game_person ADD CONSTRAINT fk_cipher_game_person_cg FOREIGN KEY (cipher_game_id) REFERENCES cipher_game (cipher_game_id) ON DELETE CASCADE;
-ALTER TABLE cipher_game_person ADD CONSTRAINT fk_cipher_game_person_p FOREIGN KEY (person_id) REFERENCES person (person_id) ON DELETE CASCADE;
+ALTER TABLE cipher_game_admin ADD CONSTRAINT fk_cipher_game_admin_cg FOREIGN KEY (cipher_game_id) REFERENCES cipher_game (cipher_game_id) ON DELETE CASCADE;
+ALTER TABLE cipher_game_admin ADD CONSTRAINT fk_cipher_game_admin_p FOREIGN KEY (person_id) REFERENCES person (person_id) ON DELETE CASCADE;
 
 ALTER TABLE cipher_game_team ADD CONSTRAINT fk_cipher_game_team_cg FOREIGN KEY (cipher_game_id) REFERENCES cipher_game (cipher_game_id) ON DELETE CASCADE;
 ALTER TABLE cipher_game_team ADD CONSTRAINT fk_cipher_game_team_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
 
-ALTER TABLE person_team ADD CONSTRAINT fk_person_team_p FOREIGN KEY (person_id) REFERENCES person (person_id) ON DELETE CASCADE;
-ALTER TABLE person_team ADD CONSTRAINT fk_person_team_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
+ALTER TABLE team_member ADD CONSTRAINT fk_team_member_p FOREIGN KEY (person_id) REFERENCES person (person_id) ON DELETE CASCADE;
+ALTER TABLE team_member ADD CONSTRAINT fk_team_member_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
+
+ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_h FOREIGN KEY (hint_id) REFERENCES hint (hint_id) ON DELETE CASCADE;
+ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
