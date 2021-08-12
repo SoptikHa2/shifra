@@ -8,6 +8,10 @@ DROP TABLE IF EXISTS team CASCADE;
 DROP TABLE IF EXISTS cipher_game_admin CASCADE;
 DROP TABLE IF EXISTS cipher_game_team CASCADE;
 DROP TABLE IF EXISTS team_member CASCADE;
+DROP TABLE IF EXISTS hint_used CASCADE;
+-- Remove legacy tables
+DROP TABLE IF EXISTS cipher_game_person CASCADE;
+DROP TABLE IF EXISTS person_team CASCADE;
 -- End of removing
 
 CREATE TABLE attempt (
@@ -98,6 +102,12 @@ CREATE TABLE team_member (
 );
 ALTER TABLE team_member ADD CONSTRAINT pk_team_member PRIMARY KEY (person_id, team_id);
 
+CREATE TABLE hint_used (
+    hint_id INTEGER NOT NULL,
+    team_id INTEGER NOT NULL
+)
+ALTER TABLE hint_used ADD CONSTRAINT pk_hint_used PRIMARY KEY (hint_id, team_id);
+
 ALTER TABLE attempt ADD CONSTRAINT fk_attempt_cipher FOREIGN KEY (cipher_id) REFERENCES cipher (cipher_id) ON DELETE CASCADE;
 ALTER TABLE attempt ADD CONSTRAINT fk_attempt_team FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
 
@@ -116,3 +126,6 @@ ALTER TABLE cipher_game_team ADD CONSTRAINT fk_cipher_game_team_t FOREIGN KEY (t
 
 ALTER TABLE team_member ADD CONSTRAINT fk_team_member_p FOREIGN KEY (person_id) REFERENCES person (person_id) ON DELETE CASCADE;
 ALTER TABLE team_member ADD CONSTRAINT fk_team_member_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
+
+ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_h FOREIGN KEY (hint_id) REFERENCES hint (hint_id) ON DELETE CASCADE;
+ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
