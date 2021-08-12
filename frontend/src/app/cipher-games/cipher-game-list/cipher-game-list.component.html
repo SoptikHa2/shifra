@@ -1,3 +1,20 @@
-<mat-card>
-  <img src="">
+<mat-card class="cipher-game-card" *ngFor="let i of [0,1,0,0,0,0]">
+  <mat-card-header>
+    <mat-card-title>Šifrovačka</mat-card-title>
+  </mat-card-header>
+  <img mat-card-image src="https://picsum.photos/250/150">
+  <mat-card-content>
+    <div style="display: flex; align-items: center; margin-bottom: 16px">
+      <mat-icon style="margin-right: 18px"> schedule </mat-icon>
+      Otevřeno do: <br/> 1.9 2021
+    </div>
+    <div style="display: flex; align-items: center; margin-bottom: 16px">
+      <mat-icon style="margin-right: 18px"> groups </mat-icon>
+      Obsazenost: <br/> 50 / 500
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button> PŘIPOJIT SE </button>
+    <button mat-button> DETAIL </button>
+  </mat-card-actions>
 </mat-card>
