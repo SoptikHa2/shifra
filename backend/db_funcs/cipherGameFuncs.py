@@ -80,7 +80,7 @@ def is_visible(cipher_game_id: int):
 
 def get_leaderboard(cipher_game_id: int):
     if not is_visible(cipher_game_id):
-        return {"result": "game is not visible"}
+        return None
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
