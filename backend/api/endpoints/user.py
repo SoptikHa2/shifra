@@ -25,7 +25,7 @@ class register_post(BaseModel):
     password: str
 
 
-@router.post('/api/login')
+@router.post('/api/auth/login')
 def login(credentials: login_post, response: Response) -> Optional[Person]:
     """
     Try to login as given user. It is impossible to log into anonymous (temporary) user account.
@@ -49,7 +49,7 @@ def login(credentials: login_post, response: Response) -> Optional[Person]:
     return strip_user_details(logged_in_person)
 
 
-@router.get('/api/checkUsernameAvailability')
+@router.get('/api/auth/checkUsernameAvailability')
 def check_username_availability(username: str) -> bool:
     """
     Check whether username is available, or already taken.
@@ -60,7 +60,7 @@ def check_username_availability(username: str) -> bool:
     return user is None
 
 
-@router.post('/api/temporaryRegister')
+@router.post('/api/auth/temporaryRegister')
 def register(credentials: register_temp_post, response: Response) -> Optional[Person]:
     """
     Register given user as anonymous (temporary) user account.
@@ -80,7 +80,7 @@ def register(credentials: register_temp_post, response: Response) -> Optional[Pe
     return strip_user_details(new_user)
 
 
-@router.post('/api/register')
+@router.post('/api/auth/register')
 def register(credentials: register_post, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[
     Person]:
     """
@@ -129,12 +129,12 @@ def register(credentials: register_post, response: Response, session_cookie: Opt
         return strip_user_details(logged_in_user)
 
 
-@router.post('/api/logout')
+@router.post('/api/auth/logout')
 def logout(response: Response) -> None:
     response.delete_cookie(key='session_cookie')
 
 
-@router.get('/api/userInfo')
+@router.get('/api/auth/userInfo')
 def user_info(response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Person]:
     """
     Get info about currently logged in user.
