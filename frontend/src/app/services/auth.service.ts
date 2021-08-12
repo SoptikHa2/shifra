@@ -78,9 +78,16 @@ export class AuthService {
    * @param email
    * @param password
    */
-  register(username: string, email: string, password: string): Promise<boolean> {
-    // todo: implement
-    return new Promise<boolean>(resolve => true);
+  async register(username: string, email: string, password: string): Promise<boolean> {
+    if (this.user.value == null) {
+      this.error = "to early";
+      return new Promise(() => false);
+    }
+
+    const result = this.http.post<HttpResponse<Person>>(environment.backendUrl + '/api/auth/register', {username, email, password});
+    return result.pipe(
+      tap(this.evaluatePersonResponse),
+      map(r => r.ok)).toPromise();
   }
 
   /**
