@@ -93,8 +93,20 @@ export class AuthService {
   /**
    * logout user
    */
-  logout() {
-    // todo: implement
+  async logout(): Promise<void> {
+    if (this.user.value == null) {
+      this.error = "to early";
+      return new Promise(() => false);
+    }
+
+    return this.http.post<HttpResponse<any>>(environment.backendUrl + '/api/auth/logout', {})
+      .pipe(
+        tap(r => {
+          if (r.ok) this.user.next({loggedIn: false, person: {nickname: ""}});
+        }),
+        map(() => {})
+      )
+      .toPromise();
   }
 
   /**
