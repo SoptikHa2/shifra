@@ -4,7 +4,6 @@ from typing import Optional
 from pydantic import BaseModel
 
 from api.logic import user_management
-from api.logic.utility import strip_user_details
 from routes import Person
 
 router = APIRouter()
@@ -43,10 +42,11 @@ def login(credentials: login_post, response: Response) -> Optional[Person]:
                             httponly=True)
         response.status_code = 200
         # Strip logged_in_person details
+        logged_in_person.strip()
     else:
         response.status_code = 401
 
-    return strip_user_details(logged_in_person)
+    return logged_in_person
 
 
 @router.get('/api/auth/checkUsernameAvailability')
@@ -76,8 +76,9 @@ def register(credentials: register_temp_post, response: Response) -> Optional[Pe
         response.set_cookie(key='session_cookie', value=new_user.session_cookie, secure=True, samesite='Strict',
                             httponly=True)
         response.status_code = 201
+        new_user.strip()
 
-    return strip_user_details(new_user)
+    return new_user
 
 
 @router.post('/api/auth/register')
@@ -114,19 +115,22 @@ def register(credentials: register_post, response: Response, session_cookie: Opt
             return None
         else:
             response.status_code = 201
-            return strip_user_details(new_user)
+            new_user.strip()
+            return new_user
     else:
         # User already exists, check if it is temp account
         if logged_in_user.mail is not None and logged_in_user.password is not None:
             # User can log in! It's not temporary account.
             response.status_code = 400
-            return strip_user_details(logged_in_user)
+            logged_in_user.strip()
+            return logged_in_user
         # User already exists and it is temp account. Provided username will be ignored.
         # Upgrade user account.
         logged_in_user.mail = credentials.email
         logged_in_user.password = user_management.hash_password(logged_in_user.nickname, credentials.password)
         user_management.updatePerson(logged_in_user.person_id, logged_in_user)
-        return strip_user_details(logged_in_user)
+        logged_in_user.strip()
+        return logged_in_user
 
 
 @router.post('/api/auth/logout')
@@ -139,7 +143,9 @@ def user_info(response: Response, session_cookie: Optional[str] = Cookie(None)) 
     """
     Get info about currently logged in user.
     """
-    user = strip_user_details(user_management.get_user_by_token(session_cookie))
+    user = user_management.get_user_by_token(session_cookie)
     if user is None:
         response.status_code = 404
+    else:
+        user.strip()
     return user
