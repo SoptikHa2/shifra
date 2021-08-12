@@ -4,6 +4,7 @@ import {BehaviorSubject} from "rxjs";
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {map, tap} from "rxjs/operators";
 import {environment} from "../../environments/environment";
+import * as http from "http";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class AuthService {
    * @param password
    */
   async login(username: string, password: string): Promise<boolean> {
-    const response = this.http.post<HttpResponse<Person>>(environment.backendUrl + '/api/login', {username, password});
+    const response = this.http.post<HttpResponse<Person>>(environment.backendUrl + '/api/auth/login', {username, password});
 
     return response.pipe(
       tap(r => {
@@ -37,8 +38,8 @@ export class AuthService {
    * @param username
    */
   async checkUserAvailability(username: string): Promise<boolean> {
-    // todo: implement
-    return new Promise(resolve => true);
+    const result = this.http.get<HttpResponse<any>>(environment.backendUrl + '/api/auth/checkUsernameAvailability', {params: {username}})
+    return result.pipe(map(r => r.body)).toPromise();
   }
 
   /**
@@ -46,8 +47,12 @@ export class AuthService {
    * @param username
    */
   async registerTemporary(username: string): Promise<boolean> {
-    // todo: implement
-    return new Promise(resolve => true);
+    const result = this.http.post<HttpResponse<Person>>(environment.backendUrl + '/api/auth/temporaryRegister', {username});
+    return result.pipe(
+      tap(r => {
+        if (r.ok) this.user.next(r.body);
+      }),
+      map(r => r.ok)).toPromise();
   }
 
   /**
