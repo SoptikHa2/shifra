@@ -1,7 +1,9 @@
+from typing import Optional
+
 from . import DBConn
 from .DBConn import *
 from fastapi import APIRouter
-from routes import Cipher_game
+from routes import CipherGame, cipher_game_from_db_row
 
 
 router = APIRouter()
@@ -79,3 +81,21 @@ def is_visible(cipher_game_id: int):
         return False
     return bool(result)
 
+
+def get_all_cipher_games() -> [CipherGame]:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT * FROM cipher_game;")
+            result = cur.fetchall()
+            return [cipher_game_from_db_row(x) for x in result]
+
+
+def get_visible_games(user_id: Optional[int]) -> [CipherGame]:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            # Everything visible to normal users
+            cur.execute("SELECT * FROM cipher_game cg WHERE cg.visible_from < now() UNION SELECT cg.* FROM "
+                        "cipher_game cg JOIN cipher_game_person cgp ON cgp.cipher_game_id = cg.cipher_game_id AND "
+                        "cgp.person_id = %s;", (user_id if user_id is not None else -1,))
+            result = cur.fetchall()
+            return [cipher_game_from_db_row(x) for x in result]

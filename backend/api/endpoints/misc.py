@@ -1,4 +1,5 @@
 import io
+import subprocess
 import qrcode
 import qrcode.image.svg
 from fastapi import APIRouter
@@ -31,3 +32,11 @@ def genQR(teamCode: str):
 
     # Save the image into fastapi response stream
     return StreamingResponse(stream, media_type="image/svg")
+
+
+@router.get('/version')
+def version():
+    """
+    Return current git version running
+    """
+    return subprocess.check_output(["git", "describe", "--always"]).strip()
