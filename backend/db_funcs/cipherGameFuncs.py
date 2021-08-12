@@ -51,7 +51,7 @@ def get_visible_games(user_id: Optional[int]) -> [CipherGame]:
         with DB_conn.getCursor(connection) as cur:
             # Everything visible to normal users
             cur.execute("SELECT * FROM cipher_game cg WHERE cg.visible_from < now() UNION SELECT cg.* FROM "
-                        "cipher_game cg JOIN cipher_game_person cgp ON cgp.cipher_game_id = cg.cipher_game_id AND "
+                        "cipher_game cg JOIN cipher_game_admin cgp ON cgp.cipher_game_id = cg.cipher_game_id AND "
                         "cgp.person_id = %s;", (user_id if user_id is not None else -1,))
             result = cur.fetchall()
             return [cipher_game_from_db_row(x) for x in result]
