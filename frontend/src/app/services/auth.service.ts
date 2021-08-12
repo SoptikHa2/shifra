@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Person} from "../model/person";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, Observable, of} from "rxjs";
 import {HttpClient, HttpResponse} from "@angular/common/http";
-import {map, tap} from "rxjs/operators";
+import {catchError, map, tap} from "rxjs/operators";
 import {environment} from "../../environments/environment";
 
 type userModel = {
@@ -19,7 +19,7 @@ export class AuthService {
   error: "to early" | undefined;
 
   constructor(private http: HttpClient) {
-    this.userInfo();
+    //this.userInfo();
   }
 
   /**
@@ -34,12 +34,13 @@ export class AuthService {
       return new Promise(() => false);
     }
 
-    const response = this.http.post<HttpResponse<Person>>(environment.backendUrl + '/api/auth/login', {username, password});
+    const result = this.http.post<Person>(environment.backendUrl + '/api/auth/login', {username, password});
+    const userObs = this.evaluatePersonResponse(result);
 
-    return response.pipe(
-      tap(this.evaluatePersonResponse),
-      map(r => r.ok))
-      .toPromise();
+    return userObs.pipe(
+      tap(u => this.user.next(u)),
+      map(u => u.loggedIn)
+    ).toPromise();
   }
 
   /**
@@ -49,11 +50,12 @@ export class AuthService {
   async checkUserAvailability(username: string): Promise<boolean> {
     if (this.user.value == null) {
       this.error = "to early";
+      console.error("chyby");
       return new Promise(() => false);
     }
 
-    const result = this.http.get<HttpResponse<any>>(environment.backendUrl + '/api/auth/checkUsernameAvailability', {params: {username}})
-    return result.pipe(map(r => r.body)).toPromise();
+    const result = this.http.get<boolean>(environment.backendUrl + '/api/auth/checkUsernameAvailability', {params: {username}})
+    return result.toPromise();
   }
 
   /**
@@ -66,10 +68,12 @@ export class AuthService {
       return new Promise(() => false);
     }
 
-    const result = this.http.post<HttpResponse<Person>>(environment.backendUrl + '/api/auth/temporaryRegister', {username});
-    return result.pipe(
-      tap(this.evaluatePersonResponse),
-      map(r => r.ok)).toPromise();
+    const result = this.http.post<Person>(environment.backendUrl + '/api/auth/temporaryRegister', {username});
+    const userObs = this.evaluatePersonResponse(result);
+    return userObs.pipe(
+      tap(u => this.user.next(u)),
+      map(u => u.loggedIn)
+    ).toPromise();
   }
 
   /**
@@ -84,45 +88,50 @@ export class AuthService {
       return new Promise(() => false);
     }
 
-    const result = this.http.post<HttpResponse<Person>>(environment.backendUrl + '/api/auth/register', {username, email, password});
-    return result.pipe(
-      tap(this.evaluatePersonResponse),
-      map(r => r.ok)).toPromise();
+    const result = this.http.post<Person>(environment.backendUrl + '/api/auth/register', {username, email, password});
+    const userObs = this.evaluatePersonResponse(result)
+    return userObs.pipe(
+        tap(u => this.user.next(u)),
+        map(u => u.loggedIn)
+      ).toPromise();
   }
 
   /**
    * logout user
    */
-  async logout(): Promise<void> {
+  async logout(): Promise<boolean> {
     if (this.user.value == null) {
       this.error = "to early";
       return new Promise(() => false);
     }
 
-    return this.http.post<HttpResponse<any>>(environment.backendUrl + '/api/auth/logout', {})
-      .pipe(
-        tap(r => {
-          if (r.ok) this.user.next({loggedIn: false, person: {nickname: ""}});
-        }),
-        map(() => {})
-      )
-      .toPromise();
+    return this.transformToSuccessObservable(
+      this.http.post(environment.backendUrl + '/api/auth/logout', {})
+        .pipe(
+          tap(() => this.user.next({loggedIn: false, person: {nickname: ""}})),
+        )
+    ).toPromise();
   }
 
   /**
    * get info about already logged user
    */
   userInfo() {
-    this.http.get<HttpResponse<Person>>(environment.backendUrl + '/api/auth/userInfo')
-      .subscribe(this.evaluatePersonResponse);
+    this.evaluatePersonResponse(this.http.get<Person>(environment.backendUrl + '/api/auth/userInfo'))
   }
 
   /**
    * sets up the user behavior subject.
-   * @param response
    * @private
+   * @param res
    */
-  private evaluatePersonResponse(response: HttpResponse<Person>) {
-      this.user.next({loggedIn: response.ok, person: response.body as Person});
+  private evaluatePersonResponse(res: Observable<Person | null>): Observable<userModel> {
+    return res.pipe(
+      map(person => ({loggedIn: true, person: person as Person})),
+      catchError(() => of({loggedIn: false, person: {nickname: ""}})));
+  }
+
+  private transformToSuccessObservable(obs: Observable<any>): Observable<boolean> {
+    return obs.pipe(map(() => true), catchError(() => of(false)));
   }
 }
