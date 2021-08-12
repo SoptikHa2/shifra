@@ -22,8 +22,14 @@ export class AuthService {
    * @param password
    */
   async login(username: string, password: string): Promise<boolean> {
-    // todo: implement
-    return new Promise(resolve => true);
+    const response = this.http.post<HttpResponse<Person>>(environment.backendUrl + '/api/login', {username, password});
+
+    return response.pipe(
+      tap(r => {
+        if (r.ok) this.user.next(r.body)
+      }),
+      map(r => r.ok))
+      .toPromise();
   }
 
   /**
