@@ -1,3 +1,5 @@
+BEGIN TRANSACTION;
+
 -- Remove conflicting tables
 DROP TABLE IF EXISTS attempt CASCADE;
 DROP TABLE IF EXISTS cipher CASCADE;
@@ -42,7 +44,7 @@ ALTER TABLE cipher ADD CONSTRAINT pk_cipher PRIMARY KEY (cipher_id);
 
 CREATE TABLE cipher_game (
     cipher_game_id SERIAL NOT NULL,
-    cipher_id INTEGER,
+    time_starting_cipher_id INTEGER,
     name VARCHAR(256) NOT NULL,
     description VARCHAR(256) NOT NULL,
     visible_from TIMESTAMP NOT NULL,
@@ -105,7 +107,7 @@ ALTER TABLE team_member ADD CONSTRAINT pk_team_member PRIMARY KEY (person_id, te
 CREATE TABLE hint_used (
     hint_id INTEGER NOT NULL,
     team_id INTEGER NOT NULL
-)
+);
 ALTER TABLE hint_used ADD CONSTRAINT pk_hint_used PRIMARY KEY (hint_id, team_id);
 
 ALTER TABLE attempt ADD CONSTRAINT fk_attempt_cipher FOREIGN KEY (cipher_id) REFERENCES cipher (cipher_id) ON DELETE CASCADE;
@@ -114,7 +116,7 @@ ALTER TABLE attempt ADD CONSTRAINT fk_attempt_team FOREIGN KEY (team_id) REFEREN
 ALTER TABLE cipher ADD CONSTRAINT fk_cipher_cipher_game FOREIGN KEY (cipher_game_id) REFERENCES cipher_game (cipher_game_id) ON DELETE CASCADE;
 ALTER TABLE cipher ADD CONSTRAINT fk_cipher_cipher FOREIGN KEY (req_cipher_id) REFERENCES cipher (cipher_id) ON DELETE CASCADE;
 
-ALTER TABLE cipher_game ADD CONSTRAINT fk_cipher_game_cipher FOREIGN KEY (cipher_id) REFERENCES cipher (cipher_id) ON DELETE CASCADE;
+ALTER TABLE cipher_game ADD CONSTRAINT fk_cipher_game_cipher FOREIGN KEY (time_starting_cipher_id) REFERENCES cipher (cipher_id) ON DELETE CASCADE;
 
 ALTER TABLE hint ADD CONSTRAINT fk_hint_cipher FOREIGN KEY (cipher_id) REFERENCES cipher (cipher_id) ON DELETE CASCADE;
 
@@ -129,3 +131,5 @@ ALTER TABLE team_member ADD CONSTRAINT fk_team_member_t FOREIGN KEY (team_id) RE
 
 ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_h FOREIGN KEY (hint_id) REFERENCES hint (hint_id) ON DELETE CASCADE;
 ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
+
+COMMIT;
