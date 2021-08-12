@@ -113,7 +113,8 @@ export class AuthService {
    * get info about already logged user
    */
   userInfo() {
-    // todo: implement
+    this.http.get<HttpResponse<Person>>(environment.backendUrl + '/api/auth/userInfo')
+      .subscribe(this.evaluatePersonResponse);
   }
 
   /**
