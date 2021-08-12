@@ -1,5 +1,5 @@
 export interface Person {
-  is_root: boolean;
+  is_root?: boolean;
   nickname: string;
-  mail: string;
+  mail?: string;
 }
