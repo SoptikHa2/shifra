@@ -56,6 +56,8 @@ def getCipherGames():
 
 
 def get_cipher_game(cipher_game_id: int):
+    if not is_visible(cipher_game_id):
+        return None
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
