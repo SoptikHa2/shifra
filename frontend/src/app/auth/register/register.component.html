@@ -1,1 +1,27 @@
-<p>register works!</p>
+<mat-form-field appearance="outline">
+  <mat-label>Uživatelské jméno</mat-label>
+  <input matInput>
+</mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Email</mat-label>
+  <input matInput>
+</mat-form-field>
+<div class="password-form-fields">
+  <mat-form-field appearance="outline">
+    <mat-label>Heslo</mat-label>
+    <input matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Heslo znovu</mat-label>
+    <input matInput>
+  </mat-form-field>
+</div>
+<div>
+  <button mat-raised-button color="primary">
+    Přihlásit se
+  </button>
+  <button mat-button color="accent" [routerLink]="['/auth/register']">
+    Nemám účet
+  </button>
+</div>
+
