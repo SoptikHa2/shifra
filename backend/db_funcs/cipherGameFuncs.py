@@ -2,6 +2,7 @@ from . import DBConn
 from .DBConn import *
 from fastapi import APIRouter
 from routes import Cipher_game
+from routes.stats import Stat
 
 
 router = APIRouter()
@@ -67,26 +68,55 @@ def getCipherGame(cipher_game_id: int):
 
 
 def is_visible(cipher_game_id: int):
-    timestamp = datetime.now()
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
-                cur.execute("SELECT * FROM cipher_game WHERE visible_from >=  %s AND cipher_game_id = %s;", (timestamp,cipher_game_id))
+                cur.execute("SELECT * FROM cipher_game WHERE visible_from <=  NOW() AND cipher_game_id = %s;", cipher_game_id)
                 result = cur.fetchall()
     except:
         return False
     return bool(result)
 
 
-def get_leaderboard(cipher_game_id: int):
-    if not is_visible(cipher_game_id):
-        return None
-    try:
-        with DB_conn.getConn(connection):
-            with DB_conn.getCursor(connection) as cur:
-                cur.execute("SELECT t.team_id, t.name, SUM(c.score) FROM team t JOIN attempt a ON a.team_id = t.team_id AND a.is_successful = TRUE JOIN cipher c ON c.cipher_id = a.cipher_id AND c.cipher_game_id = %s GROUP BY t.team_id, t.name, c.score;", cipher_game_id)
-                result = cur.fetchall()
-    except:
-        return None
+def is_staff(cipher_game_id: int, user_id: int) -> bool:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT * FROM cipher_game_admin ca WHERE ca.cipher_game_id < %s AND ca.person_id = %s;", (cipher_game_id, user_id))
+            result = cur.fetchall()
+            return bool(result)
+
+
+# TODO: Add stats to list, sort function...
+def get_leaderboard(cipher_game_id: int) -> [Stat]:
+    teams = get_all_teams(cipher_game_id)
+    result = [Stat(x.team_id, x.name, cipher_game_id) for x in teams]
+    result.sort()
     return result
 
+
+def get_cipher_count(cipher_game_id: int) -> int:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute(
+                "SELECT COUNT(1) FROM cipher_game cg WHERE cg.cipher_game_id = %s JOIN cipher ON cipher.cipher_game_id = cg.cipher_game_id;",
+                cipher_game_id)
+            count = cur.fetchall()[0]
+            return count
+
+
+def get_start_cipher(cipher_game_id: int) -> int:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute(
+                "SELECT cg.time_starting_cipher_id FROM cipher_game cg WHERE cg.cipher_game_id = %s;", cipher_game_id)
+            id = cur.fetchall()[0]
+            return (id if id is not None else -1)
+
+
+def get_all_teams(cipher_game_id: int) -> [int]:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute(
+                "SELECT cgt.team_id FROM cipher_game_team cgt WHERE cgt.cipher_game_id = %s;", cipher_game_id)
+            teams = cur.fetchall()
+            return teams
