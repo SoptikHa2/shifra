@@ -14,7 +14,7 @@ def get_visible_ciphers(cipher_game_id: int, response: Response, session_cookie:
         response.status_code = 401
         return {"result": "user is not authorized"}
     
-    if cipherGameFuncs.is_game_organizer(cipher_game_id, user.person_id) or user.is_root:
+    if cipherGameFuncs.is_staff(cipher_game_id, user.person_id) or user.is_root:
         visible_ciphers = cipherGameFuncs.get_all_ciphers(cipher_game_id)
     else:
         visible_ciphers = cipherGameFuncs.get_visible_ciphers(cipher_game_id, user.person_id)
@@ -23,5 +23,6 @@ def get_visible_ciphers(cipher_game_id: int, response: Response, session_cookie:
         response.status_code = 400
         return {"result": "error occured"}
     response.status_code = 200
-    return visible_ciphers
+    result = [x.stip() for x in visible_ciphers]
+    return result
 
