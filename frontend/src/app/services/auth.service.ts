@@ -131,6 +131,12 @@ export class AuthService {
       catchError(() => of({loggedIn: false, person: {nickname: ""}})));
   }
 
+  /**
+   * Transforms Observable<any> to Observable<boolean>
+   * where boolean is success
+   * @param obs
+   * @private
+   */
   private transformToSuccessObservable(obs: Observable<any>): Observable<boolean> {
     return obs.pipe(map(() => true), catchError(() => of(false)));
   }
