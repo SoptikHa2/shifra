@@ -77,7 +77,7 @@ def is_staff(cipher_game_id: int, user_id: int) -> bool:
 def get_visible_ciphers(cipher_game_id: int, user_id: int) -> [Cipher]:
     with DB_conn.getConn(connection):
      	with DB_conn.getCursor(connection) as cur:
-            cur.execute("SELECT cipher.cipher_id FROM cipher WHERE cipher_game_id = %s MINUS SELECT cipher.cipher_id FROM cipher WHERE cipher_game_id = %s AND req_cipher_id NOT IN (SELECT * FROM cipher JOIN attempt ON cipher.cipher_game_id = %s AND attempt.cipher_id = cipher.cipher_id AND attempt.is_successful = TRUE JOIN team ON team.team_id = attempt.team_id JOIN person_team ON person_team.team_id = team.team_id AND person_team.person_id = %s));", (cipher_game_id, cipher_game_id, cipher_game_id , cipher_game_id, user_id))
+            cur.execute("SELECT cipher.cipher_id FROM cipher WHERE cipher_game_id = %s MINUS SELECT cipher.cipher_id FROM cipher WHERE cipher_game_id = %s AND req_cipher_id NOT IN (SELECT * FROM cipher JOIN attempt ON cipher.cipher_game_id = %s AND attempt.cipher_id = cipher.cipher_id AND attempt.is_successful = TRUE JOIN team ON team.team_id = attempt.team_id JOIN team_member ON team_member.team_id = team.team_id AND team_member.person_id = %s));", (cipher_game_id, cipher_game_id, cipher_game_id , cipher_game_id, user_id))
             result = cur.fetchall()
             return [cipher_from_db_row(x) for x in result]
 
