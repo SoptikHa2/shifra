@@ -63,3 +63,4 @@ def is_staff(cipher_game_id: int, user_id: int) -> bool:
             cur.execute("SELECT * FROM cipher_game_admin ca WHERE ca.cipher_game_id < %s AND ca.person_id = %s;", (cipher_game_id, user_id))
             result = cur.fetchall()
             return bool(result)
+
