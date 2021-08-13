@@ -55,3 +55,11 @@ def get_visible_games(user_id: Optional[int]) -> [CipherGame]:
                         "cgp.person_id = %s;", (user_id if user_id is not None else -1,))
             result = cur.fetchall()
             return [cipher_game_from_db_row(x) for x in result]
+
+
+def is_staff(cipher_game_id: int, user_id: int):
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT * FROM cipher_game_admin ca WHERE ca.cipher_game_id < %s AND ca.person_id = %s;", (cipher_game_id, user_id))
+            result = cur.fetchall()
+            return bool(result)

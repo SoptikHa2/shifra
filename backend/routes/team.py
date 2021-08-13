@@ -8,8 +8,9 @@ class Team(BaseModel):
     invite_code: str
     approved: bool
 
-    #def __init__(self, team_id: int, name: str, invite_code: str, approved: bool):
-    #    self.team_id = team_id
-    #    self.name = name
-    #    self.invite_code = invite_code
-    #    self.approved = approved
+    def strip(self):
+        team_id = None
+        return self
+
+def team_from_db_row(row) -> Team:
+    return Team(team_id=row[0], name=row[1], invite_code=row[2], approved=row[3])

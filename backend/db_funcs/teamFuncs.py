@@ -1,7 +1,8 @@
 from . import DBConn
 from .DBConn import *
 from fastapi import APIRouter
-from routes import Team
+from routes import Team, team_from_db_row
+from typing import Optional
 
 router = APIRouter()
 
@@ -91,24 +92,26 @@ def getTeams():
         return {"result": "error"}
     return result
 
-def is_in_team(team_id: int, user_id: int):
-    try:
-        with DB_conn.getConn(connection):
-            with DB_conn.getCursor(connection) as cur:
-                cur.execute("SELECT * FROM person_team WHERE person_team.team_id = %s AND person_team.person_id = %s;",(team_id, user_id))
-                result = cur.fetchall()
-    except:
-        return False
-    return bool(result)
 
-def get_team_info(team_id: int, user_id: int, is_root: bool):
-    if not is_root and not is_is_teeam(team_id, user_id):
-        return None
-    try:
-        with DB_conn.getConn(connection):
-            with DB_conn.getCursor(connection) as cur:
-                cur.execute("SELECT * FROM team WHERE team.team_id = %s;", team_id)
-                result = cur.fetchall()
-    except:
-        return None
-    return result
+def is_in_team(team_id: int, user_id: int) -> bool:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT * FROM person_team WHERE person_team.team_id = %s AND person_team.person_id = %s;",(team_id, user_id))
+            result = cur.fetchall()
+            return bool(result)
+
+
+def get_team_info(team_id: int) -> Optional[Team]:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT * FROM team WHERE team.team_id = %s;", team_id)
+            result = cur.fetchall()
+            return [team_from_db_row(x) for x in result]
+
+
+def get_game_id(team_id: int) -> int:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT cgt.cipher_game_id FROM cipher_game_team cgt WHERE cgt.team_id = %s;", team_id)
+            result = cur.fetchone()[0]
+            return int(result)
