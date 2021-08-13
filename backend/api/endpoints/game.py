@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response, Cookie
 from typing import Optional
 
-from user import user_management
+from .user import user_management
 from db_funcs import *
 from routes import *
 
