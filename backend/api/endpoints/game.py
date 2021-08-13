@@ -1,37 +1,56 @@
 from fastapi import APIRouter, Response, Cookie
 from typing import Optional
 
-from db_funcs import cipherGameFuncs
+from user import user_management
+from db_funcs import *
+from routes import *
 
 router = APIRouter()
 
 @router.get("/api/game/{cipher_game_id}")
-def get_game_by_id(cipher_game_id: int, response: Response):
-    game = cipherGameFuncs.get_ciphergame(cipher_game_id)
+def get_game_by_id(cipher_game_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+        Try show information about given game
+
+        :param cipher_game_id: Game id to use
+        :return 200 Everything was OK
+                400 Game doesn't exists
+                401 No permissions
+    """
+
+    user = user_management.get_user_by_token(session_cookie)
+    game = cipherGameFuncs.get_cipher_game(cipher_game_id)
     if game is None:
         response.status_code = 400
-        return {"result": "error occured"}
+        return None
+
+    if not is_visible(cipher_game_id) and not is_staff(cipher_game_id, user.person_id):
+        response.status_code = 401
+        return None
     else:
         response.status_code = 200
     return game
 
 
 @router.get("/api/games")
-def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(None)):
+def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(None)) -> [CipherGame]:
     user = user_management.get_user_by_token(session_cookie)
     if user is None:
         response.status_code = 401
         return None
+
     if user.is_root:
         games = get_all_cipher_games()
+        result = [x.strip() for x in games]
     else:
         # Get all games, that are visible to public at the moment,
         # or user is admin of the given game.
         games = get_visible_games(user.person_id)
+        result = [x.strip() for x in games]
     if games is None:
         response.status_code = 400
         return None
     else:
         response.status_code = 200
-    return games
+    return result
 

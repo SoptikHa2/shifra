@@ -42,7 +42,7 @@ def delete_cipher_game(cipher_game_id: int):
     return {"result": success}
 
 
-def get_cipher_games():
+def get_cipher_games() -> CipherGame:
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
             cur.execute("SELECT * FROM cipher_game;")
@@ -50,7 +50,7 @@ def get_cipher_games():
     return result
 
 
-def get_cipher_game(cipher_game_id: int):
+def get_cipher_game(cipher_game_id: int) -> Optional[CipherGame]:
     if not is_visible(cipher_game_id):
         return None
     with DB_conn.getConn(connection):
@@ -60,12 +60,11 @@ def get_cipher_game(cipher_game_id: int):
     return result
 
 
-def is_visible(cipher_game_id: int):
-    timestamp = datetime.now()
+def is_visible(cipher_game_id: int) -> bool:
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
-                cur.execute("SELECT * FROM cipher_game WHERE visible_from >=  %s AND cipher_game_id = %s;", (timestamp,cipher_game_id))
+                cur.execute("SELECT * FROM cipher_game WHERE visible_from <=  NOW() AND cipher_game_id = %s;", cipher_game_id)
                 result = cur.fetchall()
     except:
         return False
@@ -79,5 +78,22 @@ def get_visible_games(user_id: Optional[int]) -> [CipherGame]:
             cur.execute("SELECT * FROM cipher_game cg WHERE cg.visible_from < now() UNION SELECT cg.* FROM "
                         "cipher_game cg JOIN cipher_game_admin cgp ON cgp.cipher_game_id = cg.cipher_game_id AND "
                         "cgp.person_id = %s;", (user_id if user_id is not None else -1,))
+            result = cur.fetchall()
+            return [cipher_game_from_db_row(x) for x in result]
+
+
+def is_staff(cipher_game_id: int, user_id: int) -> bool:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT * FROM cipher_game_admin ca WHERE ca.cipher_game_id < %s AND ca.person_id = %s;", (cipher_game_id, user_id))
+            result = cur.fetchall()
+            return bool(result)
+
+
+def get_all_cipher_games () -> [CipherGame]:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            # Everything visible to normal users
+            cur.execute("SELECT * FROM cipher_game cg;")
             result = cur.fetchall()
             return [cipher_game_from_db_row(x) for x in result]
