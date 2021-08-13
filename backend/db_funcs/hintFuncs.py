@@ -1,7 +1,8 @@
 from . import DBConn
 from .DBConn import *
 from fastapi import APIRouter
-from routes import Hint
+from routes import Hint, hint_from_db_row
+from typing import Optional
 
 router = APIRouter()
 
@@ -42,14 +43,11 @@ def deleteHint(hint_id: int):
 
 
 def get_hint(hint_id: int):
-    try:
-        with DB_conn.getConn(connection):
-            with DB_conn.getCursor(connection) as cur:
-                cur.execute("SELECT * FROM hint WHERE hint_id = %s;", (hint_id,))
-                result = cur.fetchall()[0]
-    except:
-        return None
-    return result
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT * FROM hint WHERE hint_id = %s;", (hint_id,))
+            result = cur.fetchall()[0]
+            return hint_from_db_row(result)
 
 
 def getHints():
@@ -61,3 +59,34 @@ def getHints():
     except:
         return {"result": "error"}
     return result
+
+
+def get_cipher_id(hint_id: int) -> Optional[int]:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT hint.cipher_id FROM hint WHERE h.hint_id = %s LIMIT 1;", hint_id)
+            result = cur.fetchall()[0]
+            if int(result):
+                return int(result)
+            return None
+
+
+def get_game_id_by_hint (hint_id: int) -> Optional[int]:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT cipher.cipher_game_id FROM cipher WHERE EXISTS (SELECT * FROM hint h WHERE h.hint_id = %s) LIMIT 1;", hint_id)
+            result = cur.fetchall()[0]
+            if int(result):
+                return int(result)
+            return None
+
+
+def insert_used_hint(hint_id: int, team_id: int):
+    try:
+        with DB_conn.getConn(connection):
+            with DB_conn.getCursor(connection) as cur:
+                cur.execute("INSERT INTO hint_used(hint_id, team_id) VALUES(%s, %s);", (hint_id, team_id))
+                hint_id = cur.fetchone()[0]
+    except:
+        return {"result": "error"}
+    return {"result": "inserted"}

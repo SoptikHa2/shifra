@@ -90,3 +90,11 @@ def getTeams():
     except:
         return {"result": "error"}
     return result
+
+
+def get_users_team (user_id: int) -> int:
+    with DB_conn.getConn(connection):
+        with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT team.team_id FROM team_member WHERE team_member.team_id = %s;", team_id)
+            result = cur.fetchall()[0]
+            return int(result)

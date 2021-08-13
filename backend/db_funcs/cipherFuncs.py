@@ -1,7 +1,7 @@
 from . import DBConn
 from .DBConn import *
 from fastapi import APIRouter
-from routes import Cipher
+from routes import *
 
 router = APIRouter()
 
@@ -62,3 +62,19 @@ def getCipher(cipher_id: int):
     except:
         return {"result": "error"}
     return result
+
+
+def get_visible_ciphers(cipher_game_id: int, user_id: int) -> [Cipher]:
+    with DB_conn.getConn(connection):
+     	with DB_conn.getCursor(connection) as cur:
+            cur.execute("SELECT cipher.cipher_id FROM cipher WHERE cipher_game_id = %s JOIN cipher_game cg ON cg.cipher_game_id = %s AND cg.visible_from <= NOW() MINUS SELECT cipher.cipher_id FROM cipher WHERE cipher_game_id = %s AND req_cipher_id NOT IN (SELECT * FROM cipher JOIN attempt ON cipher.cipher_game_id = %s AND attempt.cipher_id = cipher.cipher_id AND attempt.is_successful = TRUE JOIN team ON team.team_id = attempt.team_id JOIN team_member ON team_member.team_id = team.team_id AND team_member.person_id = %s));", (cipher_game_id, cipher_game_id, cipher_game_id, cipher_game_id , cipher_game_id, user_id))
+            result = cur.fetchall()
+            return [cipher_from_db_row(x) for x in result]
+
+
+def is_cipher_visible (user_id: int, game_id: int, cipher_id: int) -> bool:
+    ciphers = get_visible_ciphers(game_id, user_id)
+    for x in ciphers:
+        if x.cipher_id == cipher_id:
+            return True
+    return False
