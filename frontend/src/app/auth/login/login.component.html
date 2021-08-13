@@ -1,17 +1,26 @@
-<mat-form-field appearance="outline">
-  <mat-label>Uživatelské jméno</mat-label>
-  <input matInput>
-</mat-form-field>
-<mat-form-field appearance="outline">
-  <mat-label>Heslo</mat-label>
-  <input matInput>
-</mat-form-field>
-<div>
-  <button mat-raised-button color="primary">
-    Přihlásit se
-  </button>
-  <button mat-button color="accent" [routerLink]="['/auth/register']">
-    Nemám účet
-  </button>
+<form [formGroup]="loginFormGroup" (ngSubmit)="login()">
+<div class="grow-container label">
+  <h1 class="mat-display-3">Login</h1>
 </div>
-
+  <mat-form-field appearance="outline" class="form-item">
+    <mat-label>Uživatelské jméno</mat-label>
+    <input matInput formControlName="username">
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="form-item">
+    <mat-label>Heslo</mat-label>
+    <input matInput formControlName="password">
+    <mat-error *ngIf="loginFormGroup.errors"> </mat-error>
+  </mat-form-field>
+  <div class="error form-item" *ngIf="error">
+    {{ error }}
+  </div>
+  <div class="buttons">
+    <button mat-raised-button color="primary" type="submit">
+      Přihlásit se
+    </button>
+    <button mat-button color="accent" type="button" routerLink="/auth/register">
+      Nemám účet
+    </button>
+  </div>
+<div class="grow-container"></div>
+</form>
