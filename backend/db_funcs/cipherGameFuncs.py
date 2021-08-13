@@ -66,11 +66,10 @@ def getCipherGame(cipher_game_id: int):
     return result
 
 def is_visible(cipher_game_id: int):
-    timestamp = datetime.now()
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
-                cur.execute("SELECT * FROM cipher_game WHERE visible_from >=  %s AND cipher_game_id = %s;", (timestamp,cipher_game_id))
+                cur.execute("SELECT * FROM cipher_game WHERE visible_from <=  NOW() AND cipher_game_id = %s;",cipher_game_id)
                 result = cur.fetchall()
     except:
         return False
