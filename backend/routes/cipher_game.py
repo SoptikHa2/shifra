@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 
+
 class Cipher_game(BaseModel):
     cipher_game_id: Optional[int] = None
     cipher_id: Optional[int] = None
