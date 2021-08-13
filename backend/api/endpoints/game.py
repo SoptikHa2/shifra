@@ -23,6 +23,6 @@ def get_visible_ciphers(cipher_game_id: int, response: Response, session_cookie:
         response.status_code = 400
         return {"result": "error occured"}
     response.status_code = 200
-    result = [x.stip() for x in visible_ciphers]
+    result = [x.strip() for x in visible_ciphers]
     return result
 
