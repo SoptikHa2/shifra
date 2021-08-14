@@ -11,9 +11,6 @@ router = APIRouter()
 @router.get("/api/games")
 def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(None)):
     user = user_management.get_user_by_token(session_cookie)
-    if user is None:
-        response.status_code = 401
-        return None
     if user.is_root:
         games = get_all_cipher_games()
     else:
