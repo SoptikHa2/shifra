@@ -122,7 +122,7 @@ def get_start_time(cipher_game_id: int, team_id: int) -> datetime:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
                 cur.execute(
-                    "SELECT a.time FROM attempt a WHERE a.team_id = %s ORDER BY a.time ASC;", (team_id, start_cipher))
+                    "SELECT a.time FROM attempt a WHERE a.team_id = %s ORDER BY a.time ASC;", team_id)
                 start_time = cur.fetchall()[0]
                 return start_time
 

@@ -117,6 +117,7 @@ def get_all_teams(cipher_game_id: int) -> [int]:
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
             cur.execute(
-                "SELECT cgt.team_id FROM cipher_game_team cgt WHERE cgt.cipher_game_id = %s;", cipher_game_id)
+                "SELECT t.* FROM cipher_game_team cgt WHERE cgt.cipher_game_id = %s JOIN team t ON t.team_id = cgt.team_id;", cipher_game_id)
             teams = cur.fetchall()
-            return teams
+            return [team_from_db_row(x) for x in teams]
+        
