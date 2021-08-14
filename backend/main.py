@@ -3,28 +3,19 @@
 
 from fastapi import FastAPI
 
-from api.endpoints import user
-from api.endpoints import misc
+from api.endpoints import user, misc, game
 from db_funcs import *
 
 try:
-    connection = DB_conn()
-    if connection.conn is None:
-        raise Exception()
+    DB_conn.initialize()
 except:
     print('database info is not correct or wrong database was chosen')
     exit(-1)
 
-cipherFuncs.connection = connection
-teamFuncs.connection = connection
-cipherGameFuncs.connection = connection
-personFuncs.connection = connection
-hintFuncs.connection = connection
-attemptFuncs.connection = connection
-
 app = FastAPI()
 app.include_router(user.router)
 app.include_router(misc.router)
+app.include_router(game.router)
 
 @app.get('/')
 def root():
