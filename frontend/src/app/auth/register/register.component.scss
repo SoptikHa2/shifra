@@ -1,0 +1,13 @@
+.password-form-fields {
+  width: calc(100% - 256px);
+  mat-form-field {
+    width: calc(50% - 16px);
+    &:first-child {
+      margin-right: 16px;
+    }
+
+    &:last-child {
+      margin-left: 16px;
+    }
+  }
+}
