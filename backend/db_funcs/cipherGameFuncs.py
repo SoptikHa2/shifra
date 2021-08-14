@@ -66,7 +66,7 @@ def getCipherGame(cipher_game_id: int):
     return result
 
 
-def get_cipher_info(cipher_game_id: int, cipher_id: int, is_root: bool ):
+def get_cipher_info(cipher_game_id: int, cipher_id: int, is_root: bool) -> Optional[Cipher]:
     if not is_visible(cipher_game_id) and not is_root:
         return None
     try:
@@ -87,7 +87,7 @@ def is_staff(cipher_game_id: int, user_id: int) -> bool:
             return bool(result)
 
 
-def is_visible(cipher_game_id: int):
+def is_visible(cipher_game_id: int) -> bool:
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
