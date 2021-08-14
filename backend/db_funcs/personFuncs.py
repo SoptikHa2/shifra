@@ -131,5 +131,5 @@ def is_in_game(hint_id: int, user_id: int) -> Optional[int]:
             cur.execute("SELECT team.team_id FROM team t JOIN team_member tm ON tm.team_id = t.team_id AND tm.person_id = %s JOIN cipher_game_team cgt ON cgt.team_id = t.team_id JOIN cipher ON cipher.cipher_game_id = cgt.cipher_game_id JOIN hint h ON h.cipher_id = cipher.cipher_id AND h.hint_id = %s;", ( user_id , hint_id) )
             result = cur.fetchall()[0]
             if int(result):
-                return int(result)
-            return None
+                return True
+            return False
