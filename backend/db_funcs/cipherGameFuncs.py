@@ -97,3 +97,4 @@ def get_all_cipher_games () -> [CipherGame]:
             cur.execute("SELECT * FROM cipher_game cg;")
             result = cur.fetchall()
             return [cipher_game_from_db_row(x) for x in result]
+        
