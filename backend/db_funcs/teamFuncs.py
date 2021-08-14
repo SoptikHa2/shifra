@@ -95,6 +95,6 @@ def getTeams():
 def get_users_team (user_id: int) -> int:
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
-            cur.execute("SELECT team.team_id FROM team_member WHERE team_member.team_id = %s;", team_id)
+            cur.execute("SELECT team.team_id FROM team_member WHERE team_member.person_id = %s;", user_id)
             result = cur.fetchall()[0]
             return int(result)
