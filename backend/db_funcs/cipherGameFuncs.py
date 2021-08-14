@@ -46,6 +46,17 @@ def delete_cipher_game(cipher_game_id: int):
     return {"result": "removed"}
 
 
+def get_all_cipher_games() -> [CipherGame]:
+    try:
+        with Curr_with_conn() as cur:
+            # Everything visible to normal users
+            cur.execute("SELECT * FROM cipher_game cg;")
+            result = cur.fetchall()
+    except:
+        return None
+    return [cipher_game_from_db_row(x) for x in result]
+
+
 def get_visible_games(user_id: Optional[int]) -> [CipherGame]:
     try:
         with Curr_with_conn() as cur:
@@ -55,5 +66,5 @@ def get_visible_games(user_id: Optional[int]) -> [CipherGame]:
                         "cgp.person_id = %s;", (user_id if user_id is not None else -1,))
             result = cur.fetchall()
     except:
-        return {"result": "error"}
+        return None
     return [cipher_game_from_db_row(x) for x in result]
