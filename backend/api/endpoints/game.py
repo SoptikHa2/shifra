@@ -16,9 +16,6 @@ def get_visible_ciphers(cipher_game_id: int, response: Response, session_cookie:
              list of visible ciphers with striped informations
     """
     user = user_management.get_user_by_token(session_cookie)
-    if user is None:
-        response.status_code = 401
-        return None
     
     if cipherGameFuncs.is_staff(cipher_game_id, user.person_id) or user.is_root:
         visible_ciphers = cipherGameFuncs.get_all_ciphers(cipher_game_id)
