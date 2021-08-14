@@ -26,7 +26,7 @@ def get_hint(hint_id: int, response: Response, session_cookie: Optional[str] = C
     game_id = get_game_id_by_hint(hint_id)
     cipher_id = get_cipher_id(hint_id)
     team_id = get_users_team(user.person_id)
-    if is_in_game(hint_id, user.person_id) is not None and is_cipher_visible(user.person_id, game_id, cipher_id):
+    if is_in_game(hint_id, user.person_id) and is_cipher_visible(user.person_id, game_id, cipher_id):
         received_hint = hintFuncs.get_hint(hint_id)
         if received_hint is None:
             response.status_code = 204
