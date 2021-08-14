@@ -167,11 +167,10 @@ def get_time(cipher_game_id: int, team_id: int) -> float:
     if completed_game(cipher_game_id, team_id):
         finish_time = get_finish_time(cipher_game_id, team_id)
         duration_in_s = (finish_time - start_time).total_seconds()
-        return divmod(duration_in_s, 60)[0]
     else:
         actual_time = datetime.now()
         duration_in_s = (actual_time - start_time).total_seconds()
-        return divmod(duration_in_s, 60)[0]
+    return duration_in_s
 
 
 def get_time_penalization(cipher_game_id: int, team_id: int) -> float:
