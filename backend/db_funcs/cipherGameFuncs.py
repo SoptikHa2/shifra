@@ -47,7 +47,7 @@ def get_cipher_games() -> CipherGame:
         with DB_conn.getCursor(connection) as cur:
             cur.execute("SELECT * FROM cipher_game;")
             result = cur.fetchall()
-    return result
+    return [cipher_game_from_db_row(x) for x in result]
 
 
 def get_cipher_game(cipher_game_id: int) -> Optional[CipherGame]:
@@ -57,7 +57,7 @@ def get_cipher_game(cipher_game_id: int) -> Optional[CipherGame]:
         with DB_conn.getCursor(connection) as cur:
             cur.execute("SELECT * FROM cipher_game WHERE cipher_game_id = %s;", (cipher_game_id,))
             result = cur.fetchall()
-    return result
+    return [cipher_game_from_db_row(x) for x in result]
 
 
 def is_visible(cipher_game_id: int) -> bool:
