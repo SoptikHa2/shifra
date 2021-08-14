@@ -27,7 +27,7 @@ ALTER TABLE attempt ADD CONSTRAINT pk_attempt PRIMARY KEY (cipher_id, team_id);
 CREATE TABLE cipher (
     cipher_id SERIAL NOT NULL,
     cipher_game_id INTEGER NOT NULL,
-    req_cipher_id INTEGER NOT NULL,
+    req_cipher_id INTEGER NULL,
     name VARCHAR(256) NOT NULL,
     description VARCHAR(256) NOT NULL,
     solution VARCHAR(256),

@@ -14,6 +14,7 @@ class Person(BaseModel):
         person_id = 0
         session_cookie = None
         password = None
+        return self
 
 
 def person_from_db_row(row) -> Person:
