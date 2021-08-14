@@ -96,7 +96,7 @@ def getTeams():
 def is_in_team(team_id: int, user_id: int) -> bool:
     with DB_conn.getConn(connection):
         with DB_conn.getCursor(connection) as cur:
-            cur.execute("SELECT * FROM person_team WHERE person_team.team_id = %s AND person_team.person_id = %s;",(team_id, user_id))
+            cur.execute("SELECT * FROM team_member WHERE team_member.team_id = %s AND team_member.person_id = %s;",(team_id, user_id))
             result = cur.fetchall()
             return bool(result)
 
