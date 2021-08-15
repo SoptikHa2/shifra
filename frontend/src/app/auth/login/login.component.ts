@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from "../../services/auth.service";
+import {AuthService, errorMessage} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
@@ -9,7 +9,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./login.component.scss', '../auth-common.scss']
 })
 export class LoginComponent implements OnInit {
-  error: string | undefined;
+  error?: errorMessage;
+  loggingIn: boolean = false;
   loginFormGroup: FormGroup;
 
   constructor(
@@ -27,13 +28,17 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    this.loggingIn = true;
     this.authService.login(this.loginFormGroup.value.username, this.loginFormGroup.value.password)
       .then(wasSuccessful => {
         if (wasSuccessful) {
           this.authService.returnFromPromotedLogin();
         } else {
-          // todo: show API error
+          this.error = this.authService.getError();
+          if (this.error == "Nesprávné heslo nebo uživatelské jméno")
+            this.loginFormGroup.reset();
         }
+        this.loggingIn = false;
       });
   }
 }

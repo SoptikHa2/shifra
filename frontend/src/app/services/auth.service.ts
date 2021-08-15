@@ -1,15 +1,21 @@
 import {Injectable} from '@angular/core';
 import {Person} from "../model/person";
-import {BehaviorSubject, Observable, of} from "rxjs";
-import {HttpClient, HttpResponse} from "@angular/common/http";
+import {BehaviorSubject, Observable, of, throwError} from "rxjs";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, map, tap} from "rxjs/operators";
 import {environment} from "../../environments/environment";
 import {Router} from "@angular/router";
 
-type userModel = {
+export type userModel = {
   loggedIn: boolean;
-  person: Person
+  person: Person,
 }
+export type errorMessage = "Zkuste to za chvíly prosím znovu" |
+  "Nesprávné heslo nebo uživatelské jméno" |
+  "Chyba na straně serveru" |
+  "Stala se neočekávaná chyba" |
+  "Již jste přihlášený" |
+  "Uživatelské jméno již někdo používá";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +25,7 @@ export class AuthService {
 
   // If loggedIn is false, value of person is not defined!
   user: BehaviorSubject<userModel | null> = new BehaviorSubject<userModel | null>(null);
-  error: "to early" | undefined;
+  private error?: errorMessage;
 
   constructor(
     private http: HttpClient,
@@ -36,11 +42,21 @@ export class AuthService {
    */
   async login(username: string, password: string): Promise<boolean> {
     if (this.user.value == null) {
-      this.error = "to early";
+      this.error = "Zkuste to za chvíly prosím znovu";
       return new Promise(() => false);
     }
 
-    const result = this.http.post<Person>(environment.backendUrl + '/api/auth/login', {username, password});
+    const result = this.http.post<Person>(environment.backendUrl + '/api/auth/login', {username, password})
+      .pipe(catchError((err: HttpErrorResponse) => {
+        if (err.status == 401) {
+          this.error = "Nesprávné heslo nebo uživatelské jméno"
+        } else if (err.status >= 401 && err.status < 500) {
+          this.error = "Stala se neočekávaná chyba";
+        } else {
+          this.error = "Chyba na straně serveru"
+        }
+        return throwError(err);
+      }));
     const userObs = this.evaluatePersonResponse(result);
 
     return userObs.pipe(
@@ -55,7 +71,7 @@ export class AuthService {
    */
   async checkUserAvailability(username: string): Promise<boolean> {
     if (this.user.value == null) {
-      this.error = "to early";
+      this.error = "Zkuste to za chvíly prosím znovu";
       console.error("chyby");
       return new Promise(() => false);
     }
@@ -70,7 +86,7 @@ export class AuthService {
    */
   async registerTemporary(username: string): Promise<boolean> {
     if (this.user.value == null) {
-      this.error = "to early";
+      this.error = "Zkuste to za chvíly prosím znovu";
       return new Promise(() => false);
     }
 
@@ -90,16 +106,30 @@ export class AuthService {
    */
   async register(username: string, email: string, password: string): Promise<boolean> {
     if (this.user.value == null) {
-      this.error = "to early";
+      this.error = "Zkuste to za chvíly prosím znovu";
       return new Promise(() => false);
     }
 
-    const result = this.http.post<Person>(environment.backendUrl + '/api/auth/register', {username, email, password});
+    const result = this.http.post<Person>(environment.backendUrl + '/api/auth/register', {username, email, password})
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+          if (err.status == 400) {
+            this.error = "Již jste přihlášený"
+          } else if (err.status == 409) {
+            this.error = "Uživatelské jméno již někdo používá";
+          } else if (err.status >= 400 && err.status < 500) {
+            this.error = "Stala se neočekávaná chyba"
+          } else {
+            this.error = "Chyba na straně serveru";
+          }
+          return throwError(err);
+        })
+      );
     const userObs = this.evaluatePersonResponse(result)
     return userObs.pipe(
-        tap(u => this.user.next(u)),
-        map(u => u.loggedIn)
-      ).toPromise();
+      tap(u => this.user.next(u)),
+      map(u => u.loggedIn)
+    ).toPromise();
   }
 
   /**
@@ -107,14 +137,17 @@ export class AuthService {
    */
   async logout(): Promise<boolean> {
     if (this.user.value == null) {
-      this.error = "to early";
+      this.error = "Zkuste to za chvíly prosím znovu";
       return new Promise(() => false);
     }
 
     return this.transformToSuccessObservable(
       this.http.post(environment.backendUrl + '/api/auth/logout', {})
         .pipe(
-          tap(() => this.user.next({loggedIn: false, person: {nickname: ""}})),
+          tap(() => {
+            this.user.next({loggedIn: false, person: {nickname: ""}});
+            this.promptToLogin();
+          }),
         )
     ).toPromise();
   }
@@ -122,6 +155,10 @@ export class AuthService {
   promptToLogin(sw: boolean = true) {
     this.urlBeforePromting = this.router.url;
     this.router.navigate(['auth', (sw ? 'login' : 'register')]).then();
+  }
+
+  setUrlBeforePrompting(url: string) {
+    this.urlBeforePromting = url;
   }
 
   returnFromPromotedLogin() {
@@ -136,6 +173,10 @@ export class AuthService {
   userInfo() {
     this.evaluatePersonResponse(this.http.get<Person>(environment.backendUrl + '/api/auth/userInfo'))
       .subscribe(user => this.user.next(user));
+  }
+
+  getError() {
+    return this.error;
   }
 
   /**
