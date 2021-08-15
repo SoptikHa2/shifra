@@ -8,7 +8,7 @@ import {Router} from "@angular/router";
 
 export type userModel = {
   loggedIn: boolean;
-  person: Person
+  person: Person,
 }
 export type errorMessage = "Zkuste to za chvíly prosím znovu" |
   "Nesprávné heslo nebo uživatelské jméno" |
