@@ -73,7 +73,7 @@ def get_visible_games(user_id: Optional[int]) -> [CipherGame]:
 
 def is_staff(cipher_game_id: int, user_id: int) -> bool:
     with Curr_with_conn() as cur:
-        cur.execute("SELECT * FROM cipher_game_admin ca WHERE ca.cipher_game_id < %s AND ca.person_id = %s;",
+        cur.execute("SELECT * FROM cipher_game_admin ca WHERE ca.cipher_game_id = %s AND ca.person_id = %s;",
                     (cipher_game_id, user_id))
         result = cur.fetchall()
         return bool(result)
