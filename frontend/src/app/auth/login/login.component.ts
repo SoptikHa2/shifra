@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
         if (wasSuccessful) {
           this.authService.returnFromPromotedLogin();
         } else {
-          console.log(this.authService.getError());
+          this.loginFormGroup.reset();
           this.error = this.authService.getError();
         }
         this.loggingIn = false;
