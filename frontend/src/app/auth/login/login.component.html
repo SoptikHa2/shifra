@@ -15,12 +15,12 @@
     {{ error }}
   </div>
   <div class="buttons">
-    <button mat-raised-button color="primary" type="submit">
+    <button mat-raised-button color="primary" type="submit" [disabled]="loggingIn">
       <ng-container *ngIf="!loggingIn; else spinner">
         Přihlásit se
       </ng-container>
       <ng-template #spinner>
-        <mat-spinner style="margin: 5px auto" [diameter]="36" color="accent"></mat-spinner>
+        <mat-spinner style="margin: 5px auto" [diameter]="36"></mat-spinner>
       </ng-template>
     </button>
     <button mat-button color="accent" type="button" routerLink="/auth/register">
