@@ -27,7 +27,7 @@ def get_game_by_id(cipher_game_id: int, response: Response, session_cookie: Opti
 
     if is_visible(cipher_game_id) or user is not None and is_staff(cipher_game_id, user.person_id):
         response.status_code = 200
-        return games.strip()
+        return game.strip()
     else:
         response.status_code = 401
         return None
