@@ -38,11 +38,27 @@ $dark-theme: mat.define-dark-theme((
 
 @mixin background($theme){
   $color-config: mat.get-color-config($theme);
+
+  $warn-palette: map.get($color-config, 'warn');
+
+
   body {
     @if map.get($color-config, 'is-dark') {
       background: #303030;
+      color: #FAFAFA;
     } @else {
       background: #fafafa;
+      color: #303030;
+    }
+  }
+
+  .error {
+    @if map.get($color-config, 'is-dark') {
+      background: mat.get-color-from-palette($warn-palette, 500);
+      color: #FAFAFA;
+    } @else {
+      background: #fafafa;
+      color: mat.get-color-from-palette($warn-palette, 500);
     }
   }
 }
