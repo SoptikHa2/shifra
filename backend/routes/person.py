@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, Any
+from typing import Optional
 
 
 class Person(BaseModel):
@@ -11,9 +11,9 @@ class Person(BaseModel):
     password: Optional[str] = None
 
     def strip(self):
-        person_id = 0
-        session_cookie = None
-        password = None
+        self.person_id = 0
+        self.session_cookie = None
+        self.password = None
         return self
 
 
