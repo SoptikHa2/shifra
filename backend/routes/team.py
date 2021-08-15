@@ -9,7 +9,7 @@ class Team(BaseModel):
     approved: bool
 
     def strip(self):
-        team_id = None
+        self.team_id = None
         return self
 
 
