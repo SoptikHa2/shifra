@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  backendUrl: "" // todo: add url
+  backendUrl: "http://shifra.klubfitpp.cz/"
 };
