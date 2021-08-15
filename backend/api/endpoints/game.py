@@ -7,6 +7,7 @@ from routes import *
 
 router = APIRouter()
 
+
 @router.get("/api/game/{cipher_game_id}")
 def get_game_by_id(cipher_game_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
     """
@@ -24,12 +25,12 @@ def get_game_by_id(cipher_game_id: int, response: Response, session_cookie: Opti
         response.status_code = 400
         return None
 
-    if not is_visible(cipher_game_id) or user is not None and not is_staff(cipher_game_id, user.person_id):
+    if is_visible(cipher_game_id) or user is not None and is_staff(cipher_game_id, user.person_id):
+        response.status_code = 200
+        return games.strip()
+    else:
         response.status_code = 401
         return None
-    else:
-        response.status_code = 200
-    return game
 
 
 @router.get("/api/games")
@@ -43,7 +44,7 @@ def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(Non
         # Get all games, that are visible to public at the moment,
         # or user is admin of the given game.
         games = get_visible_games(user.person_id)
- 
+
     if games is None:
         response.status_code = 400
         return None
