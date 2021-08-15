@@ -19,13 +19,13 @@ class Cipher(BaseModel):
     reference_solution: Optional[str] = None
 
     def strip(self):
-        cipher_id = None
-        cipher_game_id = 0
-        req_cipher_id = None
-        name = None
-        judge = None
-        success_msg = ""
-        reference_solution = None
+        self.cipher_id = None
+        self.cipher_game_id = 0
+        self.req_cipher_id = None
+        self.name = None
+        self.judge = None
+        self.success_msg = ""
+        self.reference_solution = None
         return self
 
 def cipher_from_db_row(row) -> Cipher:
