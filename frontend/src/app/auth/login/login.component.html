@@ -8,7 +8,7 @@
   </mat-form-field>
   <mat-form-field appearance="outline" class="form-item">
     <mat-label>Heslo</mat-label>
-    <input matInput formControlName="password">
+    <input type="password" matInput formControlName="password">
     <mat-error *ngIf="loginFormGroup.errors"> </mat-error>
   </mat-form-field>
   <div class="error form-item" *ngIf="error">
