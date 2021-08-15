@@ -1,8 +1,6 @@
-from . import DBConn
 from .DBConn import *
 from fastapi import APIRouter
 from routes import Person, person_from_db_row
-import hashlib
 from typing import Optional
 
 router = APIRouter()
@@ -28,64 +26,26 @@ def insertPerson(newPerson: Person) -> Optional[int]:
 
 
 def updatePerson(person_id: int, updated_person: Person):
-    """
-
-    :param person_id: id of prson, who should be updated
-    :param updated_person: updated object
-    :return: --What to return? consult with Pavel--
-    """
-    try:
-        with Curr_with_conn() as cur:
-            cur.execute("UPDATE person SET is_root = %s, nickname = %s, session_cookie = %s, mail = %s, password = %s WHERE person_id = %s;",
-                        (updated_person.is_root, updated_person.nickname, updated_person.session_cookie, updated_person.mail, updated_person.password, person_id))
-    except:
-        return {"result": "error"}
-
-    return {"result": "updated"}
+    with Curr_with_conn() as cur:
+        cur.execute("UPDATE person SET is_root = %s, nickname = %s, session_cookie = %s, mail = %s, password = %s WHERE person_id = %s;",
+                    (updated_person.is_root, updated_person.nickname, updated_person.session_cookie, updated_person.mail, updated_person.password, person_id))
 
 
 def deletePerson(person_id: int):
-    """
-
-    :param team_id: id of team, which should be deleted
-    :return: --What to return? consult with Pavel--
-    """
-    try:
-        with Curr_with_conn() as cur:
-            cur.execute("DELETE FROM person WHERE person_id = %s;", (person_id,))
-
-    except:
-        return {"result": "error"}
-
-    return {"result": "removed"}
+    with Curr_with_conn() as cur:
+        cur.execute("DELETE FROM person WHERE person_id = %s;", (person_id,))
 
 def getPerson(person_id: int):
-    """
-
-    :param person_id: id of wanted person
-    :return: person returned by select
-    """
-    try:
-        with Curr_with_conn() as cur:
-            cur.execute("SELECT * FROM person WHERE person_id = %s;", (person_id,))
-            result = cur.fetchall()
-    except:
-        return {"result": "error"}
-
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM person WHERE person_id = %s;", (person_id,))
+        result = cur.fetchall()
     return result
 
 
 def getPersons():
-    """
-
-    :return: persons returned by select
-    """
-    try:
-        with Curr_with_conn() as cur:
-            cur.execute("SELECT * FROM person;")
-            result = cur.fetchall()
-    except:
-        return {"result": "error"}
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM person;")
+        result = cur.fetchall()
     return result
 
 

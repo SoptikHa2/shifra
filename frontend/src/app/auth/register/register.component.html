@@ -1,27 +1,44 @@
-<mat-form-field appearance="outline">
-  <mat-label>Uživatelské jméno</mat-label>
-  <input matInput>
-</mat-form-field>
-<mat-form-field appearance="outline">
-  <mat-label>Email</mat-label>
-  <input matInput>
-</mat-form-field>
-<div class="password-form-fields">
-  <mat-form-field appearance="outline">
-    <mat-label>Heslo</mat-label>
-    <input matInput>
+<form [formGroup]="registerFormGroup" (ngSubmit)="register()">
+  <div class="grow-container label">
+    <h1 class="mat-display-3">Register</h1>
+  </div>
+  <mat-form-field appearance="outline" class="form-item">
+    <mat-label>Uživatelské jméno</mat-label>
+    <input matInput formControlName="username">
+    <mat-error *ngIf="username.invalid"> {{ usernameErrorMessage() }} </mat-error>
   </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Heslo znovu</mat-label>
-    <input matInput>
+  <mat-form-field appearance="outline"  class="form-item">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email">
+    <mat-error *ngIf="email.invalid"> {{ emailErrorMessage() }} </mat-error>
   </mat-form-field>
-</div>
-<div>
-  <button mat-raised-button color="primary">
-    Přihlásit se
-  </button>
-  <button mat-button color="accent" [routerLink]="['/auth/register']">
-    Nemám účet
-  </button>
-</div>
-
+  <div class="password-form-fields form-item">
+    <mat-form-field appearance="outline">
+      <mat-label>Heslo</mat-label>
+      <input type="password" matInput formControlName="password">
+      <mat-error *ngIf="password.invalid"> {{ passwordErrorMessage() }} </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Heslo znovu</mat-label>
+      <input type="password" matInput formControlName="re_password">
+      <mat-error *ngIf="rePassword.invalid"> {{ rePasswordErrorMessage() }} </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="error form-item" *ngIf="error">
+    {{ error }}
+  </div>
+  <div class="buttons">
+    <button mat-raised-button color="primary" type="submit" [disabled]="!registerFormGroup.valid || addingUser">
+      <ng-container *ngIf="!addingUser; else spinner">
+        Registrovat se
+      </ng-container>
+      <ng-template #spinner>
+        <mat-spinner style="margin: 5px auto" [diameter]="36"></mat-spinner>
+      </ng-template>
+    </button>
+    <button mat-button color="accent" type="button" routerLink="/auth/login">
+      Mám účet
+    </button>
+  </div>
+  <div class="grow-container"></div>
+</form>
