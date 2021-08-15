@@ -1,6 +1,7 @@
 from .DBConn import *
 from fastapi import APIRouter
-from routes import Team
+from routes import Team, team_from_db_row
+from typing import Optional
 
 router = APIRouter()
 
@@ -17,7 +18,7 @@ def updateTeam(team_id: int, updated_team: Team):
     with Curr_with_conn() as cur:
         cur.execute(
             "UPDATE team SET name = %s, invite_code = %s, approved = %s WHERE team_id = %s;",
-            (updated_team.name, updated_team.invite_code, updated_team.approved, team_id ))
+            (updated_team.name, updated_team.invite_code, updated_team.approved, team_id))
 
 
 def deleteTeam(team_id: int):
@@ -37,3 +38,27 @@ def getTeams():
         cur.execute("SELECT * FROM team;")
         result = cur.fetchall()
     return result
+
+
+def is_in_team(team_id: int, user_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT COUNT(*) FROM team_member WHERE team_member.team_id = %s AND team_member.person_id = %s;",
+                    (team_id, user_id))
+        result = cur.fetchone()
+        return result[0] > 0
+
+
+def get_team_info(team_id: int) -> Optional[Team]:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM team WHERE team.team_id = %s;", team_id)
+        result = cur.fetchone()
+        if result is None:
+            return result
+        return team_from_db_row(result)
+
+
+def get_game_id(team_id: int) -> int:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT cgt.cipher_game_id FROM cipher_game_team cgt WHERE cgt.team_id = %s;", team_id)
+        result = cur.fetchone()[0]
+        return int(result)
