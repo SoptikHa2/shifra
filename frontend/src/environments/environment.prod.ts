@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  backendUrl: "http://shifra.klubfitpp.cz/"
+  backendUrl: "http://shifra.klubfitpp.cz"
 };
