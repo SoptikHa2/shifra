@@ -24,7 +24,7 @@ def get_game_by_id(cipher_game_id: int, response: Response, session_cookie: Opti
         response.status_code = 400
         return None
 
-    if not is_visible(cipher_game_id) and not is_staff(cipher_game_id, user.person_id):
+    if not is_visible(cipher_game_id) or user is not None and not is_staff(cipher_game_id, user.person_id):
         response.status_code = 401
         return None
     else:
@@ -36,21 +36,19 @@ def get_game_by_id(cipher_game_id: int, response: Response, session_cookie: Opti
 def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(None)) -> [CipherGame]:
     user = user_management.get_user_by_token(session_cookie)
     if user is None:
-        response.status_code = 401
-        return None
-
-    if user.is_root:
+        games = get_visible_games(-1)
+    elif user.is_root:
         games = get_all_cipher_games()
-        result = [x.strip() for x in games]
     else:
         # Get all games, that are visible to public at the moment,
         # or user is admin of the given game.
         games = get_visible_games(user.person_id)
-        result = [x.strip() for x in games]
+ 
     if games is None:
         response.status_code = 400
         return None
     else:
         response.status_code = 200
+        result = [x.strip() for x in games]
     return result
 
