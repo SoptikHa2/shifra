@@ -26,6 +26,3 @@ app.include_router(user.router)
 app.include_router(misc.router)
 app.include_router(game.router)
 
-@app.get('/')
-def root():
-    return {"version": "1"}
