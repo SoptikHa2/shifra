@@ -14,7 +14,6 @@ export class CipherService {
     private http: HttpClient
   ) { }
 
-  getCiphers(gameId: number) {
   getVisibleCiphers(gameId: number) {
     return this.http.get<Cipher[]>(environment.backendUrl + `/api/game/${gameId}/ciphers`)
       .pipe(catchError(this.handleError));
@@ -23,6 +22,10 @@ export class CipherService {
   getCipher(id: number) {
     return this.http.get<Cipher>(environment.backendUrl + `/api/cipher/${id}`)
       .pipe(catchError(this.handleError));
+  }
+
+  makeAttempt(teamId: number, cipherId: number, answer: string) {
+    return this.http.post(environment.backendUrl + `/api/cipher/${cipherId}`, {teamId, answer});
   }
 
   handleError(err: any) {
