@@ -1,20 +1,17 @@
-:host {
+form {
   display: flex;
   height: 100%;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   font-size: 1.1rem;
 }
 
-mat-form-field {
-  width: calc(100% - 64px);
+.form-item {
+  width: calc(100% - 256px);
 }
 
-@media screen and (min-width: 560px) {
-  mat-form-field {
-    width: calc(100% - 256px);
-  }
+mat-form-field {
+  font-size: 18px;
 }
 
 button {
@@ -22,4 +19,40 @@ button {
   height: 48px;
   margin: 0 8px;
   font-size: 1.1rem;
+}
+
+.grow-container {
+  display: flex;
+  width: 100%;
+  flex: 1 1;
+  align-items: center;
+  justify-content: center;
+
+  h1 {
+    margin: 32px 0 0;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .form-item {
+    width: calc(100% - 64px);
+  }
+
+  .grow-container {
+    align-items: flex-start;
+    padding-top: 48px;
+    box-sizing: border-box;
+  }
+
+  .grow-container:last-child {
+    min-height: 64px;
+    flex-grow: 0;
+  }
+}
+
+.error {
+  padding: 12px 0;
+  margin-bottom: 16px;
+  text-align: center;
+  border-radius: 5px;
 }

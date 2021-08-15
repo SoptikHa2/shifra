@@ -4,6 +4,7 @@ import {BehaviorSubject, Observable, of} from "rxjs";
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {catchError, map, tap} from "rxjs/operators";
 import {environment} from "../../environments/environment";
+import {Router} from "@angular/router";
 
 type userModel = {
   loggedIn: boolean;
@@ -14,12 +15,17 @@ type userModel = {
   providedIn: 'root'
 })
 export class AuthService {
+  private urlBeforePromting: string = "/";
+
   // If loggedIn is false, value of person is not defined!
   user: BehaviorSubject<userModel | null> = new BehaviorSubject<userModel | null>(null);
   error: "to early" | undefined;
 
-  constructor(private http: HttpClient) {
-    //this.userInfo();
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
+    this.userInfo();
   }
 
   /**
@@ -113,11 +119,23 @@ export class AuthService {
     ).toPromise();
   }
 
+  promptToLogin(sw: boolean = true) {
+    this.urlBeforePromting = this.router.url;
+    this.router.navigate(['auth', (sw ? 'login' : 'register')]).then();
+  }
+
+  returnFromPromotedLogin() {
+    this.router.navigate([this.urlBeforePromting]).then(() => {
+      this.urlBeforePromting = "/";
+    });
+  }
+
   /**
    * get info about already logged user
    */
   userInfo() {
     this.evaluatePersonResponse(this.http.get<Person>(environment.backendUrl + '/api/auth/userInfo'))
+      .subscribe(user => this.user.next(user));
   }
 
   /**
@@ -131,6 +149,12 @@ export class AuthService {
       catchError(() => of({loggedIn: false, person: {nickname: ""}})));
   }
 
+  /**
+   * Transforms Observable<any> to Observable<boolean>
+   * where boolean is success
+   * @param obs
+   * @private
+   */
   private transformToSuccessObservable(obs: Observable<any>): Observable<boolean> {
     return obs.pipe(map(() => true), catchError(() => of(false)));
   }
