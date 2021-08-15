@@ -34,8 +34,9 @@ export class LoginComponent implements OnInit {
         if (wasSuccessful) {
           this.authService.returnFromPromotedLogin();
         } else {
-          this.loginFormGroup.reset();
           this.error = this.authService.getError();
+          if (this.error == "Nesprávné heslo nebo uživatelské jméno")
+            this.loginFormGroup.reset();
         }
         this.loggingIn = false;
       });
