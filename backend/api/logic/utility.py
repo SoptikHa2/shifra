@@ -1,8 +1,5 @@
 import hashlib
 import uuid
-from typing import Optional
-
-from routes.person import Person
 
 
 def hash_password(username: str, password: str) -> str:

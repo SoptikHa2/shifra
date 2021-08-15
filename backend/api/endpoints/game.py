@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Response, Cookie
-from typing import Optional
+from fastapi import Response, Cookie
 
 from .user import user_management
 from db_funcs import *
@@ -15,17 +14,17 @@ def get_game_by_id(cipher_game_id: int, response: Response, session_cookie: Opti
 
         :param cipher_game_id: Game id to use
         :return 200 Everything was OK
-                400 Game doesn't exists
                 401 No permissions
+                404 Game doesn't exists
     """
 
     user = user_management.get_user_by_token(session_cookie)
     game = cipherGameFuncs.get_cipher_game(cipher_game_id)
     if game is None:
-        response.status_code = 400
+        response.status_code = 404
         return None
 
-    if is_visible(cipher_game_id) or user is not None and is_staff(cipher_game_id, user.person_id):
+    if is_visible(cipher_game_id) or (user is not None and is_staff(cipher_game_id, user.person_id)) or (user is not None and user.is_root):
         response.status_code = 200
         return game.strip()
     else:
@@ -52,4 +51,3 @@ def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(Non
         response.status_code = 200
         result = [x.strip() for x in games]
     return result
-
