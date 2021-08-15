@@ -12,8 +12,10 @@ export type userModel = {
 }
 export type errorMessage = "Zkuste to za chvíly prosím znovu" |
   "Nesprávné heslo nebo uživatelské jméno" |
-  "Chyba na strane serveru" |
-  "Stala se neočekávaná chyba";
+  "Chyba na straně serveru" |
+  "Stala se neočekávaná chyba" |
+  "Již jste přihlášený" |
+  "Uživatelské jméno již někdo používá";
 
 @Injectable({
   providedIn: 'root'
@@ -48,10 +50,10 @@ export class AuthService {
       .pipe(catchError((err: HttpErrorResponse) => {
         if (err.status == 401) {
           this.error = "Nesprávné heslo nebo uživatelské jméno"
-        } else if (err.status < 401 && err.status > 500) {
+        } else if (err.status >= 401 && err.status < 500) {
           this.error = "Stala se neočekávaná chyba";
         } else {
-          this.error = "Chyba na strane serveru"
+          this.error = "Chyba na straně serveru"
         }
         return throwError(err);
       }));
@@ -108,7 +110,21 @@ export class AuthService {
       return new Promise(() => false);
     }
 
-    const result = this.http.post<Person>(environment.backendUrl + '/api/auth/register', {username, email, password});
+    const result = this.http.post<Person>(environment.backendUrl + '/api/auth/register', {username, email, password})
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+          if (err.status == 400) {
+            this.error = "Již jste přihlášený"
+          } else if (err.status == 409) {
+            this.error = "Uživatelské jméno již někdo používá";
+          } else if (err.status >= 400 && err.status < 500) {
+            this.error = "Stala se neočekávaná chyba"
+          } else {
+            this.error = "Chyba na straně serveru";
+          }
+          return throwError(err);
+        })
+      );
     const userObs = this.evaluatePersonResponse(result)
     return userObs.pipe(
       tap(u => this.user.next(u)),

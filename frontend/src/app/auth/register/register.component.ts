@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from "../../services/auth.service";
-import {EmailValidator, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {PasswordMatcher} from "../../validators/password.validator";
 
 @Component({
@@ -10,6 +10,7 @@ import {PasswordMatcher} from "../../validators/password.validator";
 })
 export class RegisterComponent implements OnInit {
   error: string | undefined;
+  addingUser: boolean = false;
   registerFormGroup: FormGroup;
 
   username: FormControl;
@@ -23,8 +24,7 @@ export class RegisterComponent implements OnInit {
   rePasswordError: string | undefined;
 
   constructor(
-    private authService: AuthService,
-    private formBuilder: FormBuilder
+    private authService: AuthService
   ) {
     this.username = new FormControl('',
       [Validators.required, Validators.minLength(4), Validators.maxLength(80)]);
@@ -45,13 +45,15 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
+    this.addingUser = true;
     this.authService.register(this.username.value, this.email.value, this.password.value)
       .then(isSuccessful => {
           if (isSuccessful) {
             this.authService.returnFromPromotedLogin();
           } else {
-            // todo: show API error
+            this.error = this.authService.getError();
           }
+          this.addingUser = false;
         }
       );
   }
