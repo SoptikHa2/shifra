@@ -8,7 +8,7 @@ import {catchError} from "rxjs/operators";
 @Injectable({
   providedIn: 'root'
 })
-export class GamesService {
+export class GameService {
 
   constructor(private http: HttpClient) { }
 

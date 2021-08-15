@@ -15,6 +15,7 @@ export class CipherService {
   ) { }
 
   getCiphers(gameId: number) {
+  getVisibleCiphers(gameId: number) {
     return this.http.get<Cipher[]>(environment.backendUrl + `/api/game/${gameId}/ciphers`)
       .pipe(catchError(this.handleError));
   }
