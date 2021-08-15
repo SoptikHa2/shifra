@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Person} from "../model/person";
 import {BehaviorSubject, Observable, of} from "rxjs";
-import {HttpClient, HttpResponse} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {catchError, map, tap} from "rxjs/operators";
 import {environment} from "../../environments/environment";
 import {Router} from "@angular/router";
@@ -114,7 +114,10 @@ export class AuthService {
     return this.transformToSuccessObservable(
       this.http.post(environment.backendUrl + '/api/auth/logout', {})
         .pipe(
-          tap(() => this.user.next({loggedIn: false, person: {nickname: ""}})),
+          tap(() => {
+            this.user.next({loggedIn: false, person: {nickname: ""}});
+            this.promptToLogin();
+          }),
         )
     ).toPromise();
   }
@@ -122,6 +125,10 @@ export class AuthService {
   promptToLogin(sw: boolean = true) {
     this.urlBeforePromting = this.router.url;
     this.router.navigate(['auth', (sw ? 'login' : 'register')]).then();
+  }
+
+  setUrlBeforePrompting(url: string) {
+    this.urlBeforePromting = url;
   }
 
   returnFromPromotedLogin() {
