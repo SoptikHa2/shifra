@@ -34,7 +34,7 @@ def genQR(teamCode: str):
     return StreamingResponse(stream, media_type="image/svg")
 
 
-@router.get('/version')
+@router.get('/api/version')
 def version():
     """
     Return current git version running
