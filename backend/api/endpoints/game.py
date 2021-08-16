@@ -4,6 +4,7 @@ from .user import user_management
 from db_funcs import *
 from routes import *
 
+
 router = APIRouter()
 
 
@@ -51,3 +52,21 @@ def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(Non
         response.status_code = 200
         result = [x.strip() for x in games]
     return result
+
+
+@router.get('/api/game/{cipher_game_id}/ciphers')
+def get_visible_ciphers(cipher_game_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)) -> [Cipher]:
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    team_id = get_users_team(cipher_game_id, user.person_id)
+    if user.is_root or is_staff(cipher_game_id, user.person_id):
+        ciphers = get_all_ciphers(cipher_game_id)
+    elif is_in_game(cipher_game_id, team_id):
+        ciphers = cipherGameFuncs.get_visible_ciphers(cipher_game_id, team_id)
+    else:
+        response.status_code = 401
+        return None
+    return [x.strip() for x in ciphers]

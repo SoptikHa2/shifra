@@ -74,3 +74,19 @@ def getPersonByUsername(username: str) -> Optional[Person]:
         if result is None:
             return None
         return person_from_db_row(result)
+
+
+def is_in_game(cipher_game_id: int, team_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM cipher_game_team cgt WHERE cgt.cipher_game_id = %s AND cgt.team_id;", (cipher_game_id, team_id))
+        result = cur.fetchone()
+        return bool(result)
+
+
+def get_users_team(cipher_game_id: int, user_id: int) -> Optional[int]:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT t.* FROM team t JOIN cipher_game_team cgt ON cgt.team_id = t.team_id AND cgt.cipher_game_id = %s JOIN team_member tm ON tm.team_id = t.team_id AND tm.person_id = %s ;",
+            (cipher_game_id, user_id))
+        result = cur.fetchone()
+        return result

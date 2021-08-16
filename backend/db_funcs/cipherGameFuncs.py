@@ -2,7 +2,7 @@ from typing import Optional
 
 from .DBConn import *
 from fastapi import APIRouter
-from routes import CipherGame, cipher_game_from_db_row
+from routes import *
 
 router = APIRouter()
 
@@ -85,3 +85,23 @@ def get_all_cipher_games() -> [CipherGame]:
         cur.execute("SELECT * FROM cipher_game cg;")
         result = cur.fetchall()
         return [cipher_game_from_db_row(x) for x in result]
+
+
+def get_all_ciphers(cipher_game_id: int) -> [Cipher]:
+    with Curr_with_conn() as cur:
+        # Everything visible to normal users
+        cur.execute("SELECT * FROM cipher_game cg;")
+        result = cur.fetchall()
+        return [cipher_from_db_row(x) for x in result]
+
+
+def get_visible_ciphers(cipher_game_id: int, team_id: int) -> [Cipher]:
+    with Curr_with_conn() as cur:
+        # Everything visible to normal users
+        cur.execute("SELECT cipher.* FROM cipher WHERE cipher.cipher_game_id = %s EXCEPT SELECT cipher.* FROM cipher WHERE cipher.cipher_game_id = %s AND"
+                    " cipher.req_cipher_id IS NOT IN (SELECT cipher.cipher_id FROM cipher JOIN attempt a ON a.team_id = %s AND a.cipher_id = cipher.cipher_id AND a.is_successful = TRUE);", (cipher_game_id, team_id))
+        result = cur.fetchall()
+        return [cipher_from_db_row(x) for x in result]
+
+
+

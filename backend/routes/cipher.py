@@ -17,3 +17,19 @@ class Cipher(BaseModel):
     attempts: Optional[int] = None
     score: float
     reference_solution: Optional[str] = None
+
+    def strip(self):
+        cipher_id = None
+        cipher_game_id = None
+        solution = None
+        judge = None
+        success_msg = ""
+        reference_solution = None
+        return self
+
+
+def cipher_from_db_row(row) -> Cipher:
+    return Cipher(cipher_id=row[0], cipher_game_id=row[1], req_cipher_id=row[2], name=row[3],
+                  description=row[4], solution=row[5], judge=row[6], cipher_file=row[7],
+                  img=row[8], success_msg=row[9], cooldown=row[10], attempts=row[11], score=row[12],
+                  reference_solution=row[13])
