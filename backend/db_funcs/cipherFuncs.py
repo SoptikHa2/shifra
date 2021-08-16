@@ -59,11 +59,11 @@ def getCipher(cipher_id: int):
 
 
 @router.get('/api/ciphers/{cipher_game_id}/show/{cipher_id}')
-def get_cipher_info(cipher_game_id: int, cipher_id: int) -> Optional[Cipher]:
+def get_cipher_info(cipher_game_id: int, cipher_id: int, team_id: int) -> Optional[Cipher]:
     try:
         with DB_conn.getConn(connection):
             with DB_conn.getCursor(connection) as cur:
-                cur.execute("SELECT * FROM cipher WHERE cipher_id = %s AND cipher_game_id = %s;", (cipher_id, cipher_game_id))
+                cur.execute("SELECT * FROM cipher WHERE cipher_id = %s AND cipher_game_id = %s AND req_cipher_id IS IN (SELECT a.cipher_id FROM attempt WHERE team_id = %s AND a.is_successful = TRUE );", (cipher_id, cipher_game_id, team_id))
                 result = cur.fetchone()[0]
     except:
         return None
