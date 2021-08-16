@@ -90,3 +90,12 @@ def is_visible(cipher_game_id: int) -> bool:
         return False
     return bool(result)
   
+    
+def get_users_team(user_id: int, cipher_game_id: int) -> Optional[int]:
+    try:
+        with Curr_with_conn() as cur:
+                cur.execute("SELECT t.team_id FROM team t JOIN team_member tm ON tm.team_id = t.team_id AND tm.person_id = %s JOIN cipher_game_team cgt ON cgt.cipher_game_id = %s AND cgt.team_id = t.team_id;", (user_id, cipher_game_id))
+                result = cur.fetchall()
+    except:
+        return False
+    return bool(result)
