@@ -22,7 +22,8 @@ def get_cipher_info(cipher_game_id: int, cipher_id: int, response: Response, ses
         response.status_code = 401
         return None
 
-    cipher_info = cipherGameFuncs.get_cipher_info(cipher_game_id, cipher_id)
+    team_id = get_users_team(user.person_id,cipher_game_id)
+    cipher_info = cipherGameFuncs.get_cipher_info(cipher_game_id, cipher_id, team_id)
     if cipher_info is None:
         response.status_code = 400
         return None
