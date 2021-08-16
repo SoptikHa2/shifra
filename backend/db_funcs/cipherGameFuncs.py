@@ -64,24 +64,10 @@ def get_visible_games(user_id: Optional[int]) -> [CipherGame]:
     return result
 
 
-def is_staff(cipher_game_id: int, user_id: int) -> bool:
+def get_visible_ciphers(cipher_game_id: int, team_id: int) -> [Cipher]:
     with Curr_with_conn() as cur:
-        cur.execute("SELECT COUNT(*) FROM cipher_game_admin ca WHERE ca.cipher_game_id = %s AND ca.person_id = %s;", (cipher_game_id, user_id))
-        result = cur.fetchone()[0]
-        return result > 0
-
-
-def get_visible_ciphers(cipher_game_id: int, user_id: int) -> [Cipher]:
-    with Curr_with_conn() as cur:
-        # TODO: FIX, WON'T WORK
-        cur.execute("SELECT cipher.cipher_id FROM cipher WHERE cipher_game_id = %s EXCEPT SELECT cipher.cipher_id FROM "
-                    "cipher WHERE cipher_game_id = %s AND req_cipher_id NOT IN (SELECT cipher.cipher_id FROM cipher "
-                    "JOIN attempt ON cipher.cipher_game_id = %s AND attempt.cipher_id = cipher.cipher_id AND "
-                    "attempt.is_successful = TRUE JOIN team ON team.team_id = attempt.team_id JOIN team_member ON "
-                    "team_member.team_id = team.team_id AND team_member.person_id = %s));", (cipher_game_id,
-                                                                                             cipher_game_id,
-                                                                                             cipher_game_id ,
-                                                                                             cipher_game_id, user_id))
+        cur.execute("SELECT cipher.* FROM cipher WHERE cipher.cipher_game_id = %s EXCEPT SELECT cipher.* FROM cipher WHERE cipher.cipher_game_id = %s AND"
+                    " cipher.req_cipher_id IS NOT IN (SELECT cipher.cipher_id FROM cipher JOIN attempt a ON a.team_id = %s AND a.cipher_id = cipher.cipher_id AND a.is_successful = TRUE);", (cipher_game_id, team_id))
         result = cur.fetchall()
         return [cipher_from_db_row(x) for x in result]
 
@@ -107,3 +93,5 @@ def get_all_cipher_games() -> [CipherGame]:
         cur.execute("SELECT * FROM cipher_game cg;")
         result = cur.fetchall()
         return [cipher_game_from_db_row(x) for x in result]
+    
+    
