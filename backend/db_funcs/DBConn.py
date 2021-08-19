@@ -2,7 +2,6 @@ import json
 from configparser import ConfigParser
 from psycopg2 import pool
 
-
 class DB_conn:
     min_of_conn = 5
     max_of_conn = 10
@@ -16,22 +15,16 @@ class DB_conn:
             data = dbFile.read()
             obj = json.loads(data)
 
-            if len(cls.INI_FILENAME) <= 0 and len(obj['database']) <= 0:
-                return False
-
             config_parser = ConfigParser()
             config_parser.read(cls.INI_FILENAME)
-        #
-            if config_parser.has_section(obj['database']):
-                header = config_parser[obj['database']]
-                cls.__conn_pool = pool.SimpleConnectionPool(cls.min_of_conn,
-                                                           cls.max_of_conn,
-                                                           database=header['database'],
-                                                           user=header['user'],
-                                                           password=header['password'],
-                                                           host=header['host'])
-                return True
-            return False
+
+            header = config_parser[obj['database']]
+            cls.__conn_pool = pool.SimpleConnectionPool(cls.min_of_conn,
+                                                       cls.max_of_conn,
+                                                       database=header['database'],
+                                                       user=header['user'],
+                                                       password=header['password'],
+                                                       host=header['host'])
 
     @classmethod
     def get_conn(cls):

@@ -1,6 +1,9 @@
+import sys
+
 from fastapi import APIRouter, Response, Cookie
 from typing import Optional
-
+sys.path.append('../../')
+from logger import *
 from pydantic import BaseModel
 
 from api.logic import user_management
@@ -45,6 +48,7 @@ def login(credentials: login_post, response: Response) -> Optional[Person]:
         logged_in_person.strip()
     else:
         response.status_code = 401
+        logger.warning(login.__name__ + " /api/auth/login (POST) / ERROR CODE " + str(response.status_code) + ": Bad login")
 
     return logged_in_person
 
@@ -72,12 +76,12 @@ def register(credentials: register_temp_post, response: Response) -> Optional[Pe
     new_user = user_management.create_temporary_user(credentials.username)
     if new_user is None:
         response.status_code = 409
+        logger.info(register.__name__ + " /api/auth/temporaryRegister (POST) / ERROR CODE " + str(response.status_code) + ": temporary user was not created")
     else:
         response.set_cookie(key='session_cookie', value=new_user.session_cookie, secure=True, samesite='Strict',
                             httponly=True)
         response.status_code = 201
         new_user.strip()
-
     return new_user
 
 
@@ -106,12 +110,14 @@ def register(credentials: register_post, response: Response, session_cookie: Opt
         # Username must not be None
         if credentials.username is None:
             response.status_code = 400
+            logger.info(register.__name__ + " /api/auth/register (POST) / ERROR CODE " + str(response.status_code) + ": empty username")
             return None
 
         # Just register the user, if possible
         new_user = user_management.create_user(credentials.username, credentials.email, credentials.password)
         if new_user is None:
             response.status_code = 409
+            logger.info(register.__name__ + " /api/auth/register (POST) / ERROR CODE " + str(response.status_code) + ": user " + credentials.username + " already exists")
             return None
         else:
             response.status_code = 201
@@ -146,6 +152,7 @@ def user_info(response: Response, session_cookie: Optional[str] = Cookie(None)) 
     user = user_management.get_user_by_token(session_cookie)
     if user is None:
         response.status_code = 404
+        logger.info(user_info.__name__ + " /api/auth/logout (GET) / ERROR CODE " + str(response.status_code) + ": user does not exist (user_info)")
     else:
         user.strip()
     return user
