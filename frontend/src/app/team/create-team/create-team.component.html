@@ -1,1 +1,15 @@
-<p>create-team works!</p>
+<form [formGroup]="createTeamForm" (ngSubmit)="createTeam()">
+  <div class="grow-container label">
+    <h1 class="mat-display-3">Založit Team</h1>
+  </div>
+  <mat-form-field appearance="outline" class="form-item">
+    <mat-label> Název teamu </mat-label>
+    <input matInput formControlName="name">
+  </mat-form-field>
+  <div class="buttons">
+    <button mat-raised-button color="primary" type="button" routerLink="/auth/register">
+      Založit
+    </button>
+  </div>
+  <div class="grow-container"></div>
+</form>
