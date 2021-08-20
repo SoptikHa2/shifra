@@ -13,6 +13,10 @@ const routes: Routes = [
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   },
   {
+    path: 'cipher',
+    loadChildren: () => import('./cipher/cipher.module').then(m => m.CipherModule)
+  },
+  {
     path: 'team',
     loadChildren: () => import('./team/team.module').then(m => m.TeamModule)
   }
