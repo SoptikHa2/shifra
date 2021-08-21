@@ -4,13 +4,17 @@ import {catchError, map} from "rxjs/operators";
 import {Observable, of} from "rxjs";
 import {Team} from "../model/team";
 import {Injectable} from "@angular/core";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TeamService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
+  ) { }
 
   createTeam(name: string) : Observable<boolean> {
     return this.http.post(`${environment.backendUrl}/api/team` + '', {name})
@@ -35,7 +39,8 @@ export class TeamService {
       );
   }
 
-  getQRCodeLink(): string {
-    return `${environment.backendUrl}/api/generateTeamJoinQR/Ahoj%20Pep%C3%ADku%20Jak`;
+  getQRCodeLink(): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(
+      `${environment.backendUrl}/api/generateTeamJoinQR/Ahoj Pepíčku Jak`);
   }
 }

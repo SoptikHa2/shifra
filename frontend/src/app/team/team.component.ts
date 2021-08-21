@@ -3,6 +3,7 @@ import {TeamService} from "./team.service";
 import {Team} from "../model/team";
 import {ActivatedRoute} from "@angular/router";
 import {Observable} from "rxjs";
+import {SafeUrl} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-team',
@@ -11,7 +12,7 @@ import {Observable} from "rxjs";
 })
 export class TeamComponent implements OnInit {
   teamObs?: Observable<Team>;
-  qrCodeUrl?: string;
+  qrCodeUrl?: SafeUrl;
 
   constructor(
     private teamService: TeamService,
