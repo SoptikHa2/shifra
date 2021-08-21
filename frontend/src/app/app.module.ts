@@ -8,10 +8,15 @@ import {HttpClientModule} from "@angular/common/http";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MarkdownModule} from "ngx-markdown";
 import {FormsModule} from "@angular/forms";
+import { MenuComponent } from './menu/menu.component';
+import {MatMenuModule} from "@angular/material/menu";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
     AppComponent,
+    MenuComponent,
   ],
   imports: [
     BrowserModule,
@@ -21,6 +26,9 @@ import {FormsModule} from "@angular/forms";
     MatNativeDateModule,
     MarkdownModule.forRoot(),
     FormsModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
