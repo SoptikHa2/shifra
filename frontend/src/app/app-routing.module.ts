@@ -5,8 +5,7 @@ import {LoggedInGuard} from "./guards/logged-in.guard";
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./cipher-games/cipher-games.module').then(m => m.CipherGamesModule),
-    canActivate: [LoggedInGuard]
+    loadChildren: () => import('./cipher-games/cipher-games.module').then(m => m.CipherGamesModule)
   },
   {
     path: 'auth',

@@ -14,10 +14,18 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
 import {MatRippleModule} from "@angular/material/core";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { AttributeComponent } from './attribute/attribute.component';
+import {LoggedInGuard} from "../guards/logged-in.guard";
 
 const routes: Routes = [
-  {path: 'create', component: CreateTeamComponent},
-  {path: ':id', component: TeamComponent}
+  {
+    path: 'create',
+    component: CreateTeamComponent,
+    canActivate: [LoggedInGuard]
+  },
+  {
+    path: ':id',
+    component: TeamComponent // todo: add is team participant Guard
+  }
 ]
 
 @NgModule({
