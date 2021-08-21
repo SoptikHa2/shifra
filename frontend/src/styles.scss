@@ -44,7 +44,7 @@ $dark-theme: mat.define-dark-theme((
   $warn-palette: map.get($color-config, 'warn');
 
 
-  body {
+  body, .background {
     @if map.get($color-config, 'is-dark') {
       background: #303030;
       color: #FAFAFA;
@@ -67,7 +67,10 @@ $dark-theme: mat.define-dark-theme((
 
 @include background($dark-theme);
 
-html, body {height: 100%; }
+html, body {
+  max-width: 100%;
+  height: 100%;
+}
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
