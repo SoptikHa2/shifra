@@ -3,7 +3,7 @@ import {TeamService} from "./team.service";
 import {Team} from "../model/team";
 import {ActivatedRoute} from "@angular/router";
 import {Observable} from "rxjs";
-import {SafeUrl} from "@angular/platform-browser";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-team',
@@ -12,7 +12,6 @@ import {SafeUrl} from "@angular/platform-browser";
 })
 export class TeamComponent implements OnInit {
   teamObs?: Observable<Team>;
-  qrCodeUrl?: SafeUrl;
 
   constructor(
     private teamService: TeamService,
@@ -21,6 +20,5 @@ export class TeamComponent implements OnInit {
 
   ngOnInit(): void {
     this.teamObs = this.teamService.getTeamById(this.route.snapshot.params['id']);
-    this.qrCodeUrl = this.teamService.getQRCodeLink();
   }
 }

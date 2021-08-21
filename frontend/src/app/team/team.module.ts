@@ -8,6 +8,12 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import { TeamComponent } from './team.component';
+import {MatIconModule} from "@angular/material/icon";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {ClipboardModule} from "@angular/cdk/clipboard";
+import {MatRippleModule} from "@angular/material/core";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { AttributeComponent } from './attribute/attribute.component';
 
 const routes: Routes = [
   {path: 'create', component: CreateTeamComponent},
@@ -17,7 +23,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     CreateTeamComponent,
-    TeamComponent
+    TeamComponent,
+    AttributeComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +32,12 @@ const routes: Routes = [
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    ClipboardModule,
+    MatRippleModule,
+    MatSnackBarModule
   ],
   providers: [
     TeamService
