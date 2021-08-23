@@ -16,8 +16,8 @@ export class TeamService {
     private sanitizer: DomSanitizer
   ) { }
 
-  createTeam(name: string) : Observable<boolean> {
-    return this.http.post(`${environment.backendUrl}/api/team` + '', {name})
+  createTeam(name: string, cipher_game_id: number) : Observable<boolean> {
+    return this.http.post(`${environment.backendUrl}/api/team`, {name, cipher_game_id})
       .pipe(
         map(() => true),
         catchError(err => {
