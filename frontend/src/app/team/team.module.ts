@@ -15,6 +15,7 @@ import {MatRippleModule} from "@angular/material/core";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { AttributeComponent } from './attribute/attribute.component';
 import {LoggedInGuard} from "../guards/logged-in.guard";
+import { JoinComponent } from './join/join.component';
 
 const routes: Routes = [
   {
@@ -32,7 +33,8 @@ const routes: Routes = [
   declarations: [
     CreateTeamComponent,
     TeamComponent,
-    AttributeComponent
+    AttributeComponent,
+    JoinComponent
   ],
   imports: [
     CommonModule,
