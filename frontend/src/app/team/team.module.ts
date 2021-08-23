@@ -19,7 +19,7 @@ import { JoinComponent } from './join/join.component';
 
 const routes: Routes = [
   {
-    path: 'create',
+    path: 'create/:id',
     component: CreateTeamComponent,
     canActivate: [LoggedInGuard]
   },

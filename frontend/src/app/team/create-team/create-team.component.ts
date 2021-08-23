@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {TeamService} from "../team.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-create-team',
@@ -11,7 +12,11 @@ export class CreateTeamComponent implements OnInit {
   createTeamForm: FormGroup;
   teamName: FormControl;
 
-  constructor(private teamService: TeamService) {
+  constructor(
+    private teamService: TeamService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.teamName = new FormControl('',
       [Validators.required, Validators.minLength(4), Validators.maxLength(80)]);
 
@@ -24,6 +29,23 @@ export class CreateTeamComponent implements OnInit {
   }
 
   createTeam() {
-    this.teamService.createTeam(this.teamName.value);
+    const id = this.route.snapshot.params['id'];
+    this.teamService.createTeam(this.teamName.value, id)
+      .subscribe((success) => {
+        if (success) {
+          this.router.navigate([`/team/${id}`]).then();
+        }
+      });
+  }
+
+  teamNameErrorMessage() {
+    if (this.teamName.hasError('required')) {
+      return 'Požadováno';
+    } else if (this.teamName.hasError('minlength')) {
+      return 'Název teamu musí mít alespoň 4 znaky';
+    } else if (this.teamName.hasError('maxlength')) {
+      return 'Název teamu může mít nejvíce 80 znaků';
+    }
+    return undefined;
   }
 }
