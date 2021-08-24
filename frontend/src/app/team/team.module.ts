@@ -16,6 +16,8 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { AttributeComponent } from './attribute/attribute.component';
 import {LoggedInGuard} from "../guards/logged-in.guard";
 import { JoinComponent } from './join/join.component';
+import { QRComponent } from './join/qr/qr.component';
+import { CodeComponent } from './join/code/code.component';
 
 const routes: Routes = [
   {
@@ -24,8 +26,20 @@ const routes: Routes = [
     canActivate: [LoggedInGuard]
   },
   {
+    path: 'join',
+    component: JoinComponent,
+  },
+  {
+    path: 'join/qr',
+    component: QRComponent
+  },
+  {
+    path: 'join/code',
+    component: CodeComponent
+  },
+  {
     path: ':id',
-    component: TeamComponent // todo: add is team participant Guard
+    component: TeamComponent, // todo: add is team participant Guard
   }
 ]
 
@@ -34,7 +48,9 @@ const routes: Routes = [
     CreateTeamComponent,
     TeamComponent,
     AttributeComponent,
-    JoinComponent
+    JoinComponent,
+    QRComponent,
+    CodeComponent
   ],
   imports: [
     CommonModule,

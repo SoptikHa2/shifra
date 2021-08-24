@@ -1,8 +1,14 @@
 .menu-btn {
   position: absolute;
-  top: 32px;
+  top: 24px;
   right: 32px;
   z-index: 200;
+}
+
+@media screen and (max-width: 560px){
+  .menu-btn {
+    right: 16px;
+  }
 }
 
 .menu-streacher {
