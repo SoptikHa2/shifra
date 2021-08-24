@@ -117,7 +117,7 @@ def create_team(cipher_game_id: int, team_name: str, response: Response, session
 def join_team(username: Optional[str], team: Team, response: Response, session_cookie: Optional[str] = Cookie(None)):
 
     """
-        Assigns user to a team, if user is not logged in, then creates temporary register account
+        Assigns user to a team, if user is not logged in, then creates temporary register account. Fails, if team is full
 
         :param username: name of a user
         :param team: team, that user wants to join
@@ -126,6 +126,12 @@ def join_team(username: Optional[str], team: Team, response: Response, session_c
     """
 
     try:
+
+        if cipherGameFuncs.is_full(team.team_id):
+            # response.status_code = ???
+            logger.info(join_team.__name__ + " /api/team/join - full team")
+            return False
+
         user = user_management.get_user_by_token(session_cookie)
 
         if user is None:
@@ -141,8 +147,6 @@ def join_team(username: Optional[str], team: Team, response: Response, session_c
         logger.critical(join_team.__name__ + " /api/team/join - something went wrong")
         # response.status_code = ???
         return False
-
-
     response.status_code = 200
     joinTeam(team.team_id, user.person_id)
     return True
