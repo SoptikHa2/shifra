@@ -91,14 +91,3 @@ def get_all_cipher_games() -> [CipherGame]:
 def add_team(team_id: int, cipher_game_id: int):
     with Curr_with_conn() as cur:
         cur.execute("INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (%s, %s)", (cipher_game_id, team_id))
-
-
-def is_full(team_id: int) -> bool:
-    with Curr_with_conn() as cur:
-        cur.execute("select teammax from team_member join cipher_game_team using(team_id) join cipher_game using(cipher_game_id) WHERE team_id = %s", (team_id, ))
-        array_tmp = cur.fetchall()
-        number_of_members = len(array_tmp)
-        capacity = array_tmp[0][0]  # first record and first column (only teammax)
-        if number_of_members == capacity:
-            return True
-        return False

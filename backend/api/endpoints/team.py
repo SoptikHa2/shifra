@@ -127,7 +127,7 @@ def join_team(username: Optional[str], team: Team, response: Response, session_c
 
     try:
 
-        if cipherGameFuncs.is_full(team.team_id):
+        if teamFuncs.is_full(team.team_id):
             # response.status_code = ???
             logger.info(join_team.__name__ + " /api/team/join - full team")
             return False

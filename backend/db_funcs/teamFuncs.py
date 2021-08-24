@@ -67,3 +67,13 @@ def get_game_id(team_id: int) -> int:
         result = cur.fetchone()[0]
         return int(result)
 
+
+def is_full(team_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute("select teammax from team_member join cipher_game_team using(team_id) join cipher_game using(cipher_game_id) WHERE team_id = %s", (team_id, ))
+        array_tmp = cur.fetchall()
+        number_of_members = len(array_tmp)
+        capacity = array_tmp[0][0]  # first record and first column (only teammax)
+        if number_of_members == capacity:
+            return True
+        return False
