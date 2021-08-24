@@ -5,6 +5,10 @@ import {LoggedInGuard} from "./guards/logged-in.guard";
 const routes: Routes = [
   {
     path: '',
+    loadChildren: () => import('./main-menu/main-menu.module').then(m => m.MainMenuModule)
+  },
+  {
+    path: 'game',
     loadChildren: () => import('./cipher-games/cipher-games.module').then(m => m.CipherGamesModule)
   },
   {
