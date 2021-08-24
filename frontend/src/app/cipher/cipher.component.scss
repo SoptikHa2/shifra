@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  padding: 64px 0;
+}
+
+.cipher-container {
+  margin: 0 auto;
+  width: 50%;
+}
+
+@media screen and (max-width: 560px) {
+  .cipher-container {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 325px) {
+  .cipher-container {
+    width: 95%;
+  }
+}
+
+p {
+  font-size: 30px;
+}

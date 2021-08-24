@@ -9,4 +9,5 @@ export interface Game {
   capacity: number;
   teammax: number;
   autoapprove: boolean;
+  teamId: number | null;
 }

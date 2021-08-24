@@ -27,9 +27,10 @@ button {
   flex: 1 1;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 
   h1 {
-    margin: 32px 0 0;
+    margin: 64px 0 0;
   }
 }
 
@@ -39,13 +40,11 @@ button {
   }
 
   .grow-container {
-    align-items: flex-start;
-    padding-top: 48px;
     box-sizing: border-box;
   }
 
   .grow-container:last-child {
-    min-height: 64px;
+    min-height: 48px;
     flex-grow: 0;
   }
 }
@@ -59,4 +58,8 @@ button {
 
 .buttons {
   display: flex;
+}
+
+.label {
+  flex: 2 1;
 }
