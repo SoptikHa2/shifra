@@ -38,7 +38,7 @@ def delete_cipher_game(cipher_game_id: int):
         cur.execute("DELETE FROM cipher_game WHERE cipher_game_id = %s;", (cipher_game_id,))
 
 
-def get_cipher_games() -> list[CipherGame]:
+def get_cipher_games(): -> list[CipherGame]:
     with Curr_with_conn() as cur:
         cur.execute("SELECT * FROM cipher_game;")
         result = cur.fetchall()
@@ -85,3 +85,9 @@ def get_all_cipher_games() -> [CipherGame]:
         cur.execute("SELECT * FROM cipher_game cg;")
         result = cur.fetchall()
         return [cipher_game_from_db_row(x) for x in result]
+
+
+# what to return???
+def add_team(team_id: int, cipher_game_id: int):
+    with Curr_with_conn() as cur:
+        cur.execute("INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (%s, %s)", (cipher_game_id, team_id))

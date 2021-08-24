@@ -1,7 +1,11 @@
+import sys
+from typing import Optional
+
+sys.path.append('../')
 from .DBConn import *
 from fastapi import APIRouter
 from routes import Team, team_from_db_row
-from typing import Optional
+from logger import *
 
 router = APIRouter()
 
@@ -62,3 +66,4 @@ def get_game_id(team_id: int) -> int:
         cur.execute("SELECT cgt.cipher_game_id FROM cipher_game_team cgt WHERE cgt.team_id = %s;", team_id)
         result = cur.fetchone()[0]
         return int(result)
+

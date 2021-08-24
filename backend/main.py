@@ -3,7 +3,7 @@
 
 from fastapi import FastAPI, Response
 from logger import *
-from api.endpoints import user, misc, game, team
+from api.endpoints import user, misc, game, team, cipherPack, hint
 from db_funcs import *
 
 
@@ -22,3 +22,5 @@ app.include_router(user.router)
 app.include_router(misc.router)
 app.include_router(game.router)
 app.include_router(team.router)
+app.include_router(cipherPack.router)
+app.include_router(hint.router)

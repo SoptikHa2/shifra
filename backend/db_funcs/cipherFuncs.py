@@ -36,5 +36,5 @@ def getCiphers(cipherGame_id: int):
 def getCipher(cipher_id: int):
     with Curr_with_conn() as cur:
         cur.execute("SELECT * FROM cipher WHERE cipher_id = %s;", (cipher_id,))
-        result = cur.fetchall()
+        result = cur.fetchone()
     return result
