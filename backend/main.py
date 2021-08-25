@@ -3,7 +3,7 @@
 
 from fastapi import FastAPI, Response
 from logger import *
-from api.endpoints import user, misc, game, team, cipherPack, hint
+from api.endpoints import user, misc, game, team
 from db_funcs import *
 
 
