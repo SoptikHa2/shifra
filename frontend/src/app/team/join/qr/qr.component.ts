@@ -53,8 +53,13 @@ export class QRComponent implements OnInit, AfterViewInit {
         const cameraId = this.cameras[0].id;
         const fps = 10;
         const qrbox = 250;
-        this.qrCodeReader.start({ facingMode: "environment" }, {fps, qrbox}, this.qrReadSuccess)
-          .catch((err: any) => {
+        const aspectRatio = 1;
+        console.log(this.qrCodeReader);
+        this.qrCodeReader.start(
+          { facingMode: "environment" },
+          { fps, qrbox, aspectRatio },
+          this.qrReadSuccess
+        ).catch((err: any) => {
             if (!environment.production) console.error(err);
           })
       }
@@ -65,5 +70,11 @@ export class QRComponent implements OnInit, AfterViewInit {
 
   qrReadSuccess(decodedText: any, decodedResult: any) {
     console.log(decodedText, decodedResult);
+  }
+
+  getGCD(a: number, b: number): number {
+    if (a == b)
+      return a;
+    return this.getGCD(b, a % b);
   }
 }
