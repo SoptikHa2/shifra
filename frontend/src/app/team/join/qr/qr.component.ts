@@ -1,5 +1,7 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {environment} from "../../../../environments/environment";
+import {Router} from "@angular/router";
+import {filter} from "rxjs/operators";
 
 declare class Html5Qrcode {
   static getCameras(): Promise<Array<CameraDevice>> // Returns a Promise
@@ -31,14 +33,13 @@ declare type CameraDevice = {
   templateUrl: './qr.component.html',
   styleUrls: ['./qr.component.scss']
 })
-export class QRComponent implements OnInit, AfterViewInit {
+export class QRComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('video', {static: false}) videoHtml?: ElementRef<HTMLVideoElement>;
 
   cameras?: CameraDevice[];
   qrCodeReader?: any;
 
   constructor() {
-
   }
 
   ngOnInit(): void {
@@ -66,13 +67,15 @@ export class QRComponent implements OnInit, AfterViewInit {
     })
   }
 
-  qrReadSuccess(decodedText: any, decodedResult: any) {
-    console.log(decodedText, decodedResult);
+  ngOnDestroy() {
+    if (this.qrCodeReader) this.qrCodeReader.stop()
+      .then()
+      .catch((err: any) => {
+        if (!environment.production) console.error(err);
+      })
   }
 
-  getGCD(a: number, b: number): number {
-    if (a == b)
-      return a;
-    return this.getGCD(b, a % b);
+  qrReadSuccess(decodedText: any, decodedResult: any) {
+    console.log(decodedText, decodedResult);
   }
 }
