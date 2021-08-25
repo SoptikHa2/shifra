@@ -12,8 +12,7 @@ export class MenuComponent implements OnInit {
   userObs: Observable<userModel | null>;
 
   constructor(
-    private authService: AuthService,
-    private location: Location
+    private authService: AuthService
   ) {
     this.userObs = authService.user.asObservable();
   }
@@ -27,9 +26,5 @@ export class MenuComponent implements OnInit {
     } else {
       this.authService.promptToLogin();
     }
-  }
-
-  back() {
-    this.location.back();
   }
 }
