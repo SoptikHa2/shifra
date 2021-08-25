@@ -1,5 +1,7 @@
 import json
 from configparser import ConfigParser
+
+import psycopg2
 from psycopg2 import pool
 
 
@@ -29,7 +31,8 @@ class DB_conn:
                                                            database=header['database'],
                                                            user=header['user'],
                                                            password=header['password'],
-                                                           host=header['host'])
+                                                           host=header['host'],
+                                                           options='-c idle_in_transaction_session_timeout=5min')
                 return True
             return False
 
@@ -57,9 +60,13 @@ class Curr_with_conn:
         return self.cursor
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if exc_val is not None:
-            self.conn.rollback()
-        else:
-            self.cursor.close()
-            self.conn.commit()
-        DB_conn.close_conn(self.conn)
+        try:
+            if self.conn.closed == 0:
+                if exc_val is not None:
+                    self.conn.rollback()
+                else:
+                    self.cursor.close()
+                    self.conn.commit()
+                DB_conn.close_conn(self.conn)
+        except psycopg2.InterfaceError as e:
+            print("Error: " + e.pgcode + " " + e.pgerror + " happened.")
