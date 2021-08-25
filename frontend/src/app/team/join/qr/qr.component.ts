@@ -50,11 +50,9 @@ export class QRComponent implements OnInit, AfterViewInit {
     Html5Qrcode.getCameras().then((devices: CameraDevice[]) => {
       this.cameras = devices;
       if (this.cameras && this.cameras.length) {
-        const cameraId = this.cameras[0].id;
         const fps = 10;
         const qrbox = 250;
         const aspectRatio = 1;
-        console.log(this.qrCodeReader);
         this.qrCodeReader.start(
           { facingMode: "environment" },
           { fps, qrbox, aspectRatio },
