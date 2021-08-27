@@ -56,7 +56,7 @@ def get_cipher_game(cipher_game_id: int) -> Optional[CipherGame]:
 
 def is_visible(cipher_game_id: int) -> bool:
     with Curr_with_conn() as cur:
-        cur.execute("SELECT * FROM cipher_game WHERE visible_from <=  NOW() AND cipher_game_id = %s;", cipher_game_id)
+        cur.execute("SELECT * FROM cipher_game WHERE visible_from <=  NOW() AND cipher_game_id = %s;", (cipher_game_id,))
         result = cur.fetchall()
     return bool(result)
 
