@@ -1,9 +1,7 @@
-from fastapi import APIRouter, Response, Cookie
-from typing import Optional
+from fastapi import Response, Cookie
 
 from db_funcs import *
 from api.logic import user_management
-from routes import Person
 
 router = APIRouter()
 
