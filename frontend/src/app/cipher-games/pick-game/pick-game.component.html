@@ -1,0 +1,7 @@
+<ng-container *ngIf="gamesObs | async as games">
+  <app-game-card *ngFor="let game of games" [game]="game[0]">
+    <button mat-button [routerLink]="['/team/create', game[0].cipher_game_id]"> VYBRAT </button>
+    <button mat-button> DETAIL </button>
+  </app-game-card>
+</ng-container>
+
