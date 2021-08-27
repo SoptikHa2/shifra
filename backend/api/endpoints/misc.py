@@ -1,7 +1,6 @@
 import io
 import subprocess
 import qrcode
-import qrcode.image.svg
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 
@@ -24,14 +23,14 @@ def genQR(teamCode: str):
     # Other cases do not interest us.
     teamCode = teamCode.replace(" ", "%20")
 
-    img = qrcode.make('https://shifra.klubfitpp.cz/join/' + teamCode, image_factory = qrcode.image.svg.SvgImage)
+    img = qrcode.make('https://shifra.klubfitpp.cz/join/' + teamCode)
 
     stream = io.BytesIO()
     img.save(stream)
     stream.seek(0)
 
     # Save the image into fastapi response stream
-    return StreamingResponse(stream, media_type="image/svg")
+    return StreamingResponse(stream, media_type="image/png")
 
 
 @router.get('/api/version')
