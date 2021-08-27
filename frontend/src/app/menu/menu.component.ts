@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService, userModel} from "../services/auth.service";
 import {Observable} from "rxjs";
-import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-menu',
