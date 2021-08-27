@@ -3,13 +3,13 @@ from typing import Optional
 
 
 class Team(BaseModel):
-    team_id: Optional[int] = None
+    team_id: int
     name: str
-    invite_code: str
+    invite_code: Optional[str]
     approved: bool
 
     def strip(self):
-        self.team_id = None
+        self.invite_code = None
         return self
 
 
