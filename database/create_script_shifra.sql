@@ -20,7 +20,7 @@ CREATE TABLE attempt (
     cipher_id INTEGER NOT NULL,
     team_id INTEGER NOT NULL,
     start_time TIMESTAMP NOT NULL,
-    last_attempt_time TIMESTAMP NOT NULL,
+    last_attempt_time TIMESTAMP,
     attempt_count INTEGER NOT NULL DEFAULT(0),
     was_success BOOLEAN NOT NULL
 );
