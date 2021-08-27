@@ -75,7 +75,7 @@ def register(credentials: register_temp_post, response: Response) -> Optional[Pe
         response.status_code = 409
     else:
         response.set_cookie(key='session_cookie', value=new_user.session_cookie, secure=True, samesite='Strict',
-                            httponly=True, max_cookie=COOKIE_TIMEOUT)
+                            httponly=True, max_age=COOKIE_TIMEOUT)
         response.status_code = 201
         new_user.strip()
 
