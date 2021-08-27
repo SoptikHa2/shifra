@@ -7,7 +7,7 @@ class Cipher(BaseModel):
     cipher_game_id: int
     req_cipher_id: Optional[int] = None
     name: str
-    description: str
+    description: Optional[str]
     solution: Optional[str] = None
     judge: Optional[str] = None
     cipher_file: Optional[str] = None
@@ -17,6 +17,12 @@ class Cipher(BaseModel):
     attempts: Optional[int] = None
     score: float
     reference_solution: Optional[str] = None
+
+    def strip_assignment(self):
+        self.description = None
+        self.cipher_file = None
+        self.img = None
+        return self.strip()
 
     def strip(self):
         self.solution = None

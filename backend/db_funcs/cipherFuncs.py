@@ -56,7 +56,7 @@ def get_cipher(cipher_id: int) -> Optional[Cipher]:
 def is_cipher_solved(cipher_id: int, team_id: int) -> bool:
     with Curr_with_conn() as cur:
         cur.execute("SELECT * FROM attempt a "
-                    "WHERE a.cipher_id = %s AND a.team_id = %s AND a.is_successful;",
+                    "WHERE a.cipher_id = %s AND a.team_id = %s AND a.was_success;",
                     (cipher_id, team_id,))
         result = cur.fetchone()
     return result is not None
