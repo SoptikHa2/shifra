@@ -21,15 +21,15 @@ class DB_conn:
 
             config_parser = ConfigParser()
             config_parser.read(cls.INI_FILENAME)
-        #
+            #
             if config_parser.has_section(obj['database']):
                 header = config_parser[obj['database']]
                 cls.__conn_pool = pool.SimpleConnectionPool(cls.min_of_conn,
-                                                           cls.max_of_conn,
-                                                           database=header['database'],
-                                                           user=header['user'],
-                                                           password=header['password'],
-                                                           host=header['host'])
+                                                            cls.max_of_conn,
+                                                            database=header['database'],
+                                                            user=header['user'],
+                                                            password=header['password'],
+                                                            host=header['host'])
                 return True
             return False
 
