@@ -62,10 +62,9 @@ def is_cipher_solved(cipher_id: int, team_id: int) -> bool:
     return result is not None
 
 
-def is_cipher_visible_to_team(cipher: Cipher, team_id: int) -> bool:
+def is_cipher_visible_to_team(cipher: Cipher, team_id: int, team_cipher_game_id: int) -> bool:
     # If team is not signed up into this, cipher is not visible.
-    corresponding_game_id = get_cipher_game_id_from_team(team_id)
-    if cipher.cipher_game_id != corresponding_game_id:
+    if cipher.cipher_game_id != team_cipher_game_id:
         return False
 
     # Check for requirements
