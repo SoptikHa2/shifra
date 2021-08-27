@@ -13,7 +13,7 @@ router = APIRouter()
 def insertAttempt(newAttempt: Attempt):
     with Curr_with_conn() as cur:
         cur.execute(
-            "INSERT INTO attempt(cipher_id, team_id, start_time, last_attempt_time, attempt_count, was_success) VALUES (%s, %s, %s, %s) RETURNING cipher_id;",
+            "INSERT INTO attempt(cipher_id, team_id, start_time, last_attempt_time, attempt_count, was_success) VALUES (%s, %s, %s, %s, %s, %s) RETURNING cipher_id;",
             (newAttempt.cipher_id, newAttempt.team_id, newAttempt.start_time, newAttempt.last_attempt_time, newAttempt.attempt_count, newAttempt.was_success))
         result = cur.fetchone()
     return result[0]
