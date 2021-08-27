@@ -7,14 +7,19 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatRippleModule} from "@angular/material/core";
 import {MatDatepickerModule} from "@angular/material/datepicker";
+import { PickGameComponent } from './pick-game/pick-game.component';
+import { GameCardComponent } from './game-card/game-card.component';
 
 const routes: Routes = [
-  {path: '', component: CipherGameListComponent}
+  {path: '', component: CipherGameListComponent},
+  {path: 'pick', component: PickGameComponent}
 ]
 
 @NgModule({
   declarations: [
-    CipherGameListComponent
+    CipherGameListComponent,
+    PickGameComponent,
+    GameCardComponent
   ],
   imports: [
     CommonModule,
