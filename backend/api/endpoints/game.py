@@ -32,6 +32,41 @@ def get_game_by_id(cipher_game_id: int, response: Response, session_cookie: Opti
         return None
 
 
+@router.get("/api/game/{cipher_game_id}/ciphers")
+def get_ciphers_for_game(cipher_game_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+    404 -> game not found
+    401 -> person not authenticated
+    400 -> person not in any team
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    game = cipherGameFuncs.get_cipher_game(cipher_game_id)
+
+    if game is None:
+        response.status_code = 404
+        return None
+
+    if user is None:
+        response.status_code = 401
+        return None
+
+    all_ciphers = get_ciphers(cipher_game_id)
+
+    # If user is staff, return everything
+    print(user.is_root)
+    if is_staff(cipher_game_id, user.person_id) or user.is_root:
+        return [x.strip() for x in all_ciphers]
+
+    # Else, return just visible ciphers
+    user_team = get_team_by_game_and_user(game.cipher_game_id, user.person_id)
+
+    if user_team is None:
+        response.status_code = 400
+        return None
+
+    return [x.strip() for x in all_ciphers if is_cipher_visible_to_team(x, user_team.team_id)]
+
+
 @router.get("/api/games")
 def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(None)) -> [CipherGame]:
     user = user_management.get_user_by_token(session_cookie)
