@@ -13,16 +13,16 @@ router = APIRouter()
 def insertAttempt(newAttempt: Attempt):
     with Curr_with_conn() as cur:
         cur.execute(
-            "INSERT INTO attempt(cipher_id, team_id, time, is_successful) VALUES (%s, %s, %s, %s) RETURNING cipher_id, team_id;",
-            (newAttempt.cipher_id, newAttempt.team_id, newAttempt.time, newAttempt.is_successful))
+            "INSERT INTO attempt(cipher_id, team_id, start_time, last_attempt_time, attempt_count, was_success) VALUES (%s, %s, %s, %s, %s, %s) RETURNING cipher_id;",
+            (newAttempt.cipher_id, newAttempt.team_id, newAttempt.start_time, newAttempt.last_attempt_time, newAttempt.attempt_count, newAttempt.was_success))
         result = cur.fetchone()
-    return {"cipher_id": result[0], "team_id": result[1]}
+    return result[0]
 
 
 def updateAttempt(cipher_id: int, team_id: int, updatedAttempt: Attempt):
     with Curr_with_conn() as cur:
-        cur.execute("UPDATE attempt SET time=%s, is_successful=%s WHERE cipher_id=%s AND team_id=%s;",
-                    (updatedAttempt.time, updatedAttempt.is_successful, cipher_id, team_id))
+        cur.execute("UPDATE attempt SET start_time=%s, last_attempt_time=%s, attempt_count=%s, was_success=%s WHERE cipher_id=%s AND team_id=%s;",
+                    (updatedAttempt.start_time, updatedAttempt.last_attempt_time, updatedAttempt.attempt_count, updatedAttempt.was_success, cipher_id, team_id))
 
 
 def deleteAttempt(cipher_id: int, team_id: int):
