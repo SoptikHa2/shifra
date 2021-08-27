@@ -83,5 +83,5 @@ def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(Non
         return None
     else:
         response.status_code = 200
-        result = [x.strip() for x in games]
+        result = [(x.strip(), None if user is None else get_team_by_game_and_user(x.cipher_game_id, user.person_id)) for x in games]
     return result
