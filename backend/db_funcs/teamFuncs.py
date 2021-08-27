@@ -12,8 +12,8 @@ router = APIRouter()
 
 def insertTeam(newTeam: Team):
     with Curr_with_conn() as cur:
-        cur.execute("INSERT INTO team (name, invite_code, approved) VALUES(%s, %s, %s) RETURNING team_id;",
-                    (newTeam.name, newTeam.invite_code, newTeam.approved))
+        cur.execute("INSERT INTO team (name, approved) VALUES(%s, %s) RETURNING team_id;",
+                    (newTeam.name, newTeam.approved))
         team_id = cur.fetchone()[0]
     return team_id
 
@@ -70,10 +70,26 @@ def get_game_id(team_id: int) -> int:
 
 def is_full(team_id: int) -> bool:
     with Curr_with_conn() as cur:
-        cur.execute("select teammax from team_member join cipher_game_team using(team_id) join cipher_game using(cipher_game_id) WHERE team_id = %s", (team_id, ))
+        cur.execute("SELECT teammax FROM team_member JOIN cipher_game_team USING(team_id) JOIN cipher_game USING(cipher_game_id) WHERE team_id = %s", (team_id, ))
         array_tmp = cur.fetchall()
         number_of_members = len(array_tmp)
+
+        if number_of_members == 0:
+            return False
+
         capacity = array_tmp[0][0]  # first record and first column (only teammax)
         if number_of_members == capacity:
             return True
         return False
+
+
+def get_id_by_inv_code(inv_code: str) -> Optional[int]:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT team_id FROM team WHERE invite_code = %s", (inv_code,))
+        team_id = cur.fetchone()[0]
+        return team_id
+
+
+def add_invite_code(team_id: int, invite_code: str):
+    with Curr_with_conn() as cur:
+        cur.execute("UPDATE team SET invite_code = %s WHERE team_id = %s;", (invite_code, team_id,))
