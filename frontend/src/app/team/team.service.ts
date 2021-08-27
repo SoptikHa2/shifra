@@ -58,14 +58,13 @@ export class TeamService {
     return this.sanitizer.bypassSecurityTrustUrl('https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FQR_code&psig=AOvVaw0XKpRON6z_3IcFBhHXxTXh&ust=1629620256736000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCPino9vWwfICFQAAAAAdAAAAABAD');
   }
 
-  joinTeam(invite_code: string): Promise<boolean> {
+  joinTeam(invite_code: string): Observable<null> {
     return this.http.post(`${environment.backendUrl}/api/team/join`, {invite_code})
       .pipe(
-        map(() => true),
         catchError(err => {
           if (!environment.production) console.error(err);
-          return of (false);
+          return of (null);
         })
-      ).toPromise();
+      );
   }
 }
