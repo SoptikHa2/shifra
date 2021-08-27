@@ -53,13 +53,13 @@ export class TeamService {
 
   private getQRCodeLink(code: string): SafeUrl {
     // todo: uncomment once API is ready
-    return this.sanitizer.bypassSecurityTrustUrl(
-      `${environment.backendUrl}/api/generateTeamJoinQR/${code}`);
+    //return this.sanitizer.bypassSecurityTrustUrl(
+    //  `${environment.backendUrl}/api/generateTeamJoinQR/${code}`);
     return this.sanitizer.bypassSecurityTrustUrl('https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FQR_code&psig=AOvVaw0XKpRON6z_3IcFBhHXxTXh&ust=1629620256736000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCPino9vWwfICFQAAAAAdAAAAABAD');
   }
 
-  joinTeam(code: string): Promise<boolean> {
-    return this.http.post(`${environment.backendUrl}/api/team/join`, {})
+  joinTeam(invite_code: string): Promise<boolean> {
+    return this.http.post(`${environment.backendUrl}/api/team/join`, {invite_code})
       .pipe(
         map(() => true),
         catchError(err => {
