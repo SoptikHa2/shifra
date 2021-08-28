@@ -3,7 +3,7 @@
 
 from fastapi import FastAPI
 
-from api.endpoints import user, misc, game, team
+from api.endpoints import user, misc, game, team, cipher
 from db_funcs import *
 
 try:
@@ -17,3 +17,4 @@ app.include_router(user.router)
 app.include_router(misc.router)
 app.include_router(game.router)
 app.include_router(team.router)
+app.include_router(cipher.router)
