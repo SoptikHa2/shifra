@@ -54,7 +54,13 @@ def get_ciphers_for_game(cipher_game_id: int, response: Response, session_cookie
 
     # If user is staff, return everything
     if is_staff(cipher_game_id, user.person_id) or user.is_root:
-        return [x.strip_assignment() for x in all_ciphers]
+        ciphers = [x.strip_assignment() for x in all_ciphers]
+        # Add solved if applicable
+        user_team = get_team_by_game_and_user(game.cipher_game_id, user.person_id)
+        if user_team is not None:
+            for cip in ciphers:
+                cip.solved = is_cipher_solved(cip.cipher_id, user_team.team_id)
+        return ciphers
 
     # Else, return just visible ciphers
     user_team = get_team_by_game_and_user(game.cipher_game_id, user.person_id)
