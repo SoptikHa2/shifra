@@ -2,9 +2,9 @@
   <mat-icon>menu</mat-icon>
 </button>
 <mat-menu #menu="matMenu" class="menu-container">
-  <button mat-menu-item (click)="back()">
-    <mat-icon class="material-icons-outlined">arrow_back</mat-icon>
-    <span>Zpět</span>
+  <button mat-menu-item routerLink="/">
+    <mat-icon class="material-icons-outlined">home</mat-icon>
+    <span>Domů</span>
   </button>
   <ng-container *ngIf="userObs | async as user">
     <button mat-menu-item disabled="disabled" *ngIf="user.loggedIn">

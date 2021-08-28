@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService, userModel} from "../services/auth.service";
 import {Observable} from "rxjs";
-import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-menu',
@@ -12,8 +11,7 @@ export class MenuComponent implements OnInit {
   userObs: Observable<userModel | null>;
 
   constructor(
-    private authService: AuthService,
-    private location: Location
+    private authService: AuthService
   ) {
     this.userObs = authService.user.asObservable();
   }
@@ -27,9 +25,5 @@ export class MenuComponent implements OnInit {
     } else {
       this.authService.promptToLogin();
     }
-  }
-
-  back() {
-    this.location.back();
   }
 }

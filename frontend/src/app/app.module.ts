@@ -12,24 +12,26 @@ import { MenuComponent } from './menu/menu.component';
 import {MatMenuModule} from "@angular/material/menu";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 @NgModule({
   declarations: [
     AppComponent,
-    MenuComponent,
+    MenuComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    MatNativeDateModule,
-    MarkdownModule.forRoot(),
-    FormsModule,
-    MatMenuModule,
-    MatButtonModule,
-    MatIconModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        MatNativeDateModule,
+        MarkdownModule.forRoot(),
+        FormsModule,
+        MatMenuModule,
+        MatButtonModule,
+        MatIconModule,
+        MatProgressBarModule,
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
