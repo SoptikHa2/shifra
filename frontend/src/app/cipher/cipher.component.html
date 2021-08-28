@@ -1,3 +1,6 @@
-<div class="cipher-container">
-  <markdown [data]="text"></markdown>
-</div>
+<ng-container *ngIf="cipherObs | async as cipher">
+  <div class="mat-display-1"> {{ cipher.name }} </div>
+  <div class="cipher-container">
+    <markdown [data]="text" class="markdown"></markdown>
+  </div>
+</ng-container>

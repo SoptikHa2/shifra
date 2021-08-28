@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Cipher} from "../model/cipher";
-import {Observable, of} from "rxjs";
+import {Observable, of, throwError} from "rxjs";
 import {catchError} from "rxjs/operators";
 
 @Injectable({
@@ -14,7 +14,7 @@ export class CipherService {
     private http: HttpClient
   ) { }
 
-  getVisibleCiphers(gameId: number) : Observable<Cipher[] | null> {
+  getVisibleCiphers(gameId: number) : Observable<Cipher[]> {
     return this.http.get<Cipher[]>(environment.backendUrl + `/api/game/${gameId}/ciphers`)
       .pipe(catchError(this.handleError));
   }
@@ -30,6 +30,6 @@ export class CipherService {
 
   handleError(err: any) {
     if (!environment.production) console.error(err);
-    return of(null);
+    return throwError(err);
   }
 }

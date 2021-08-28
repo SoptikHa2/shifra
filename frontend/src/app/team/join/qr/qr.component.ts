@@ -39,7 +39,9 @@ export class QRComponent implements OnInit, AfterViewInit, OnDestroy {
   cameras?: CameraDevice[];
   qrCodeReader?: any;
 
-  constructor() {
+  constructor(
+    private router: Router
+  ) {
   }
 
   ngOnInit(): void {
@@ -57,8 +59,14 @@ export class QRComponent implements OnInit, AfterViewInit, OnDestroy {
         this.qrCodeReader.start(
           { facingMode: "environment" },
           { fps, qrbox, aspectRatio },
-          this.qrReadSuccess
-        ).catch((err: any) => {
+          (text: any) => {
+            this.router.navigate(['/team/join/code'], {queryParams: {code: text.split('=').pop()}})
+              .then()
+              .catch(err => {
+                if (!environment.production) console.error(err);
+              })
+          }
+        ).then(console.log).catch((err: any) => {
             if (!environment.production) console.error(err);
           })
       }
@@ -73,9 +81,5 @@ export class QRComponent implements OnInit, AfterViewInit, OnDestroy {
       .catch((err: any) => {
         if (!environment.production) console.error(err);
       })
-  }
-
-  qrReadSuccess(decodedText: any, decodedResult: any) {
-    console.log(decodedText, decodedResult);
   }
 }

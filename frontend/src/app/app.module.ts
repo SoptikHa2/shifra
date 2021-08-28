@@ -6,7 +6,7 @@ import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from "@angular/common/http";
 import {MatNativeDateModule} from "@angular/material/core";
-import {MarkdownModule} from "ngx-markdown";
+import {MarkdownModule, MarkedOptions} from "ngx-markdown";
 import {FormsModule} from "@angular/forms";
 import { MenuComponent } from './menu/menu.component';
 import {MatMenuModule} from "@angular/material/menu";
