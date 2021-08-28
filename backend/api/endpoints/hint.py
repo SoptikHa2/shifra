@@ -45,9 +45,7 @@ def get_hint(hint_id: int, response: Response, session_cookie: Optional[str] = C
         response.status_code = 404
         return None
 
-    if is_hint_used(hint_id, team_id) or use_hint(hint_id, team_id) is False:
-        response.status_code = 204
-        return None
+    if not is_hint_used(hint_id, team_id):
+        use_hint(hint_id, team_id)
 
-    response.status_code = 200
     return game_hint

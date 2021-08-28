@@ -43,14 +43,18 @@ def getHints():
 def get_hints_game(hint_id: int) -> Optional[int]:
     with Curr_with_conn() as cur:
         cur.execute("SELECT cipher.cipher_game_id FROM cipher JOIN hint ON hint.cipher_id = cipher.cipher_id AND hint.hint_id = %s;", (hint_id,))
-        result = cur.fetchall()[0]
-    return result
+        result = cur.fetchone()
+        if result is None:
+            return None
+    return result[0]
 
 
 def get_hint(hint_id: int) -> Optional[Hint]:
     with Curr_with_conn() as cur:
         cur.execute("SELECT * FROM hint WHERE hint_id = %s;", (hint_id,))
-        result = cur.fetchall()[0]
+        result = cur.fetchone()
+        if result is None:
+            return None
     return hint_from_db_row(result)
 
 
@@ -67,7 +71,7 @@ def use_hint(hint_id: int, team_id: int) -> bool:
 def is_hint_used(hint_id: int, team_id: int) -> bool:
     try:
         with Curr_with_conn() as cur:
-            cur.execute("SELECT * FROM used_hint uh WHERE uh.hint_id = %s AND uh.team_id = %s;",
+            cur.execute("SELECT * FROM hint_used uh WHERE uh.hint_id = %s AND uh.team_id = %s;",
                         (hint_id, team_id,))
             result = cur.fetchall()
     except:

@@ -92,5 +92,7 @@ def players_team(user_id: int, game_id: int) -> Optional[int]:
         cur.execute(
             "SELECT tm.team_id FROM team_member tm JOIN cipher_game_team cgt ON  cgt.team_id = tm.team_id AND tm.person_id = %s AND cgt.cipher_game_id = %s;",
             (user_id, game_id,))
-        result = cur.fetchall()
-        return result
+        result = cur.fetchone()
+        if result is None:
+            return None
+        return result[0]
