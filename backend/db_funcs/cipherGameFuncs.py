@@ -38,7 +38,7 @@ def delete_cipher_game(cipher_game_id: int):
         cur.execute("DELETE FROM cipher_game WHERE cipher_game_id = %s;", (cipher_game_id,))
 
 
-def get_cipher_games() -> list[CipherGame]:
+def get_cipher_games() -> [CipherGame]:
     with Curr_with_conn() as cur:
         cur.execute("SELECT * FROM cipher_game;")
         result = cur.fetchall()
@@ -85,3 +85,12 @@ def get_all_cipher_games() -> [CipherGame]:
         cur.execute("SELECT * FROM cipher_game cg;")
         result = cur.fetchall()
         return [cipher_game_from_db_row(x) for x in result]
+
+
+def players_team(user_id: int, game_id: int) -> Optional[int]:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT tm.team_id FROM team_member tm JOIN cipher_game_team cgt ON  cgt.team_id = tm.team_id AND tm.person_id = %s AND cgt.cipher_game_id = %s;",
+            (user_id, game_id,))
+        result = cur.fetchall()
+        return result

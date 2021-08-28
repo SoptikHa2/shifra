@@ -1,6 +1,8 @@
+from typing import Optional
+
 from .DBConn import *
 from fastapi import APIRouter
-from routes import Hint
+from routes.hint import *
 
 router = APIRouter()
 
@@ -36,3 +38,18 @@ def getHints():
         cur.execute("SELECT * FROM hint;")
         result = cur.fetchall()
     return result
+
+
+def get_hints_game(hint_id: int) -> Optional[int]:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT cipher.cipher_game_id FROM cipher JOIN hint ON hint.cipher_id = cipher.cipher_id AND hint.hint_id = %s;", (hint_id,))
+        result = cur.fetchall()[0]
+    return result
+
+
+def get_hint(hint_id: int) -> Optional[Hint]:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM hint WHERE hint_id = %s;", (hint_id,))
+        result = cur.fetchall()[0]
+    return hint_from_db_row(result)
+
