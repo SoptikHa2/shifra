@@ -78,3 +78,8 @@ def is_hint_used(hint_id: int, team_id: int) -> bool:
         return False
     return bool(result)
 
+
+def get_hints_for_cipher(cipher_id: int) -> [Hint]:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT h.* FROM hint h WHERE h.cipher_id = %s;", (cipher_id,))
+        return [hint_from_db_row(x) for x in cur.fetchall()]
