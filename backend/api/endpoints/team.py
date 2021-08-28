@@ -95,12 +95,6 @@ def create_team(cipher_game_id: int, team_name: str, response: Response, session
 
     team_id = teamFuncs.insertTeam(team)
 
-    if team_id is None:
-        # response.status_code = ???
-        logger.critical(create_team.__name__ + " /api/createteam " + str(response.status_code)
-                        + "something bad happened")
-        return None
-
     wg = word_generator()
     con = converter()
     random_string = con.dec_to_36(team_id) + wg.get_word() + wg.get_word()
@@ -119,9 +113,6 @@ def create_team(cipher_game_id: int, team_name: str, response: Response, session
     response.status_code = 200
     return team_id
 
-
-# use of register_temp_post - useless to create new class just for username
-# what to return?
 @router.post('/api/team/join')
 def join_team(inv_code: str, response: Response, username_cred: Optional[register_temp_post] = None, session_cookie: Optional[str] = Cookie(None)) -> Optional[int]:
 
@@ -144,7 +135,7 @@ def join_team(inv_code: str, response: Response, username_cred: Optional[registe
             logger.info(join_team.__name__ + " /api/team/join " + str(response.status_code) + ": team does not exist")
             return None
         if teamFuncs.is_full(team_id):
-            # response.status_code = ???
+            response.status_code = 409
             logger.info(join_team.__name__ + " /api/team/join - full team " + str(team_id))
             return None
 
@@ -160,11 +151,12 @@ def join_team(inv_code: str, response: Response, username_cred: Optional[registe
             joinTeam(team_id, new_user.person_id)
             return team_id
 
-    except:
+        response.status_code = 200
+        joinTeam(team_id, user.person_id)
+        return team_id
 
-        logger.warning(join_team.__name__ + " /api/team/join - something went wrong (Database is down, or user already joined this cipher game)")
-        # response.status_code = ???
+    except:
+        response.status_code = 409
+        logger.info(join_team.__name__ + " /api/team/join " + str(response.status_code) + ": user is already in the team (user_id, team_id)- (" + str(user.person_id) + ", " + str(team_id) + ")")
         return None
-    response.status_code = 200
-    joinTeam(team_id, user.person_id)
-    return team_id
+

@@ -28,6 +28,7 @@ def updateTeam(team_id: int, updated_team: Team):
 def deleteTeam(team_id: int):
     with Curr_with_conn() as cur:
         cur.execute("DELETE FROM team WHERE team_id = %s;", (team_id,))
+    return team_id
 
 
 def getTeam(team_id: int):
@@ -65,7 +66,7 @@ def get_game_id(team_id: int) -> int:
     with Curr_with_conn() as cur:
         cur.execute("SELECT cgt.cipher_game_id FROM cipher_game_team cgt WHERE cgt.team_id = %s;", team_id)
         result = cur.fetchone()[0]
-        return int(result)
+    return int(result)
 
 
 def is_full(team_id: int) -> bool:
@@ -87,9 +88,10 @@ def get_id_by_inv_code(inv_code: str) -> Optional[int]:
     with Curr_with_conn() as cur:
         cur.execute("SELECT team_id FROM team WHERE invite_code = %s", (inv_code,))
         team_id = cur.fetchone()[0]
-        return team_id
+    return team_id
 
 
 def add_invite_code(team_id: int, invite_code: str):
     with Curr_with_conn() as cur:
         cur.execute("UPDATE team SET invite_code = %s WHERE team_id = %s;", (invite_code, team_id,))
+    return team_id
