@@ -12,7 +12,7 @@
     <input matInput formControlName="code">
     <mat-error *ngIf="codeControl.invalid"> {{ 'Požadováno' }} </mat-error>
   </mat-form-field>
-  <div class="error"></div>
+  <div class="error form-item" *ngIf="error"> {{ error }} </div>
   <div class="buttons">
     <button mat-raised-button color="primary"
             type="submit" [disabled]="!joinTeamForm.valid">
