@@ -26,17 +26,13 @@ export class LoadingService {
 
   startLoading<T>(task: Observable<T>): Observable<T> {
     ++this.TasksRunningCount;
-    console.log("remaining tasks:", this.TasksRunningCount);
     return task.pipe(
       tap((val) => {
-        console.log(val)
         --this.TasksRunningCount;
-        console.log("remaining tasks:", this.TasksRunningCount);
       }),
       catchError(err => {
         if (!environment.production) console.error(err);
         --this.TasksRunningCount;
-        console.log("remaining tasks:", this.TasksRunningCount);
         return throwError(err);
       })
     );
