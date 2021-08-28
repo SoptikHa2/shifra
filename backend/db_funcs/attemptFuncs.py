@@ -42,3 +42,13 @@ def getAttempts():
         cur.execute("SELECT * FROM attempt")
         result = cur.fetchall()
     return result
+
+
+def log_cipher_view_into_attempt(cipher_id: int, team_id: int):
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM attempt WHERE cipher_id=%s AND team_id=%s;", (cipher_id, team_id))
+        result = cur.fetchone()
+        if result is None:
+            # Team is seeing this for the first time
+            cur.execute("INSERT INTO attempt (cipher_id, team_id, start_time, last_attempt_time, attempt_count, was_success) "
+                        "VALUES (%s, %s, now(), NULL, 0, false);", (cipher_id, team_id,))

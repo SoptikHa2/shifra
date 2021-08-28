@@ -37,4 +37,5 @@ def get_team_by_id(team_id: int, response: Response, session_cookie: Optional[st
 
     response.status_code = 200
     team_info.strip()
+    team_info.members = [x.strip_with_email() for x in get_team_members(team_info.team_id)]
     return team_info
