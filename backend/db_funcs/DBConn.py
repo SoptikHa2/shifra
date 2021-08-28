@@ -18,6 +18,7 @@ class DB_conn:
             config_parser = ConfigParser()
             config_parser.read(cls.INI_FILENAME)
 
+
             header = config_parser[obj['database']]
             cls.__conn_pool = pool.SimpleConnectionPool(cls.min_of_conn,
                                                        cls.max_of_conn,
@@ -25,6 +26,7 @@ class DB_conn:
                                                        user=header['user'],
                                                        password=header['password'],
                                                        host=header['host'])
+
 
     @classmethod
     def get_conn(cls):

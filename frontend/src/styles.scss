@@ -1,4 +1,6 @@
 
+@use './app/theme/markdown-theme';
+
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '~@angular/material' as mat;
@@ -14,10 +16,11 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $dark-primary: mat.define-palette(mat.$pink-palette, 700, 500, 900);
-$dark-accent: mat.define-palette(mat.$blue-grey-palette, A200, A100, A400);
+$dark-accent: mat.define-palette(mat.$light-green-palette, A200, A100, A400);
+$dark-warn: mat.define-palette(mat.$amber-palette, 500);
 
 // The warn palette is optional (defaults to red).
-$dark-warn: mat.define-palette(mat.$red-palette);
+$dark-error: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
@@ -25,7 +28,8 @@ $dark-theme: mat.define-dark-theme((
   color: (
     primary: $dark-primary,
     accent: $dark-accent,
-    warn: $dark-warn,
+    error: $dark-error,
+    warn: $dark-warn
   )
 ));
 
@@ -42,7 +46,7 @@ $dark-theme: mat.define-dark-theme((
   $warn-palette: map.get($color-config, 'warn');
 
 
-  body {
+  body, .background {
     @if map.get($color-config, 'is-dark') {
       background: #303030;
       color: #FAFAFA;
@@ -65,5 +69,21 @@ $dark-theme: mat.define-dark-theme((
 
 @include background($dark-theme);
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  max-width: 100%;
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}

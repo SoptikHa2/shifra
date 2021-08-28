@@ -1,9 +1,10 @@
 # code inspirated by (https://www.youtube.com/watch?v=OOSl2jeAA5U)
 # safe to use, code is under unlicense license (https://unlicense.org)
 
+
 from fastapi import FastAPI, Response
 from logger import *
-from api.endpoints import user, misc, game, team
+from api.endpoints import user, misc, game, team, cipher, hint
 from db_funcs import *
 
 try:
@@ -20,3 +21,5 @@ app.include_router(user.router)
 app.include_router(misc.router)
 app.include_router(game.router)
 app.include_router(team.router)
+app.include_router(cipher.router)
+app.include_router(hint.router)

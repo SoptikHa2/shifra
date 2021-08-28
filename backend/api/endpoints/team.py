@@ -1,7 +1,9 @@
+
 import sys
 
 from fastapi import APIRouter, Response, Cookie
 from typing import Optional
+
 
 from backend.api.endpoints.user import register_temp_post
 from backend.db_funcs import teamFuncs, cipherGameFuncs
@@ -13,6 +15,7 @@ sys.path.append("../../")
 from db_funcs import *
 
 from api.logic import user_management
+
 from routes import Person
 from logger import *
 from word_generator import *
@@ -56,6 +59,7 @@ def get_team_by_id(team_id: int, response: Response, session_cookie: Optional[st
 
     response.status_code = 200
     team_info.strip()
+    team_info.members = [x.strip_with_email() for x in get_team_members(team_info.team_id)]
     return team_info
 
 

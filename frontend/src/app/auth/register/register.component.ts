@@ -6,7 +6,7 @@ import {PasswordMatcher} from "../../validators/password.validator";
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['../auth-common.scss', './register.component.scss']
+  styleUrls: ['../../theme/form-theme.scss', './register.component.scss']
 })
 export class RegisterComponent implements OnInit {
   error: string | undefined;

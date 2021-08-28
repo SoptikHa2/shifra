@@ -11,4 +11,5 @@ export interface Cipher {
   attempts?: number;
   score: number;
   reference_solution?: string;
+  solved: boolean;
 }

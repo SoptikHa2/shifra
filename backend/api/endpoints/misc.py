@@ -11,7 +11,7 @@ router = APIRouter()
 @router.get('/api/generateTeamJoinQR/{teamCode}')
 def genQR(teamCode: str):
     """
-    Generate QR code pointing to https://shifra.klubfitpp.cz/join/[ID].
+    Generate QR code pointing to https://shifra.klubfitpp.cz/team/join/code?code=[ID].
 
     The user should see a confirmation screen asking whether they
     want to join a team for given cipher.
@@ -24,13 +24,14 @@ def genQR(teamCode: str):
     # Other cases do not interest us.
     teamCode = teamCode.replace(" ", "%20")
 
-    img = qrcode.make('https://shifra.klubfitpp.cz/team/join/code?code=' + teamCode, image_factory=qrcode.image.svg.SvgImage)
+
+    img = qrcode.make('https://shifra.klubfitpp.cz/team/join/code?code=' + teamCode, image_factory = qrcode.image.svg.SvgImage)
 
     stream = io.BytesIO()
     img.save(stream)
 
-    image = stream.getvalue()
-    return base64.b64encode(image)
+    # Save the image into fastapi response stream
+    return StreamingResponse(stream, media_type="image/svg+xml")
 
 
 @router.get('/api/version')

@@ -11,6 +11,7 @@ from routes import Person
 
 router = APIRouter()
 
+COOKIE_TIMEOUT = 365 * 24 * 3600
 
 class login_post(BaseModel):
     username: str
@@ -42,7 +43,7 @@ def login(credentials: login_post, response: Response) -> Optional[Person]:
     if logged_in_person is not None:
         # Set cookies
         response.set_cookie(key='session_cookie', value=logged_in_person.session_cookie, secure=True, samesite='Strict',
-                            httponly=True)
+                            httponly=True, max_age=COOKIE_TIMEOUT)
         response.status_code = 200
         # Strip logged_in_person details
         logged_in_person.strip()
@@ -79,7 +80,7 @@ def register(credentials: register_temp_post, response: Response) -> Optional[Pe
         logger.info(register.__name__ + " /api/auth/temporaryRegister (POST) / ERROR CODE " + str(response.status_code) + ": temporary user was not created")
     else:
         response.set_cookie(key='session_cookie', value=new_user.session_cookie, secure=True, samesite='Strict',
-                            httponly=True)
+                            httponly=True, max_age=COOKIE_TIMEOUT)
         response.status_code = 201
         new_user.strip()
     return new_user

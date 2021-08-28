@@ -1,15 +1,16 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 
 class Team(BaseModel):
-    team_id: Optional[int] = None
+    team_id: int
     name: str
-    invite_code: str
+    invite_code: Optional[str]
+    members: List = []
     approved: bool
 
     def strip(self):
-        self.team_id = None
+        self.invite_code = None
         return self
 
 

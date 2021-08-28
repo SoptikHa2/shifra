@@ -1,0 +1,14 @@
+.attribute-value {
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  min-width: 0;
+  flex: 1;
+}
+
+@media screen and (max-width: 560px) {
+  .attribute-value {
+    max-width: 160px;
+  }
+}

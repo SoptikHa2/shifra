@@ -1,0 +1,24 @@
+<form [formGroup]="joinTeamForm" (ngSubmit)="joinTeam()">
+  <div class="grow-container label">
+    <h1 class="mat-display-3">Připojit se k teamu</h1>
+  </div>
+  <mat-form-field appearance="outline" class="form-item">
+    <mat-label> Uživatelské jméno </mat-label>
+    <input matInput formControlName="username"/>
+    <mat-error *ngIf="usernameControl.valid"> {{ usernameErrorMessage() }} </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="form-item">
+    <mat-label> kód </mat-label>
+    <input matInput formControlName="code">
+    <mat-error *ngIf="codeControl.invalid"> {{ 'Požadováno' }} </mat-error>
+  </mat-form-field>
+  <div class="error form-item" *ngIf="error"> {{ error }} </div>
+  <div class="buttons">
+    <button mat-raised-button color="primary"
+            type="submit" [disabled]="!joinTeamForm.valid">
+      Přidat se
+    </button>
+  </div>
+  <div class="grow-container"></div>
+</form>
+

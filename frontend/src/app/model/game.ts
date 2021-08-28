@@ -8,5 +8,5 @@ export interface Game {
   deadline_event: Date;
   capacity: number;
   teammax: number;
-  autoapprove: boolean;
+  teamId: number | null;
 }

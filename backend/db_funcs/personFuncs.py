@@ -38,6 +38,7 @@ def deletePerson(person_id: int):
     with Curr_with_conn() as cur:
         cur.execute("DELETE FROM person WHERE person_id = %s;", (person_id,))
 
+
 def getPerson(person_id: int):
     with Curr_with_conn() as cur:
         cur.execute("SELECT * FROM person WHERE person_id = %s;", (person_id,))

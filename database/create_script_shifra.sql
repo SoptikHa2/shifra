@@ -19,8 +19,10 @@ DROP TABLE IF EXISTS person_team CASCADE;
 CREATE TABLE attempt (
     cipher_id INTEGER NOT NULL,
     team_id INTEGER NOT NULL,
-    time TIMESTAMP NOT NULL,
-    is_successful BOOLEAN NOT NULL
+    start_time TIMESTAMP NOT NULL,
+    last_attempt_time TIMESTAMP,
+    attempt_count INTEGER NOT NULL DEFAULT(0),
+    was_success BOOLEAN NOT NULL
 );
 ALTER TABLE attempt ADD CONSTRAINT pk_attempt PRIMARY KEY (cipher_id, team_id);
 
@@ -81,7 +83,7 @@ ALTER TABLE person ADD CONSTRAINT pk_person PRIMARY KEY (person_id);
 CREATE TABLE team (
     team_id SERIAL NOT NULL,
     name VARCHAR(256) NOT NULL,
-    invite_code VARCHAR(256) NOT NULL,
+    invite_code VARCHAR(256),
     approved BOOLEAN NOT NULL
 );
 ALTER TABLE team ADD CONSTRAINT pk_team PRIMARY KEY (team_id);

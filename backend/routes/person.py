@@ -11,10 +11,13 @@ class Person(BaseModel):
     password: Optional[str] = None
 
     def strip(self):
-        self.person_id = 0
         self.session_cookie = None
         self.password = None
         return self
+
+    def strip_with_email(self):
+        self.mail = None
+        return self.strip()
 
 
 def person_from_db_row(row) -> Person:

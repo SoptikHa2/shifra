@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -5,5 +7,7 @@ from datetime import datetime
 class Attempt(BaseModel):
     cipher_id: int
     team_id: int
-    time: datetime
-    is_successful: bool
+    start_time: datetime
+    last_attempt_time: Optional[datetime]
+    attempt_count: int
+    was_success: bool

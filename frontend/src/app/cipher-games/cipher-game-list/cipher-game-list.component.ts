@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {GameService} from "../../services/game.service";
 import {Game} from "../../model/game";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
+import {Team} from "../../model/team";
 
 @Component({
   selector: 'app-cipher-game-list',
@@ -9,7 +10,7 @@ import {Observable, of} from "rxjs";
   styleUrls: ['./cipher-game-list.component.scss']
 })
 export class CipherGameListComponent implements OnInit {
-  gamesObs: Observable<Game[] | null>;
+  gamesObs: Observable<[Game, Team | null][] | null>;
 
   constructor(
     private gameService: GameService
