@@ -63,7 +63,10 @@ def get_ciphers_for_game(cipher_game_id: int, response: Response, session_cookie
         response.status_code = 400
         return None
 
-    return [x.strip_assignment() for x in all_ciphers if is_cipher_visible_to_team(x, user_team.team_id, get_cipher_game_id_from_team(user_team.team_id))]
+    stripped_ciphers = [x.strip_assignment() for x in all_ciphers if is_cipher_visible_to_team(x, user_team.team_id, get_cipher_game_id_from_team(user_team.team_id))]
+    for stripped_cipher in stripped_ciphers:
+        stripped_cipher.solved = is_cipher_solved(stripped_cipher.cipher_id, user_team.team_id)
+    return stripped_ciphers
 
 
 @router.get("/api/games")

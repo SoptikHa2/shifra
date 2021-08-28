@@ -17,6 +17,7 @@ class Cipher(BaseModel):
     attempts: Optional[int] = None
     score: float
     reference_solution: Optional[str] = None
+    solved: bool = False
 
     def strip_assignment(self):
         self.description = None

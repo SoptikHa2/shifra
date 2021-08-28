@@ -1,7 +1,7 @@
 from .DBConn import *
 from fastapi import APIRouter
-from routes import Team, team_from_db_row
-from typing import Optional
+from routes import Team, team_from_db_row, Person, person_from_db_row
+from typing import Optional, List
 
 router = APIRouter()
 
@@ -72,7 +72,7 @@ def get_team_info(team_id: int) -> Optional[Team]:
 
 def get_game_id(team_id: int) -> int:
     with Curr_with_conn() as cur:
-        cur.execute("SELECT cgt.cipher_game_id FROM cipher_game_team cgt WHERE cgt.team_id = %s;", team_id)
+        cur.execute("SELECT cgt.cipher_game_id FROM cipher_game_team cgt WHERE cgt.team_id = %s;", (team_id,))
         result = cur.fetchone()[0]
         return int(result)
 
@@ -85,3 +85,12 @@ def get_cipher_game_id_from_team(team_id: int) -> Optional[int]:
         if result is None:
             return None
         return result[0]
+
+
+def get_team_members(team_id: int) -> List[Person]:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT p.* FROM person p "
+                    "JOIN team_member tm on tm.person_id = p.person_id "
+                    "WHERE tm.team_id = %s;", (team_id,))
+        people = cur.fetchall()
+        return [person_from_db_row(x) for x in people]

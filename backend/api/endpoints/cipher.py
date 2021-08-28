@@ -43,5 +43,6 @@ def open_cipher(cipher_id: int, response: Response, session_cookie: Optional[str
     if team is not None:
         # Don't log if user is not in any team here (staff, root)
         log_cipher_view_into_attempt(cipher_id, team.team_id)
+        cipher.solved = is_cipher_solved(cipher_id, team.team_id)
 
     return cipher.strip()
