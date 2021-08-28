@@ -7,6 +7,8 @@ import {AuthService} from "../../../services/auth.service";
 import {LoadingService} from "../../../services/loading.service";
 import {Observable} from "rxjs";
 import {map, mergeMap, skip, skipWhile} from "rxjs/operators";
+import {environment} from "../../../../environments/environment.prod";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-code',
@@ -14,6 +16,7 @@ import {map, mergeMap, skip, skipWhile} from "rxjs/operators";
   styleUrls: ['./code.component.scss', '../../../theme/form-theme.scss']
 })
 export class CodeComponent implements OnInit {
+  error?: string;
   joinTeamForm: FormGroup;
   codeControl: FormControl;
   usernameControl: FormControl;
@@ -55,13 +58,20 @@ export class CodeComponent implements OnInit {
 
   joinTeam() {
     this.teamService.joinTeam(this.codeControl.value)
-      .then(success => {
-        if (success) {
-          this.router.navigate(['team']).then();
-        } else {
-
+      .subscribe((teamId) => {
+        this.router.navigate(['/team', teamId])
+          .then()
+          .catch(err => {
+            if (!environment.production) console.error(err);
+          });
+      }, (err: HttpErrorResponse) => {
+        // todo: add better error messages
+        if (err.status >= 400 && err.status < 500) {
+          this.error = "Nepodařilo se připojit k teamu";
+        } else if (err.status >= 500) {
+          this.error = "Stala se chyba na straně serveru";
         }
-      });
+      })
   }
 
   usernameErrorMessage(): string | undefined {

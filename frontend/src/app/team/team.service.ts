@@ -1,7 +1,7 @@
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {catchError, map} from "rxjs/operators";
-import {Observable, of} from "rxjs";
+import {Observable, of, throwError} from "rxjs";
 import {Team} from "../model/team";
 import {Injectable} from "@angular/core";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
@@ -58,12 +58,12 @@ export class TeamService {
     return this.sanitizer.bypassSecurityTrustUrl('https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FQR_code&psig=AOvVaw0XKpRON6z_3IcFBhHXxTXh&ust=1629620256736000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCPino9vWwfICFQAAAAAdAAAAABAD');
   }
 
-  joinTeam(invite_code: string): Observable<null> {
-    return this.http.post(`${environment.backendUrl}/api/team/join`, {invite_code})
+  joinTeam(invite_code: string): Observable<number> {
+    return this.http.post<number>(`${environment.backendUrl}/api/team/join`, {invite_code})
       .pipe(
-        catchError(err => {
+        catchError((err) => {
           if (!environment.production) console.error(err);
-          return of (null);
+          return throwError(err);
         })
       );
   }
