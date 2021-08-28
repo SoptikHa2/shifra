@@ -54,7 +54,7 @@ def get_ciphers_for_game(cipher_game_id: int, response: Response, session_cookie
 
     # If user is staff, return everything
     if is_staff(cipher_game_id, user.person_id) or user.is_root:
-        return [x.strip() for x in all_ciphers]
+        return [x.strip_assignment() for x in all_ciphers]
 
     # Else, return just visible ciphers
     user_team = get_team_by_game_and_user(game.cipher_game_id, user.person_id)
@@ -63,7 +63,7 @@ def get_ciphers_for_game(cipher_game_id: int, response: Response, session_cookie
         response.status_code = 400
         return None
 
-    return [x.strip() for x in all_ciphers if is_cipher_visible_to_team(x, user_team.team_id, get_cipher_game_id_from_team(user_team.team_id))]
+    return [x.strip_assignment() for x in all_ciphers if is_cipher_visible_to_team(x, user_team.team_id, get_cipher_game_id_from_team(user_team.team_id))]
 
 
 @router.get("/api/games")

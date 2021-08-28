@@ -31,7 +31,7 @@ def genQR(teamCode: str):
     stream.seek(0)
 
     # Save the image into fastapi response stream
-    return StreamingResponse(stream, media_type="image/svg")
+    return StreamingResponse(stream, media_type="image/svg+xml")
 
 
 @router.get('/api/version')
