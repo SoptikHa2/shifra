@@ -13,6 +13,7 @@ def get_hint(hint_id: int, response: Response, session_cookie: Optional[str] = C
         Check possibility to get hint and give hint if it is possible
         :param hint_id: Hint id to us
         :return 200 Everything was OK
+                204 Fault while recording hint use
                 401 Not authorized
                 404 Not existing hint/game
     """
@@ -42,6 +43,10 @@ def get_hint(hint_id: int, response: Response, session_cookie: Optional[str] = C
     game_hint = hintFuncs.get_hint(hint_id)
     if game_hint is None:
         response.status_code = 404
+        return None
+
+    if is_hint_used(hint_id, team_id) or use_hint(hint_id, team_id) is False:
+        response.status_code = 204
         return None
 
     response.status_code = 200

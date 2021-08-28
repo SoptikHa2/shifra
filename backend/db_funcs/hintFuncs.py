@@ -53,3 +53,24 @@ def get_hint(hint_id: int) -> Optional[Hint]:
         result = cur.fetchall()[0]
     return hint_from_db_row(result)
 
+
+def use_hint(hint_id: int, team_id: int) -> bool:
+    try:
+        with Curr_with_conn() as cur:
+            cur.execute("INSERT INTO hint_used(hint_id, team_id) VALUES(%s, %s);",
+                        (hint_id, team_id,))
+    except:
+        return False
+    return True
+
+
+def is_hint_used(hint_id: int, team_id: int) -> bool:
+    try:
+        with Curr_with_conn() as cur:
+            cur.execute("SELECT * FROM used_hint uh WHERE uh.hint_id = %s AND uh.team_id = %s;",
+                        (hint_id, team_id,))
+            result = cur.fetchall()
+    except:
+        return False
+    return bool(result)
+
