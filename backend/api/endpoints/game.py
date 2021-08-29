@@ -94,3 +94,43 @@ def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(Non
         response.status_code = 200
         result = [(x.strip(), None if user is None else get_team_by_game_and_user(x.cipher_game_id, user.person_id)) for x in games]
     return result
+
+
+@router.get('/api/leaderboard/{cipher_game_id}')
+def get_leaderboard(cipher_game_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+        Shows leaderboard of specified game
+        :param cipher_game_id: Game id to use
+        :return 200 everything is OK
+                401 no permissions to see leaderboard
+    """
+
+    user = user_management.get_user_by_token(session_cookie)
+    if is_visible(cipher_game_id) or is_staff(cipher_game_id, user.person_id) or user.is_root:
+        return cipherGameFuncs.get_leaderboard(cipher_game_id)
+    else:
+        response.status_code = 401
+        return None
+
+
+@router.get('/api/game/{cipher_game_id}/teams')
+def get_teams_in_game(cipher_game_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+        Show all teams registered in game with specified id
+        :param cipher_game_id: Game id to use
+        :return 200 everything is OK
+                401 not visible game
+    """
+    user = user_management.get_user_by_token(session_cookie)
+
+    if not is_visible(cipher_game_id):
+        if user is None:
+            response.status_code = 401
+            return None
+        elif not user.is_root and not is_staff(cipher_game_id, user.person_id):
+            response.status_code = 401
+            return None
+
+    teams_in_game = cipherGameFuncs.get_all_teams(cipher_game_id)
+    return [x.strip() for x in teams_in_game]
+
