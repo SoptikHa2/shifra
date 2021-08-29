@@ -3,6 +3,7 @@ import {CipherService} from "../services/cipher.service";
 import {ActivatedRoute} from "@angular/router";
 import {Observable} from "rxjs";
 import {Cipher} from "../model/cipher";
+import {Hint} from "../model/hint";
 
 @Component({
   selector: 'app-cipher',
@@ -18,6 +19,16 @@ export class CipherComponent implements OnInit {
   ) {
     this.cipherObs = this.cipherService
       .getCipher(this.route.snapshot.params['id'])
+  }
+
+  getHintCostText(hint: Hint) {
+    if (hint.score_cost && hint.time_cost)
+      return `-${hint.score_cost} bodů, -${hint.time_cost} sekund`;
+    if (hint.score_cost)
+      return `-${hint.score_cost} bodů`;
+    if (hint.time_cost)
+      return `-${hint.time_cost} sekund`;
+    return 'Zdarma';
   }
 
   ngOnInit(): void {

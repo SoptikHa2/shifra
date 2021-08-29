@@ -3,8 +3,8 @@
   <div class="cipher-container">
     <markdown [data]="cipher.description" class="markdown"></markdown>
   </div>
-  <div class="download" *ngIf="cipher.cipher_file">
-    <button mat-raised-button color="primary">
+  <div class="button-row" *ngIf="cipher.cipher_file">
+    <button mat-raised-button color="accent">
       <mat-icon style="margin-right: 2px;">download</mat-icon>
       {{ cipher.cipher_file }}
     </button>
@@ -12,13 +12,18 @@
   <div class="mat-display-1 hint-label"> Nápovědy </div>
   <mat-list class="hint-list" *ngIf="cipher.hints">
     <mat-list-item *ngFor="let hint of cipher.hints">
-       <div></div>
+       <div> Nápověda ({{ getHintCostText(hint) }}) </div>
        <div style="flex-grow: 1"></div>
-       <button mat-button color="primary">  </button>
+       <button mat-button color="accent"> text </button>
     </mat-list-item>
   </mat-list>
   <mat-form-field appearance="outline" class="solution">
     <mat-label> Řešení </mat-label>
     <textarea rows="5" matInput placeholder="Placeholder"></textarea>
   </mat-form-field>
+  <div class="button-row">
+    <button mat-raised-button color="primary">
+      Odevzdat
+    </button>
+  </div>
 </ng-container>

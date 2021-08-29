@@ -23,9 +23,10 @@
   }
 }
 
-.download {
+.button-row {
   margin-top: 32px;
   text-align: center;
+
   button {
     width: 100%;
     height: 64px;
@@ -46,5 +47,7 @@
 }
 
 .hint-list {
-  display: flex;
+  mat-list-item div {
+    display: flex;
+  }
 }
