@@ -67,3 +67,28 @@ def edit_team(team_id: int, edits: EditTeam, response: Response, session_cookie:
 
     edited_team = teamFuncs.edit_team(team_id, edits)
     return edited_team
+
+
+@router.delete('/api/team/{team_id}')
+def delete_team(team_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+        Delete existing team by root
+        :param team_id team to delete
+        :return 200 Everything OK
+                401 No permission
+                404 Not existing team
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    if not user.is_root:
+        response.status_code = 401
+        return None
+
+    if not is_team(team_id):
+        response.status_code = 404
+        return None
+
+    deleteTeam(team_id)
