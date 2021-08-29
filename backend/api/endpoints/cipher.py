@@ -49,3 +49,29 @@ def open_cipher(cipher_id: int, response: Response, session_cookie: Optional[str
     cipher.hints = [h.strip() for h in get_hints_for_cipher(cipher_id)]
 
     return cipher.strip()
+
+
+@router.delete('/api/cipher/{cipher_id}')
+def delete_cipher(cipher_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+        Delete of existing cipher by root or staff
+        :param cipher_id to delete
+        :return 200 Everything OK
+                401 No permission
+                404 Not found
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    cipher = get_cipher(cipher_id)
+    if cipher is None:
+        response.status_code = 404
+        return None
+
+    if not user.is_root and not is_staff(cipher.cipher_game_id, user.person_id):
+        response.status_code = 401
+        return None
+
+    cipherFuncs.delete_cipher(cipher_id)
