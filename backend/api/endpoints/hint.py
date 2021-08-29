@@ -49,3 +49,30 @@ def get_hint(hint_id: int, response: Response, session_cookie: Optional[str] = C
         use_hint(hint_id, team_id)
 
     return game_hint
+
+
+@router.post('/api/hint')
+def create_hint(hint: Hint, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Hint]:
+    """
+        create hint to existing cipher
+        :hint to create
+        :return 200 Everything OK
+                401 No permission
+                404 Not found cipher
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    cipher = get_cipher(hint.cipher_id)
+    if cipher is None:
+        response.status_code = 404
+        return None
+
+    if not user.is_root and not is_staff(cipher.cipher_game_id, user.person_id):
+        response.status_code = 401
+        return None
+
+    insertHint(hint)
+    return hint
