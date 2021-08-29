@@ -1,6 +1,7 @@
 from fastapi import Response, Cookie
 
 from db_funcs import *
+from routes.team import EditTeam, Team
 from api.logic import user_management
 
 router = APIRouter()
@@ -39,3 +40,30 @@ def get_team_by_id(team_id: int, response: Response, session_cookie: Optional[st
     team_info.strip()
     team_info.members = [x.strip_with_email() for x in get_team_members(team_info.team_id)]
     return team_info
+
+
+@router.put('/api/team/{team_id}')
+def edit_team(team_id: int, edits: EditTeam, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Team]:
+    """
+        Edit team information according to edit
+        :param edits show data to edit
+        :param team_id id of team to edit
+        :return 200 Everything OK
+                401 No permission
+                404 Not found team
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    if not user.is_root and not is_in_team(team_id, user.person_id):
+        response.status_code = 401
+        return None
+
+    if not is_team(team_id):
+        response.status_code = 404
+        return None
+
+    edited_team = teamFuncs.edit_team(team_id, edits)
+    return edited_team
