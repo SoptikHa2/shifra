@@ -132,5 +132,5 @@ def get_teams_in_game(cipher_game_id: int, response: Response, session_cookie: O
             return None
 
     teams_in_game = cipherGameFuncs.get_all_teams(cipher_game_id)
-    return [x.strip() for x in teams_in_game]
+    return teams_in_game
 
