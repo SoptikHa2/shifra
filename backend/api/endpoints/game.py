@@ -132,6 +132,7 @@ def set_admin(cipher_game_id: int, user_id: int, response: Response, session_coo
     if user is None:
         response.status_code = 401
         return None
+
     if not user.is_root:
         response.status_code = 401
         return None
@@ -204,3 +205,21 @@ def edit_game(cipher_game_id: int, cipher_game_edits: EditCipherGame, response: 
 
     edited_game = cipherGameFuncs.edit_game(cipher_game_id, cipher_game_edits)
     return edited_game
+
+@router.delete('/api/game/{cipher_game_id}')
+def delete_game(cipher_game_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+        Delete game if user is root
+        :return 200 Everything OK
+                401 not root
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    if not user.is_root:
+        response.status_code = 401
+        return None
+
+    cipherGameFuncs.delete_cipher_game(cipher_game_id)
