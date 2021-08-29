@@ -7,6 +7,10 @@ import {FormsModule} from "@angular/forms";
 import { CipherListComponent } from './cipher-list/cipher-list.component';
 import {MatIconModule} from "@angular/material/icon";
 import {MatRippleModule} from "@angular/material/core";
+import {MatButtonModule} from "@angular/material/button";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatListModule} from "@angular/material/list";
 
 const routes: Routes = [
   {
@@ -30,7 +34,11 @@ const routes: Routes = [
     MarkdownModule,
     FormsModule,
     MatIconModule,
-    MatRippleModule
+    MatRippleModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatListModule
   ]
 })
 export class CipherModule { }

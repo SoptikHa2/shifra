@@ -8,10 +8,10 @@
 <div class="cards-container">
   <ng-container *ngIf="gamesObs | async as games">
     <app-game-card *ngFor="let game of games" [game]="game[0]">
-      <button mat-button *ngIf="game[1]">
+      <button mat-button *ngIf="!game[1]">
         Zapojit se
       </button>
-      <button mat-button *ngIf="!game[1]">
+      <button mat-button *ngIf="game[1]">
         Pokračovat
       </button>
       <button mat-button> DETAIL </button>

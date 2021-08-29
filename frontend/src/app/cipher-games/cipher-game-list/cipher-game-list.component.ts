@@ -18,8 +18,8 @@ export class CipherGameListComponent implements OnInit {
   ) {
     this.gamesObs = this.gameService.getGames()
       .pipe(map(games => [
-          ...games!.filter(val => val[1] == null),
-          ...games!.filter(val => val[1] != null)
+        ...games!.filter(val => val[1] != null),
+        ...games!.filter(val => val[1] == null)
         ]));
   }
 

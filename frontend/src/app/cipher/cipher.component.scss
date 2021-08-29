@@ -1,22 +1,20 @@
 :host {
   display: block;
-  padding: 64px 0;
-}
-
-.cipher-container {
-  margin: 0 auto;
-  width: 50%;
-}
-
-.mat-display-1 {
-  text-align: center;
-  margin-bottom: 32px;
+  padding: 0 64px 64px;
+  box-sizing: border-box;
 }
 
 @media screen and (max-width: 560px) {
-  .cipher-container {
-    width: 80%;
+  :host {
+    padding: 0 32px 64px;
   }
+}
+
+.label {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 32px 0 16px;
+  border-bottom: 2px solid white;
 }
 
 @media screen and (max-width: 325px) {
@@ -25,10 +23,24 @@
   }
 }
 
-p {
-  font-size: 30px;
+.download {
+  margin-top: 32px;
+  text-align: center;
+  button {
+    width: 100%;
+    height: 64px;
+    padding: 0 48px;
+    font-size: 16px;
+  }
 }
 
-.markdown {
+.solution {
+  width: 100%;
+  margin-top: 32px;
   font-size: 18px;
+}
+
+.hint-label {
+  text-align: center;
+  margin: 32px 0 8px;
 }
