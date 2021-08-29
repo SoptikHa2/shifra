@@ -2,7 +2,7 @@ from typing import Optional
 
 from .DBConn import *
 from fastapi import APIRouter
-from routes import CipherGame, cipher_game_from_db_row
+from routes import CipherGame, cipher_game_from_db_row, EditCipherGame
 
 router = APIRouter()
 
@@ -96,3 +96,13 @@ def players_team(user_id: int, game_id: int) -> Optional[int]:
         if result is None:
             return None
         return result[0]
+
+
+def edit_game(cipher_game_id: int, edits: EditCipherGame):
+    cipher_game = get_cipher_game(cipher_game_id)
+    if cipher_game is None:
+        return None
+
+    cipher_game.edit(edits)
+    update_cipher_game(cipher_game_id, cipher_game)
+    return cipher_game
