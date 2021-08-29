@@ -2,7 +2,7 @@ from fastapi import Response, Cookie
 
 from .user import user_management
 from db_funcs import *
-from routes import *
+from routes.cipher import Cipher, EditCipher
 
 router = APIRouter()
 
@@ -49,3 +49,32 @@ def open_cipher(cipher_id: int, response: Response, session_cookie: Optional[str
     cipher.hints = [h.strip() for h in get_hints_for_cipher(cipher_id)]
 
     return cipher.strip()
+
+
+@router.put('/api/cipher/{cipher_id}')
+def edit_cipher(cipher_id: int, edits: EditCipher, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Cipher]:
+    """
+        Edit existing cipher by staff or root
+        :param cipher_id cipher to edit
+        :param edits changes to be done
+        :return 200 Everything OK
+                401 No permission
+                404 No existing cipher
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    cipher = get_cipher(cipher_id)
+    if cipher is None:
+        response.status_code = 404
+        return None
+
+    if not user.is_root and not is_staff(cipher.cipher_game_id, user.person_id):
+        response.status_code = 401
+        return None
+
+    cipher.edit(edits)
+    update_cipher(cipher_id, cipher)
+    return cipher
