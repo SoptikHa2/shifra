@@ -94,3 +94,10 @@ def get_team_members(team_id: int) -> List[Person]:
                     "WHERE tm.team_id = %s;", (team_id,))
         people = cur.fetchall()
         return [person_from_db_row(x) for x in people]
+
+
+def is_team(team_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT t.* FROM team t;", (team_id,))
+        team = cur.fetchall()
+        return bool(team)

@@ -39,3 +39,28 @@ def get_team_by_id(team_id: int, response: Response, session_cookie: Optional[st
     team_info.strip()
     team_info.members = [x.strip_with_email() for x in get_team_members(team_info.team_id)]
     return team_info
+
+
+@router.delete('/api/team/{team_id}')
+def delete_team(team_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+        Delete existing team by root
+        :param team_id team to delete
+        :return 200 Everything OK
+                401 No permission
+                404 Not existing team
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    if not user.is_root:
+        response.status_code = 401
+        return None
+
+    if not is_team(team_id):
+        response.status_code = 404
+        return None
+
+    deleteTeam(team_id)
