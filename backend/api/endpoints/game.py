@@ -108,6 +108,36 @@ def create_game(cipher_game: CipherGame, response: Response, session_cookie: Opt
     if user is None:
         response.status_code = 401
         return None
+    if not user.is_root:
+        response.status_code = 401
+        return None
+
     game_id = insert_cipher_game(cipher_game)
-    set_game_admin(game_id, user.person_id)
     return game_id
+
+
+@router.post('/api/game/{cipher_game_id}/set_admin/{user_id}')
+def set_admin(cipher_game_id: int, user_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+        Add new admin of game
+        :param user_id id of new admin
+        :return 200 Everything OK
+                401 No permission
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+    if not user.is_root:
+        response.status_code = 401
+        return None
+
+    if not exist_game(cipher_game_id):
+        response.status_code = 404
+        return None
+
+    if not is_registred(user_id):
+        response.status_code = 404
+        return None
+
+    set_game_admin(cipher_game_id, user_id)

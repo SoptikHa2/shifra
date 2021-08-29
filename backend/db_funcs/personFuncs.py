@@ -75,3 +75,10 @@ def getPersonByUsername(username: str) -> Optional[Person]:
         if result is None:
             return None
         return person_from_db_row(result)
+
+
+def is_registred(user_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM person where person_id = %s;", (user_id,))
+        result = cur.fetchone()
+        return bool(result)
