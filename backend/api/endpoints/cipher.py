@@ -49,3 +49,32 @@ def open_cipher(cipher_id: int, response: Response, session_cookie: Optional[str
     cipher.hints = [h.strip() for h in get_hints_for_cipher(cipher_id)]
 
     return cipher.strip()
+
+
+
+@router.post('/api/cipher')
+def create_cipher(cipher: Cipher, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Cipher]:
+    """
+        create new cipher
+        :param cipher new cipher to add
+        :return 200 Everything OK
+                401 No permission
+                404 Not existing game
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    if not is_game(cipher.cipher_game_id):
+        response.status_code = 404
+        return None
+
+    if not user.is_root and not is_staff(cipher.cipher_game_id, user.person_id):
+        response.status_code = 401
+        return None
+
+    insert_cipher(cipher.cipher_game_id, cipher)
+    return cipher
+
+
