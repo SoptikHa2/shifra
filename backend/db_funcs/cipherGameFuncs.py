@@ -96,3 +96,12 @@ def players_team(user_id: int, game_id: int) -> Optional[int]:
         if result is None:
             return None
         return result[0]
+
+
+def is_game(cipher_game_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT * FROM cipher_game WHERE cipher_game_id = %s;", (cipher_game_id, )
+        )
+        result = cur.fetchall()
+        return bool(result)
