@@ -1,5 +1,7 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
+
+from routes import Hint
 
 
 class Cipher(BaseModel):
@@ -18,6 +20,7 @@ class Cipher(BaseModel):
     score: float
     reference_solution: Optional[str] = None
     solved: bool = False
+    hints: List[Hint] = []
 
     def strip_assignment(self):
         self.description = None

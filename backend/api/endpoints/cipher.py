@@ -45,4 +45,7 @@ def open_cipher(cipher_id: int, response: Response, session_cookie: Optional[str
         log_cipher_view_into_attempt(cipher_id, team.team_id)
         cipher.solved = is_cipher_solved(cipher_id, team.team_id)
 
+    # Add hints
+    cipher.hints = [h.strip() for h in get_hints_for_cipher(cipher_id)]
+
     return cipher.strip()

@@ -72,3 +72,12 @@ def is_cipher_visible_to_team(cipher: Cipher, team_id: int, team_cipher_game_id:
         return True
 
     return is_cipher_solved(cipher.req_cipher_id, team_id)
+
+
+def get_cipher_by_hint(hint_id: int) -> Optional[Cipher]:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT cipher.* FROM cipher JOIN hint ON hint.hint_id = %s;", (hint_id,))
+        result = cur.fetchone()
+    if result is None:
+        return None
+    return cipher_from_db_row(result)
