@@ -101,6 +101,21 @@ def players_team(user_id: int, game_id: int) -> Optional[int]:
         return result[0]
 
 
+def set_game_admin(cipher_game_id: int, user_id: int):
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "INSERT INTO cipher_game_admin (cipher_game_id, person_id) VALUES (%s,%s)",
+            (cipher_game_id, user_id, ))
+
+
+def exist_game(cipher_game_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT * FROM cipher_game WHERE cipher_game_id = %s", (cipher_game_id, )
+        )
+        result = cur.fetchone()
+        return bool(result)
+
 def is_visible(cipher_game_id: int) -> bool:
     with Curr_with_conn() as cur:
         cur.execute("SELECT * FROM cipher_game WHERE visible_from <=  NOW() AND cipher_game_id = %s;",
@@ -118,3 +133,4 @@ def get_all_teams(cipher_game_id: int) -> [Team]:
         if teams is None:
             return None
         return [team_from_db_row(x) for x in teams]
+
