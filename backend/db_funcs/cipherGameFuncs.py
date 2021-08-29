@@ -96,3 +96,10 @@ def players_team(user_id: int, game_id: int) -> Optional[int]:
         if result is None:
             return None
         return result[0]
+
+
+def set_game_admin(cipher_game_id: int, user_id: int):
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "INSERT INTO cipher_game_admin (cipher_game_id, person_id) VALUES (%s,%s)",
+            (cipher_game_id, user_id, ))

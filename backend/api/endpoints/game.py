@@ -94,3 +94,20 @@ def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(Non
         response.status_code = 200
         result = [(x.strip(), None if user is None else get_team_by_game_and_user(x.cipher_game_id, user.person_id)) for x in games]
     return result
+
+
+@router.post('/api/game')
+def create_game(cipher_game: CipherGame, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+        Creating game
+        :param cipher_game ciphergame to create
+        :return 200 Everything OK
+                401 Not authorized
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+    game_id = insert_cipher_game(cipher_game)
+    set_game_admin(game_id, user.person_id)
+    return game_id
