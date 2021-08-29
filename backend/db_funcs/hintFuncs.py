@@ -83,3 +83,10 @@ def get_hints_for_cipher(cipher_id: int) -> [Hint]:
     with Curr_with_conn() as cur:
         cur.execute("SELECT h.* FROM hint h WHERE h.cipher_id = %s;", (cipher_id,))
         return [hint_from_db_row(x) for x in cur.fetchall()]
+
+
+def get_hint(hint_id: int) -> Optional[Hint]:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT h.* FROM hint h WHERE h.hint_id = %s;", (hint_id,))
+        result = cur.fetchone()
+        return hint_from_db_row(result)
