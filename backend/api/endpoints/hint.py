@@ -49,3 +49,28 @@ def get_hint(hint_id: int, response: Response, session_cookie: Optional[str] = C
         use_hint(hint_id, team_id)
 
     return game_hint
+
+@router.get('/api/hint/{hint_id}')
+def get_admin_hint(hint_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Hint]:
+    """
+        Get any hint for admin
+        :param hint_id
+        :return 200 Everything OK
+                401 No permission
+                404 No existing hint
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    if not user.is_root:
+        response.status_code = 401
+        return None
+
+    hint = getHint(hint_id)
+    if hint is None:
+        response.status_code = 404
+        return None
+
+    return hint
