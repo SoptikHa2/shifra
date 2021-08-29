@@ -94,3 +94,22 @@ def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(Non
         response.status_code = 200
         result = [(x.strip(), None if user is None else get_team_by_game_and_user(x.cipher_game_id, user.person_id)) for x in games]
     return result
+
+
+@router.delete('/api/game/{cipher_game_id}')
+def delete_game(cipher_game_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+        Delete game if user is root
+        :return 200 Everything OK
+                401 not root
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    if not user.is_root:
+        response.status_code = 401
+        return None
+
+    cipherGameFuncs.delete_cipher_game(cipher_game_id)
