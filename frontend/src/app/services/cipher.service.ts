@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Cipher} from "../model/cipher";
-import {Observable, of, throwError} from "rxjs";
+import {Observable, throwError} from "rxjs";
 import {catchError} from "rxjs/operators";
 
 @Injectable({
