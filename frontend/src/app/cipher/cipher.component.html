@@ -10,9 +10,11 @@
     </button>
   </div>
   <div class="mat-display-1 hint-label"> Nápovědy </div>
-  <mat-list *ngIf="cipher.hints">
+  <mat-list class="hint-list" *ngIf="cipher.hints">
     <mat-list-item *ngFor="let hint of cipher.hints">
-       {{ hint.score_cost }}
+       <div></div>
+       <div style="flex-grow: 1"></div>
+       <button mat-button color="primary">  </button>
     </mat-list-item>
   </mat-list>
   <mat-form-field appearance="outline" class="solution">
