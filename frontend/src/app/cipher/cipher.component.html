@@ -11,10 +11,12 @@
   </div>
   <div class="mat-display-1 hint-label"> Nápovědy </div>
   <mat-list class="hint-list" *ngIf="cipher.hints">
-    <mat-list-item *ngFor="let hint of cipher.hints">
-       <div> Nápověda ({{ getHintCostText(hint) }}) </div>
-       <div style="flex-grow: 1"></div>
-       <button mat-button color="accent"> text </button>
+    <mat-list-item *ngFor="let hint of cipher.hints"
+                   style="cursor: pointer"
+                   (click)="hintClick()" matRipple>
+      <mat-icon mat-list-icon> help_outline </mat-icon>
+      <div mat-line> Nápověda </div>
+      <div mat-line> ({{ getHintCostText(hint) }}) </div>
     </mat-list-item>
   </mat-list>
   <mat-form-field appearance="outline" class="solution">

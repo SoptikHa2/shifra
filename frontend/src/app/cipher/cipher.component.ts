@@ -34,6 +34,9 @@ export class CipherComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  hintClick() {
+
+  }
 }
 /*
 # Lorem ipsum dolor
