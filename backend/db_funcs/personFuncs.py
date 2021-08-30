@@ -84,3 +84,10 @@ def joinTeam(team_id: int, person_id: int):
     with Curr_with_conn() as cur:
         cur.execute("INSERT INTO team_member(person_id, team_id) VALUES(%s, %s);", (person_id, team_id))
     return team_id
+
+
+def is_registred(user_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM person where person_id = %s;", (user_id,))
+        result = cur.fetchone()
+        return bool(result)
