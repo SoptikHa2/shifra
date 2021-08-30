@@ -90,6 +90,12 @@ def get_all_cipher_games() -> [CipherGame]:
         return [cipher_game_from_db_row(x) for x in result]
 
 
+
+def add_team(team_id: int, cipher_game_id: int):
+    with Curr_with_conn() as cur:
+        cur.execute("INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (%s, %s)", (cipher_game_id, team_id))
+    return team_id
+
 def players_team(user_id: int, game_id: int) -> Optional[int]:
     with Curr_with_conn() as cur:
         cur.execute(
