@@ -8,13 +8,15 @@
 <div class="cards-container">
   <ng-container *ngIf="gamesObs | async as games">
     <app-game-card *ngFor="let game of games" [game]="game[0]">
-      <button mat-button *ngIf="!game[1]">
-        Zapojit se
+      <button mat-button *ngIf="!game[1]" [routerLink]="['/team/create', game[0].cipher_game_id]">
+        Vytvořit team
       </button>
-      <button mat-button *ngIf="game[1]">
+      <button mat-button *ngIf="game[1]" [routerLink]="['/team', game[0].cipher_game_id]">
         Pokračovat
       </button>
       <button mat-button> DETAIL </button>
     </app-game-card>
   </ng-container>
+  <div class="card-placeholder"></div>
+  <div class="card-placeholder"></div>
 </div>
