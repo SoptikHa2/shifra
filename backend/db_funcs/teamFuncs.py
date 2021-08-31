@@ -1,15 +1,22 @@
+import sys
+from typing import Optional
+
+sys.path.append('../')
 from .DBConn import *
 from fastapi import APIRouter
 from routes import Team, team_from_db_row, Person, person_from_db_row, EditTeam
 from typing import Optional, List
+
 
 router = APIRouter()
 
 
 def insertTeam(newTeam: Team):
     with Curr_with_conn() as cur:
-        cur.execute("INSERT INTO team (name, invite_code, approved) VALUES(%s, %s, %s) RETURNING team_id;",
-                    (newTeam.name, newTeam.invite_code, newTeam.approved,))
+
+        cur.execute("INSERT INTO team (name, approved) VALUES(%s, %s) RETURNING team_id;",
+                    (newTeam.name, newTeam.approved))
+
         team_id = cur.fetchone()[0]
     return team_id
 
@@ -24,6 +31,7 @@ def updateTeam(team_id: int, updated_team: Team):
 def deleteTeam(team_id: int):
     with Curr_with_conn() as cur:
         cur.execute("DELETE FROM team WHERE team_id = %s;", (team_id,))
+    return team_id
 
 
 def getTeam(team_id: int):
@@ -74,6 +82,37 @@ def get_game_id(team_id: int) -> int:
     with Curr_with_conn() as cur:
         cur.execute("SELECT cgt.cipher_game_id FROM cipher_game_team cgt WHERE cgt.team_id = %s;", (team_id,))
         result = cur.fetchone()[0]
+
+    return int(result)
+
+
+def is_full(team_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT teammax FROM team_member JOIN cipher_game_team USING(team_id) JOIN cipher_game USING(cipher_game_id) WHERE team_id = %s", (team_id, ))
+        array_tmp = cur.fetchall()
+        number_of_members = len(array_tmp)
+
+        if number_of_members == 0:
+            return False
+
+        capacity = array_tmp[0][0]  # first record and first column (only teammax)
+        if number_of_members == capacity:
+            return True
+        return False
+
+
+def get_id_by_inv_code(inv_code: str) -> Optional[int]:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT team_id FROM team WHERE invite_code = %s", (inv_code,))
+        team_id = cur.fetchone()[0]
+    return team_id
+
+
+def add_invite_code(team_id: int, invite_code: str):
+    with Curr_with_conn() as cur:
+        cur.execute("UPDATE team SET invite_code = %s WHERE team_id = %s;", (invite_code, team_id,))
+    return team_id
+
         return int(result)
 
 
@@ -94,7 +133,6 @@ def get_team_members(team_id: int) -> List[Person]:
                     "WHERE tm.team_id = %s;", (team_id,))
         people = cur.fetchall()
         return [person_from_db_row(x) for x in people]
-
 
 def is_team(team_id: int) -> bool:
     with Curr_with_conn() as cur:
