@@ -29,7 +29,7 @@ export class CipherService {
   }
 
   openHint(id: number) {
-    return this.http.
+    return this.http.get('');
   }
 
   handleError(err: any) {

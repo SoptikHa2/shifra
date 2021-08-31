@@ -112,9 +112,6 @@ def get_id_by_inv_code(inv_code: str) -> Optional[int]:
 def add_invite_code(team_id: int, invite_code: str):
     with Curr_with_conn() as cur:
         cur.execute("UPDATE team SET invite_code = %s WHERE team_id = %s;", (invite_code, team_id,))
-    return team_id
-
-        return int(result)
 
 
 def get_cipher_game_id_from_team(team_id: int) -> Optional[int]:
