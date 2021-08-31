@@ -4,6 +4,9 @@ import {ActivatedRoute} from "@angular/router";
 import {Observable} from "rxjs";
 import {Cipher} from "../model/cipher";
 import {Hint} from "../model/hint";
+import {DomSanitizer} from "@angular/platform-browser";
+import {MatDialog} from "@angular/material/dialog";
+import {AskDialogComponent} from "../dialogs/ask-dialog/ask-dialog.component";
 
 @Component({
   selector: 'app-cipher',
@@ -15,6 +18,8 @@ export class CipherComponent implements OnInit {
 
   constructor(
     private cipherService: CipherService,
+    private domSanitizer: DomSanitizer,
+    private dialog: MatDialog,
     private route: ActivatedRoute
   ) {
     this.cipherObs = this.cipherService
@@ -34,8 +39,19 @@ export class CipherComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  hintClick() {
+  hintClick(hint_id: number) {
+    this.dialog.open(AskDialogComponent, {data: {text: 'Opravdu chcete nápovědu?'}}).afterClosed()
+      .subscribe(res => {
+        if (res) {
 
+        } else {
+
+        }
+      });
+  }
+
+  trustUrl(url: string) {
+    return this.domSanitizer.bypassSecurityTrustUrl(url);
   }
 }
 /*

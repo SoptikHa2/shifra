@@ -1,5 +1,14 @@
 <ng-container *ngIf="cipherObs | async as cipher">
-  <div class="mat-display-1 label"> {{ cipher.name }} </div>
+  <div class="mat-display-1 label">
+    {{ cipher.name }}
+  </div>
+  <div class="score-display">
+    {{ cipher.score }} Bodů
+  </div>
+  <!--<img class="main-image" *ngIf="cipher.img"
+           [src]="'assets/' + trustUrl(cipher.img)" alt="obrázek"/>
+  --> <img class="main-image" *ngIf="cipher.img"
+           src="https://picsum.photos/900" alt="obrázek"/>
   <div class="cipher-container">
     <markdown [data]="cipher.description" class="markdown"></markdown>
   </div>
@@ -10,15 +19,16 @@
     </button>
   </div>
   <div class="mat-display-1 hint-label"> Nápovědy </div>
-  <mat-list class="hint-list" *ngIf="cipher.hints">
-    <mat-list-item *ngFor="let hint of cipher.hints"
+  <mat-selection-list [multiple]="false" class="hint-list"
+                      *ngIf="cipher.hints">
+    <mat-list-option *ngFor="let hint of cipher.hints"
                    style="cursor: pointer"
-                   (click)="hintClick()" matRipple>
+                   (click)="hintClick(hint.hint_id)">
       <mat-icon mat-list-icon> help_outline </mat-icon>
       <div mat-line> Nápověda </div>
       <div mat-line> ({{ getHintCostText(hint) }}) </div>
-    </mat-list-item>
-  </mat-list>
+    </mat-list-option>
+  </mat-selection-list>
   <mat-form-field appearance="outline" class="solution">
     <mat-label> Řešení </mat-label>
     <textarea rows="5" matInput placeholder="Placeholder"></textarea>

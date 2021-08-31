@@ -28,6 +28,10 @@ export class CipherService {
     return this.http.post(environment.backendUrl + `/api/cipher/${cipherId}`, {teamId, answer});
   }
 
+  openHint(id: number) {
+    return this.http.
+  }
+
   handleError(err: any) {
     if (!environment.production) console.error(err);
     return throwError(err);
