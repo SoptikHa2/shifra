@@ -13,11 +13,14 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import { AskDialogComponent } from './dialogs/ask-dialog/ask-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
     AppComponent,
-    MenuComponent
+    MenuComponent,
+    AskDialogComponent
   ],
     imports: [
         BrowserModule,
@@ -31,6 +34,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
         MatButtonModule,
         MatIconModule,
         MatProgressBarModule,
+        MatDialogModule,
     ],
   providers: [],
   bootstrap: [AppComponent]
