@@ -114,8 +114,6 @@ def add_invite_code(team_id: int, invite_code: str):
         cur.execute("UPDATE team SET invite_code = %s WHERE team_id = %s;", (invite_code, team_id,))
     return team_id
 
-        return int(result)
-
 
 def get_cipher_game_id_from_team(team_id: int) -> Optional[int]:
     with Curr_with_conn() as cur:
@@ -135,3 +133,20 @@ def get_team_members(team_id: int) -> List[Person]:
         people = cur.fetchall()
         return [person_from_db_row(x) for x in people]
 
+
+def get_teams_by_member(member_id: int) -> Team:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT tm.team_id FROM team_member tm WHERE person_id = %s;", (member_id,))
+        result = cur.fetchall()
+    return [team_from_db_row(x) for x in result]
+
+
+def get_team_by_member_and_cipher(member_id: int, cipher_id: int) -> Team:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM team WHERE team_id = "
+                    "( SELECT team_id FROM team_member NATURAL JOIN cipher_game_team JOIN cipher USING ( cipher_game_id) "
+                    "WHERE person_id = %s AND cipher_id = %s);", (member_id, cipher_id,))
+        result = cur.fetchone()
+    if result is None:
+        return result
+    return team_from_db_row(result)
