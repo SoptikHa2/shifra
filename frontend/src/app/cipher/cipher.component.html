@@ -1,4 +1,4 @@
-<ng-container *ngIf="cipherObs | async as cipher">
+<ng-container *ngIf="cipher">
   <div class="mat-display-1 label">
     {{ cipher.name }}
   </div>
@@ -13,9 +13,10 @@
     <markdown [data]="cipher.description" class="markdown"></markdown>
   </div>
   <div class="button-row" *ngIf="cipher.cipher_file">
-    <button mat-raised-button color="accent">
+    <a [href]="cipher.cipher_file" target="_blank" #fileLink style="display: none"></a>
+    <button mat-raised-button color="accent" (click)="fileLink.click()">
       <mat-icon style="margin-right: 2px;">download</mat-icon>
-      {{ cipher.cipher_file }}
+      Soubor ke stažení
     </button>
   </div>
   <div class="mat-display-1 hint-label"> Nápovědy </div>
@@ -23,7 +24,7 @@
                       *ngIf="cipher.hints">
     <mat-list-option *ngFor="let hint of cipher.hints"
                    style="cursor: pointer"
-                   (click)="hintClick(hint.hint_id)">
+                   (click)="hintClick(hint.hint_id, cipher)">
       <mat-icon mat-list-icon> help_outline </mat-icon>
       <div mat-line> Nápověda </div>
       <div mat-line> ({{ getHintCostText(hint) }}) </div>
@@ -31,10 +32,10 @@
   </mat-selection-list>
   <mat-form-field appearance="outline" class="solution">
     <mat-label> Řešení </mat-label>
-    <textarea rows="5" matInput placeholder="Placeholder"></textarea>
+    <textarea rows="5" matInput></textarea>
   </mat-form-field>
   <div class="button-row">
-    <button mat-raised-button color="primary">
+    <button mat-raised-button color="primary" (click)="makeAttempt()">
       Odevzdat
     </button>
   </div>
