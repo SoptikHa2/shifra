@@ -2,11 +2,12 @@
 <mat-dialog-content class="mat-typography">
   <img *ngIf="data.img" [src]="data.img" alt="obrázek" class="image"/>
   <markdown *ngIf="data.msg" [data]="data.msg"></markdown>
-  <button mat-raised-button color="primary" class="download">
+  <a [href]="data.hint_file" target="_blank" #fileLink style="display: none" tabindex="-1"></a>
+  <button mat-raised-button color="primary" class="download" (click)="fileLink.click()" tabindex="-1">
     <mat-icon> download </mat-icon>
     Soubor ke stažení
   </button>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Skrýt</button>
+  <button mat-button mat-dialog-close tabindex="0" color="accent">Skrýt</button>
 </mat-dialog-actions>
