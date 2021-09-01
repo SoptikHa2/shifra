@@ -31,16 +31,16 @@ CREATE TABLE cipher (
     cipher_game_id INTEGER NOT NULL,
     req_cipher_id INTEGER NULL,
     name VARCHAR(256) NOT NULL,
-    description VARCHAR(256) NOT NULL,
-    solution VARCHAR(256),
+    description TEXT NOT NULL,
+    solution VARCHAR(512),
     judge VARCHAR(256),
     cipher_file VARCHAR(256),
     img VARCHAR(256),
-    success_msg VARCHAR(256) NOT NULL,
+    success_msg TEXT NOT NULL,
     cooldown INTEGER NOT NULL,
     attempts INTEGER,
     score DOUBLE PRECISION NOT NULL,
-    reference_solution VARCHAR(256)
+    reference_solution TEXXT
 );
 ALTER TABLE cipher ADD CONSTRAINT pk_cipher PRIMARY KEY (cipher_id);
 
@@ -48,7 +48,7 @@ CREATE TABLE cipher_game (
     cipher_game_id SERIAL NOT NULL,
     time_starting_cipher_id INTEGER,
     name VARCHAR(256) NOT NULL,
-    description VARCHAR(256) NOT NULL,
+    description TEXT NOT NULL,
     visible_from TIMESTAMP NOT NULL,
     deadline_signup TIMESTAMP NOT NULL,
     deadline_event TIMESTAMP NOT NULL,
@@ -62,7 +62,7 @@ ALTER TABLE cipher_game ADD CONSTRAINT pk_cipher_game PRIMARY KEY (cipher_game_i
 CREATE TABLE hint (
     hint_id SERIAL NOT NULL,
     cipher_id INTEGER NOT NULL,
-    msg VARCHAR(256) NOT NULL,
+    msg TEXT NOT NULL,
     img VARCHAR(256),
     hint_file VARCHAR(256),
     score_cost DOUBLE PRECISION NOT NULL,
