@@ -5,32 +5,38 @@ import {Cipher} from "../model/cipher";
 import {Observable, throwError} from "rxjs";
 import {catchError} from "rxjs/operators";
 import {Hint} from "../model/hint";
+import {LoadingService} from "./loading.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CipherService {
-
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private loadingService: LoadingService
   ) { }
 
   getVisibleCiphers(gameId: number) : Observable<Cipher[]> {
-    return this.http.get<Cipher[]>(environment.backendUrl + `/api/game/${gameId}/ciphers`)
-      .pipe(catchError(this.handleError));
+    return this.loadingService.startLoading(
+      this.http.get<Cipher[]>(environment.backendUrl + `/api/game/${gameId}/ciphers`)
+      .pipe(catchError(this.handleError)));
   }
 
   getCipher(id: number) {
-    return this.http.get<Cipher>(environment.backendUrl + `/api/cipher/${id}`)
-      .pipe(catchError(this.handleError));
+    return this.loadingService.startLoading(
+      this.http.get<Cipher>(environment.backendUrl + `/api/cipher/${id}`)
+      .pipe(catchError(this.handleError)));
   }
 
-  makeAttempt(teamId: number, cipherId: number, answer: string) {
-    return this.http.post(environment.backendUrl + `/api/cipher/${cipherId}`, {teamId, answer});
+  makeAttempt(cipherId: number, answer: string) {
+    return this.loadingService.startLoading(
+      this.http.post(environment.backendUrl + `/api/cipher/${cipherId}/attempt`,
+        {answer}));
   }
 
   openHint(id: number): Observable<Hint> {
-    return this.http.post<Hint>(`${environment.backendUrl}/api/hint/${id}`, {});
+    return this.loadingService.startLoading(
+      this.http.post<Hint>(`${environment.backendUrl}/api/hint/${id}`, {}));
   }
 
   handleError(err: any) {
