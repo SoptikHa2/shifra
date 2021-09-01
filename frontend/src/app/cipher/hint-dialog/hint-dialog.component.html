@@ -1,0 +1,12 @@
+<h2 mat-dialog-title> Nápověda </h2>
+<mat-dialog-content class="mat-typography">
+  <img *ngIf="data.img" [src]="data.img" alt="obrázek" class="image"/>
+  <markdown *ngIf="data.msg" [data]="data.msg"></markdown>
+  <button mat-raised-button color="primary" class="download">
+    <mat-icon> download </mat-icon>
+    Soubor ke stažení
+  </button>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Skrýt</button>
+</mat-dialog-actions>

@@ -4,6 +4,7 @@ import {environment} from "../../environments/environment";
 import {Cipher} from "../model/cipher";
 import {Observable, throwError} from "rxjs";
 import {catchError} from "rxjs/operators";
+import {Hint} from "../model/hint";
 
 @Injectable({
   providedIn: 'root'
@@ -28,8 +29,8 @@ export class CipherService {
     return this.http.post(environment.backendUrl + `/api/cipher/${cipherId}`, {teamId, answer});
   }
 
-  openHint(id: number) {
-    return this.http.get('');
+  openHint(id: number): Observable<Hint> {
+    return this.http.post<Hint>(`${environment.backendUrl}/api/hint/${id}`, {});
   }
 
   handleError(err: any) {

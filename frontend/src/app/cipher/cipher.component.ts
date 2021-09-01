@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import {CipherService} from "../services/cipher.service";
 import {ActivatedRoute} from "@angular/router";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {Cipher} from "../model/cipher";
 import {Hint} from "../model/hint";
 import {DomSanitizer} from "@angular/platform-browser";
 import {MatDialog} from "@angular/material/dialog";
 import {AskDialogComponent} from "../dialogs/ask-dialog/ask-dialog.component";
+import {skipWhile, switchMap} from "rxjs/operators";
+import {HintDialogComponent} from "./hint-dialog/hint-dialog.component";
 
 @Component({
   selector: 'app-cipher',
@@ -41,13 +43,17 @@ export class CipherComponent implements OnInit {
 
   hintClick(hint_id: number) {
     this.dialog.open(AskDialogComponent, {data: {text: 'Opravdu chcete nápovědu?'}}).afterClosed()
-      .subscribe(res => {
-        if (res) {
-
-        } else {
-
-        }
-      });
+      .pipe(
+        skipWhile(res => !res),
+        switchMap(res => {
+          if (res)
+            return this.cipherService.openHint(hint_id);
+          return of(null);
+        }),
+        switchMap(hint => {
+          return this.dialog.open(HintDialogComponent,
+            {data: hint, width: '100%'}).afterClosed()
+        })).subscribe();
   }
 
   trustUrl(url: string) {
