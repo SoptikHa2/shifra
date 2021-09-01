@@ -3,6 +3,6 @@ export interface Hint {
   msg?: string;
   img?: string;
   hint_file?: string;
-  score_cost: number;
-  time_cost: number;
+  score_cost?: number;
+  time_cost?: number;
 }
