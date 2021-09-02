@@ -3,6 +3,9 @@ import {GameService} from "../../services/game.service";
 import {Game} from "../../model/game";
 import {Observable} from "rxjs";
 import {Team} from "../../model/team";
+import {map} from "rxjs/operators";
+import {MatDialog} from "@angular/material/dialog";
+import {AskDialogComponent} from "../../dialogs/ask-dialog/ask-dialog.component";
 
 @Component({
   selector: 'app-cipher-game-list',
@@ -15,7 +18,11 @@ export class CipherGameListComponent implements OnInit {
   constructor(
     private gameService: GameService
   ) {
-    this.gamesObs = this.gameService.getGames();
+    this.gamesObs = this.gameService.getGames()
+      .pipe(map(games => [
+        ...games!.filter(val => val[1] != null),
+        ...games!.filter(val => val[1] == null)
+        ]));
   }
 
   ngOnInit(): void {}

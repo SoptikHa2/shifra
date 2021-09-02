@@ -2,8 +2,7 @@
 # safe to use, code is under unlicense license (https://unlicense.org)
 
 
-from fastapi import FastAPI, Response
-from logger import *
+from fastapi import FastAPI
 from api.endpoints import user, misc, game, team, cipher, hint
 from db_funcs import *
 

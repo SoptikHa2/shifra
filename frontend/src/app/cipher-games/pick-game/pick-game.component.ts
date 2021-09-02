@@ -10,7 +10,7 @@ import {GameService} from "../../services/game.service";
   styleUrls: ['./pick-game.component.scss']
 })
 export class PickGameComponent implements OnInit {
-  gamesObs: Observable<[Game, Team | null][] | null>;
+  gamesObs: Observable<[Game, Team | null][]>;
 
   constructor(
     private gameService: GameService

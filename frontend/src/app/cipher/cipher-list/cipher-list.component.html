@@ -5,10 +5,12 @@
        [routerLink]="['/cipher', cipher.cipher_id]">
     <svg viewBox="0 0 1 1"></svg>
     <div>
-      <mat-icon *ngIf="cipher.solved" color="accent"
-                class="material-icons-outlined"> done_outline </mat-icon>
-      <mat-icon *ngIf="!cipher.solved" color="warn"
-                class="material-icons-outlined"> help_outline </mat-icon><br/>
+      <mat-icon *ngIf="cipher.solved" class="material-icons-outlined success">
+        done_outline
+      </mat-icon>
+      <mat-icon *ngIf="!cipher.solved" class="material-icons-outlined warn">
+        help_outline
+      </mat-icon><br/>
       {{ cipher.name }}
     </div>
   </div>

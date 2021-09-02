@@ -20,6 +20,7 @@ class Hint(BaseModel):
     hint_file: Optional[str] = None
     score_cost: float
     time_cost: int
+    is_used: Optional[bool] = None
 
     def strip(self):
         self.msg = None

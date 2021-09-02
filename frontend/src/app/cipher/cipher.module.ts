@@ -7,6 +7,12 @@ import {FormsModule} from "@angular/forms";
 import { CipherListComponent } from './cipher-list/cipher-list.component';
 import {MatIconModule} from "@angular/material/icon";
 import {MatRippleModule} from "@angular/material/core";
+import {MatButtonModule} from "@angular/material/button";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatListModule} from "@angular/material/list";
+import { HintDialogComponent } from './hint-dialog/hint-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 const routes: Routes = [
   {
@@ -22,15 +28,21 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     CipherComponent,
-    CipherListComponent
+    CipherListComponent,
+    HintDialogComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    MarkdownModule,
-    FormsModule,
-    MatIconModule,
-    MatRippleModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        MarkdownModule,
+        FormsModule,
+        MatIconModule,
+        MatRippleModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatListModule,
+        MatDialogModule
+    ]
 })
 export class CipherModule { }

@@ -13,23 +13,15 @@ import {filter, map} from "rxjs/operators";
   styleUrls: ['../../theme/menu-theme.scss', './cipher-list.component.scss']
 })
 export class CipherListComponent implements OnInit {
-  ciphersObs: Observable<Cipher[] | null>;
-  gameObs: Observable<Game | null>;
+  ciphersObs: Observable<Cipher[]>;
+  gameObs: Observable<Game>;
 
   constructor(
     private cipherService: CipherService,
     private gameService: GameService,
     private route: ActivatedRoute
   ) {
-    this.ciphersObs = this.cipherService.getVisibleCiphers(this.route.snapshot.params['id'])
-      .pipe(
-        filter(ciphers => ciphers !== null),
-        map(ciphers => {
-        for (let i = 0; i < ciphers?.length!; ++i) {
-          ciphers![i].solved = (i % 2 === 0);
-        }
-        return ciphers;
-      }));
+    this.ciphersObs = this.cipherService.getVisibleCiphers(this.route.snapshot.params['id']);
     this.gameObs = this.gameService.getGameById(this.route.snapshot.params['id']);
   }
 

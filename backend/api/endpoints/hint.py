@@ -2,6 +2,7 @@ from fastapi import FastAPI, Response, Cookie
 
 from api.logic import user_management
 from routes.hint import *
+from routes import Hint
 from db_funcs import *
 
 router = APIRouter()
@@ -79,3 +80,4 @@ def edit_hint(hint_id: int, edits: EditHint, response: Response, session_cookie:
     hint.edit(edits)
     updateHint(hint_id, hint)
     return hint
+

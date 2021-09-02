@@ -48,6 +48,11 @@ def open_cipher(cipher_id: int, response: Response, session_cookie: Optional[str
     # Add hints
     cipher.hints = [h.strip() for h in get_hints_for_cipher(cipher_id)]
 
+    # TODO: Optimize, gather hint usage information during initial load
+    if team is not None:
+        for h in cipher.hints:
+            h.is_used = is_hint_used(h.hint_id, team.team_id)
+
     return cipher.strip()
 
 
