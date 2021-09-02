@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Response, Cookie
 
 from api.logic import user_management
+from routes.hint import *
 from routes import Hint
 from db_funcs import *
 
@@ -49,3 +50,34 @@ def get_hint(hint_id: int, response: Response, session_cookie: Optional[str] = C
         use_hint(hint_id, team_id)
 
     return game_hint
+
+
+@router.put('/api/hint/{hint_id}')
+def edit_hint(hint_id: int, edits: EditHint, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Hint]:
+    """
+        Edit existing hint
+        :param hint_id hint to edits
+        :param edits to be done
+        :return 200 Everything OK
+                401 No permission
+                404 Not existing hint
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    cipher = get_cipher_by_hint(hint_id)
+    if not user.is_root and not is_staff(cipher.cipher_game_id, user.person_id):
+        response.status_code = 401
+        return None
+
+    hint = hintFuncs.get_hint(hint_id)
+    if hint is None:
+        response.status_code = 404
+        return None
+
+    hint.edit(edits)
+    updateHint(hint_id, hint)
+    return hint
+

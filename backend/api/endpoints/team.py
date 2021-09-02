@@ -13,7 +13,7 @@ from backend.routes import Team
 sys.path.append("../../")
 
 from db_funcs import *
-
+from routes.team import EditTeam, Team
 from api.logic import user_management
 
 from routes import Person
@@ -62,7 +62,57 @@ def get_team_by_id(team_id: int, response: Response, session_cookie: Optional[st
     team_info.members = [x.strip_with_email() for x in get_team_members(team_info.team_id)]
     return team_info
 
+@router.put('/api/team/{team_id}')
+def edit_team(team_id: int, edits: EditTeam, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Team]:
+    """
+        Edit team information according to edit
+        :param edits show data to edit
+        :param team_id id of team to edit
+        :return 200 Everything OK
+                401 No permission
+                404 Not found team
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
 
+    if not user.is_root and not is_in_team(team_id, user.person_id):
+        response.status_code = 401
+        return None
+
+    if not is_team(team_id):
+        response.status_code = 404
+        return None
+
+    edited_team = teamFuncs.edit_team(team_id, edits)
+    return edited_team
+
+
+@router.delete('/api/team/{team_id}')
+def delete_team(team_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+        Delete existing team by root
+        :param team_id team to delete
+        :return 200 Everything OK
+                401 No permission
+                404 Not existing team
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    if not user.is_root:
+        response.status_code = 401
+        return None
+
+    if not is_team(team_id):
+        response.status_code = 404
+        return None
+
+    deleteTeam(team_id)
+    
 @router.post('/api/team/create')
 def create_team(cipher_game_id: int, team_name: str, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[int]:
 
@@ -163,4 +213,3 @@ def join_team(inv_code: str, response: Response, username_cred: Optional[registe
         response.status_code = 409
         logger.info(join_team.__name__ + " /api/team/join " + str(response.status_code) + ": user is already in the team (user_id, team_id)- (" + str(user.person_id) + ", " + str(team_id) + ")")
         return None
-
