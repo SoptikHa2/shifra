@@ -3,7 +3,8 @@ import subprocess
 import qrcode
 import qrcode.image.svg
 from fastapi import APIRouter
-import base64
+
+from starlette.responses import StreamingResponse
 
 router = APIRouter()
 
