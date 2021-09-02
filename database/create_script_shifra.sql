@@ -49,6 +49,7 @@ CREATE TABLE cipher_game (
     time_starting_cipher_id INTEGER,
     name VARCHAR(256) NOT NULL,
     description TEXT NOT NULL,
+    image VARCHAR(256),
     visible_from TIMESTAMP NOT NULL,
     deadline_signup TIMESTAMP NOT NULL,
     deadline_event TIMESTAMP NOT NULL,
