@@ -63,7 +63,7 @@ ALTER TABLE cipher_game ADD CONSTRAINT pk_cipher_game PRIMARY KEY (cipher_game_i
 CREATE TABLE hint (
     hint_id SERIAL NOT NULL,
     cipher_id INTEGER NOT NULL,
-    msg VARCHAR(256) NOT NULL,
+    msg VARCHAR(512) NOT NULL,
     img VARCHAR(256),
     hint_file VARCHAR(256),
     score_cost DOUBLE PRECISION NOT NULL,
@@ -133,6 +133,10 @@ ALTER TABLE team_member ADD CONSTRAINT fk_team_member_p FOREIGN KEY (person_id) 
 ALTER TABLE team_member ADD CONSTRAINT fk_team_member_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
 
 ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_h FOREIGN KEY (hint_id) REFERENCES hint (hint_id) ON DELETE CASCADE;
-ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
+ALTER TABLE hint_us
+
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO shifra_group;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO shifra_group;ed ADD CONSTRAINT fk_hint_used_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
 
 COMMIT;
