@@ -5,6 +5,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, map, tap} from "rxjs/operators";
 import {environment} from "../../environments/environment";
 import {Router} from "@angular/router";
+import {LoadingService} from "./loading.service";
 
 export type userModel = {
   loggedIn: boolean;
@@ -29,6 +30,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
+    private loadingService: LoadingService,
     private router: Router
   ) {
     this.userInfo();
@@ -57,7 +59,7 @@ export class AuthService {
         }
         return throwError(err);
       }));
-    const userObs = this.evaluatePersonResponse(result);
+    const userObs = this.loadingService.startLoading(this.evaluatePersonResponse(result));
 
     return userObs.pipe(
       tap(u => this.user.next(u)),

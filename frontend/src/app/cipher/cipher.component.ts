@@ -53,7 +53,7 @@ export class CipherComponent implements OnInit {
     if (stripedHint == null)
       return;
 
-    if (stripedHint.score_cost == null && stripedHint.time_cost) {
+    if (!stripedHint.score_cost && !stripedHint.time_cost) {
       this.cipherService.openHint(hint_id)
         .pipe(
           switchMap(hint => this.dialog.open(HintDialogComponent,
