@@ -82,32 +82,6 @@ def create_cipher(cipher: Cipher, response: Response, session_cookie: Optional[s
     return cipher
 
 
-@router.get('/api/cipher/{cipher_id}')
-def get_cipher(cipher_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Cipher]:
-    """
-        get cipher by its id
-        :param cipher_id id
-        :return 200 Everything OK
-                401 No permission
-                404 Not found
-    """
-    user = user_management.get_user_by_token(session_cookie)
-    if user is None:
-        response.status_code = 401
-        return None
-
-    cipher = cipherFuncs.get_cipher(cipher_id)
-    if cipher is None:
-        response.status_code = 404
-        return None
-
-    if not user.is_root and not is_staff(cipher.cipher_game_id, user.person_id):
-        response.status_code = 401
-        return None
-
-    return cipher
-
-
 @router.put('/api/cipher/{cipher_id}')
 def edit_cipher(cipher_id: int, edits: EditCipher, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Cipher]:
     """
