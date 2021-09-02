@@ -26,8 +26,9 @@ export class CodeComponent implements OnInit {
     private authService: AuthService,
     private loadingService: LoadingService,
     private router: Router,
+    private route: ActivatedRoute
   ) {
-    this.codeControl = new FormControl('', [Validators.required]);
+    this.codeControl = new FormControl(this.route.snapshot.queryParamMap.get('code'), [Validators.required]);
     this.usernameControl = new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(80)]);
     this.joinTeamForm = new FormGroup({
       code: this.codeControl,
