@@ -8,5 +8,5 @@ export interface Team {
   teamMax: number;
   QRCode: SafeUrl;
   inviteLink: string;
-  teamMates: Person[];
+  members: Person[];
 }
