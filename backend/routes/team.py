@@ -5,7 +5,6 @@ from typing import Optional, List
 class EditTeam(BaseModel):
     name: Optional[str] = None
     invite_code: Optional[str] = None
-    members: Optional[List] = None
     approved: Optional[bool] = None
 
 
@@ -23,7 +22,6 @@ class Team(BaseModel):
     def edit(self, edits: EditTeam):
         self.name = self.name if edits.name is None else edits.name
         self.invite_code = self.invite_code if edits.invite_code is None else edits.invite_code
-        self.members = self.members if edits.members is None else edits.members
         self.approved = self.approved if edits.approved is None else edits.approved
 
 

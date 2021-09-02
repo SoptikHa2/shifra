@@ -18,8 +18,6 @@ class EditCipher(BaseModel):
     attempts: Optional[int] = None
     score: Optional[float] = None
     reference_solution: Optional[str] = None
-    solved: Optional[bool] = None
-    hints: Optional[List[Hint]] = None
 
 
 class Cipher(BaseModel):
@@ -67,8 +65,6 @@ class Cipher(BaseModel):
         self.attempts = edits.attempts if edits.attempts is not None else self.attempts
         self.score = edits.score if edits.score is not None else self.score
         self.reference_solution = edits.reference_solution if edits.reference_solution is not None else self.reference_solution
-        self.solved = edits.solved if edits.solved is not None else self.solved
-        self.hints = edits.hints if edits.hints is not None else self.hints
 
 
 def cipher_from_db_row(row) -> Cipher:
