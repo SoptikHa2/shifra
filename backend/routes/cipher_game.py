@@ -50,5 +50,5 @@ class CipherGame(BaseModel):
 
 def cipher_game_from_db_row(row) -> CipherGame:
     return CipherGame(cipher_game_id=row[0], cipher_id_to_start_timer=row[1], name=row[2], description=row[3], image=row[4],
-                      visible_from=row[4], deadline_signup=row[5], deadline_event=row[6], capacity=row[7],
-                      teammax=row[8], password=row[9], autoapprove=row[10])
+                      visible_from=row[5], deadline_signup=row[6], deadline_event=row[7], capacity=row[8],
+                      teammax=row[9], password=row[10], autoapprove=row[11])
