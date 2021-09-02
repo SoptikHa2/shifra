@@ -1,0 +1,53 @@
+:host {
+  position: relative;
+  top: -64px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.games-header {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    text-align: center;
+  }
+
+  mat-icon {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 36px;
+    font-size: 36px;
+  }
+}
+
+.cards-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.join-btn {
+  margin-top: 32px;
+}
+
+.card-placeholder {
+  display: block;
+  flex: 1 1 0;
+  min-width: 300px;
+  margin: 16px;
+}
+
+@media only screen and (min-width: 700px)  {
+  .card-placeholder {
+    max-width: 450px;
+  }
+}

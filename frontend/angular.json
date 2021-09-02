@@ -1,9 +1,15 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": "32cd57dd-7607-4f64-b7ff-18f68949c92a"
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
     "frontend": {
+      "i18n": {
+        "sourceLocale": "cs-CZ"
+      },
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +26,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/frontend",
+            "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -33,7 +39,11 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/marked/lib/marked.js",
+              "node_modules/prismjs/prism.js",
+              "node_modules/html5-qrcode/dist/html5-qrcode.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -41,7 +51,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",

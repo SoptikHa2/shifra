@@ -1,0 +1,21 @@
+<div class="flex-row team-attribute">
+  <mat-icon class="material-icons-outlined attr-ico"> {{ icon }} </mat-icon>
+  <div class="flex-container">
+    <div> {{ label }} </div>
+    <div *ngIf="value"
+         class="flex-row attribute-value"
+         (click)="showCopySnack()"
+         matTooltip="Zkopírovat"
+         [cdkCopyToClipboard]="value!">
+      {{ value }}
+    </div>
+    <div class="block-copy" *ngIf="!canCopy"></div>
+  </div>
+  <mat-icon *ngIf="canCopy"
+            matTooltip="Zkopírovat"  matRipple
+            (click)="showCopySnack()"
+            [cdkCopyToClipboard]="value!"
+            class="material-icons-outlined copy">
+    content_copy
+  </mat-icon>
+</div>

@@ -1,0 +1,25 @@
+.password-form-fields {
+  width: calc(100% - 256px);
+  margin-bottom: 16px;
+  mat-form-field {
+    width: calc(50% - 16px);
+    &:first-child {
+      margin-right: 16px;
+    }
+
+    &:last-child {
+      margin-left: 16px;
+    }
+  }
+
+  @media screen and (max-width: 560px){
+    width: calc(100% - 64px);
+    flex-direction: column;
+
+    mat-form-field {
+      width: 100%;
+      margin: 0 !important;
+    }
+  }
+
+}
