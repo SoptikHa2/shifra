@@ -63,7 +63,7 @@ ALTER TABLE cipher_game ADD CONSTRAINT pk_cipher_game PRIMARY KEY (cipher_game_i
 CREATE TABLE hint (
     hint_id SERIAL NOT NULL,
     cipher_id INTEGER NOT NULL,
-    msg VARCHAR(256) NOT NULL,
+    msg VARCHAR(512) NOT NULL,
     img VARCHAR(256),
     hint_file VARCHAR(256),
     score_cost DOUBLE PRECISION NOT NULL,
