@@ -5,6 +5,8 @@ from fastapi import APIRouter
 from routes import Cipher_game
 from routes.stats import Stat
 from routes import CipherGame, cipher_game_from_db_row
+from routes.team import *
+from routes import CipherGame, cipher_game_from_db_row, EditCipherGame
 
 router = APIRouter()
 
@@ -15,7 +17,8 @@ def insert_cipher_game(newCipherGame: CipherGame) -> int:
             "INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, deadline_signup, "
             "deadline_event, capacity, teammax, password, autoapprove) VALUES (%s, %s, %s, %s, %s, %s, "
             "%s, %s, %s, %s) RETURNING cipher_game_id;",
-            (newCipherGame.cipher_id_to_start_timer, newCipherGame.name, newCipherGame.description, newCipherGame.visible_from,
+            (newCipherGame.cipher_id_to_start_timer, newCipherGame.name, newCipherGame.description,
+             newCipherGame.visible_from,
              newCipherGame.deadline_signup, newCipherGame.deadline_event, newCipherGame.capacity, newCipherGame.teammax,
              newCipherGame.password, newCipherGame.autoapprove))
         cipher_game_id = cur.fetchone()[0]
@@ -40,7 +43,7 @@ def delete_cipher_game(cipher_game_id: int):
         cur.execute("DELETE FROM cipher_game WHERE cipher_game_id = %s;", (cipher_game_id,))
 
 
-def get_cipher_games() -> list[CipherGame]:
+def get_cipher_games() -> [CipherGame]:
     with Curr_with_conn() as cur:
         cur.execute("SELECT * FROM cipher_game;")
         result = cur.fetchall()
@@ -58,7 +61,8 @@ def get_cipher_game(cipher_game_id: int) -> Optional[CipherGame]:
 
 def is_visible(cipher_game_id: int) -> bool:
     with Curr_with_conn() as cur:
-        cur.execute("SELECT * FROM cipher_game WHERE visible_from <=  NOW() AND cipher_game_id = %s;", cipher_game_id)
+        cur.execute("SELECT * FROM cipher_game WHERE visible_from <=  NOW() AND cipher_game_id = %s;",
+                    (cipher_game_id,))
         result = cur.fetchall()
     return bool(result)
 
@@ -134,4 +138,73 @@ def get_all_cipher_games() -> [CipherGame]:
         cur.execute("SELECT * FROM cipher_game cg;")
         result = cur.fetchall()
         return [cipher_game_from_db_row(x) for x in result]
+
+
+def add_team(team_id: int, cipher_game_id: int):
+    with Curr_with_conn() as cur:
+        cur.execute("INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (%s, %s)", (cipher_game_id, team_id))
+    return team_id
+
+def players_team(user_id: int, game_id: int) -> Optional[int]:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT tm.team_id FROM team_member tm JOIN cipher_game_team cgt ON  cgt.team_id = tm.team_id AND tm.person_id = %s AND cgt.cipher_game_id = %s;",
+            (user_id, game_id,))
+        result = cur.fetchone()
+        if result is None:
+            return None
+        return result[0]
+
+
+def set_game_admin(cipher_game_id: int, user_id: int):
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "INSERT INTO cipher_game_admin (cipher_game_id, person_id) VALUES (%s,%s)",
+            (cipher_game_id, user_id,))
+
+
+def exist_game(cipher_game_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT * FROM cipher_game WHERE cipher_game_id = %s", (cipher_game_id,)
+        )
+        result = cur.fetchone()
+        return bool(result)
+
+
+def is_visible(cipher_game_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM cipher_game WHERE visible_from <=  NOW() AND cipher_game_id = %s;",
+                    (cipher_game_id,))
+        result = cur.fetchall()
+        return bool(result)
+
+
+def get_all_teams(cipher_game_id: int) -> [Team]:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT t.* FROM cipher_game_team cgt JOIN team t ON cgt.cipher_game_id = %s AND t.team_id = cgt.team_id;",
+            (cipher_game_id,))
+        teams = cur.fetchall()
+        if teams is None:
+            return None
+        return [team_from_db_row(x) for x in teams]
+
+
+def edit_game(cipher_game_id: int, edits: EditCipherGame):
+    cipher_game = get_cipher_game(cipher_game_id)
+    if cipher_game is None:
+        return None
+
+    cipher_game.edit(edits)
+    update_cipher_game(cipher_game_id, cipher_game)
+    return cipher_game
+
+def is_game(cipher_game_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT * FROM cipher_game WHERE cipher_game_id = %s;", (cipher_game_id, )
+        )
+        result = cur.fetchall()
+        return bool(result)
 

@@ -1,3 +1,5 @@
+import {Hint} from "./hint";
+
 export interface Cipher {
   cipher_id?: number;
   cipher_game_id: number;
@@ -11,4 +13,6 @@ export interface Cipher {
   attempts?: number;
   score: number;
   reference_solution?: string;
+  solved: boolean;
+  hints: Hint[]
 }

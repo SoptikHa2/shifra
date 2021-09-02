@@ -1,6 +1,8 @@
+from typing import Optional
+
 from .DBConn import *
 from fastapi import APIRouter
-from routes import Hint
+from routes.hint import *
 
 router = APIRouter()
 
@@ -36,3 +38,55 @@ def getHints():
         cur.execute("SELECT * FROM hint;")
         result = cur.fetchall()
     return result
+
+
+def get_hints_game(hint_id: int) -> Optional[int]:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT cipher.cipher_game_id FROM cipher JOIN hint ON hint.cipher_id = cipher.cipher_id AND hint.hint_id = %s;", (hint_id,))
+        result = cur.fetchone()
+        if result is None:
+            return None
+    return result[0]
+
+
+def get_hint(hint_id: int) -> Optional[Hint]:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM hint WHERE hint_id = %s;", (hint_id,))
+        result = cur.fetchone()
+        if result is None:
+            return None
+    return hint_from_db_row(result)
+
+
+def use_hint(hint_id: int, team_id: int) -> bool:
+    try:
+        with Curr_with_conn() as cur:
+            cur.execute("INSERT INTO hint_used(hint_id, team_id) VALUES(%s, %s);",
+                        (hint_id, team_id,))
+    except:
+        return False
+    return True
+
+
+def is_hint_used(hint_id: int, team_id: int) -> bool:
+    try:
+        with Curr_with_conn() as cur:
+            cur.execute("SELECT * FROM hint_used uh WHERE uh.hint_id = %s AND uh.team_id = %s;",
+                        (hint_id, team_id,))
+            result = cur.fetchall()
+    except:
+        return False
+    return bool(result)
+
+
+def get_hints_for_cipher(cipher_id: int) -> [Hint]:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT h.* FROM hint h WHERE h.cipher_id = %s;", (cipher_id,))
+        return [hint_from_db_row(x) for x in cur.fetchall()]
+
+
+def get_hint(hint_id: int) -> Optional[Hint]:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT h.* FROM hint h WHERE h.hint_id = %s;", (hint_id,))
+        result = cur.fetchone()
+        return hint_from_db_row(result)

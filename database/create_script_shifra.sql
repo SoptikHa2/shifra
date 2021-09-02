@@ -19,8 +19,10 @@ DROP TABLE IF EXISTS person_team CASCADE;
 CREATE TABLE attempt (
     cipher_id INTEGER NOT NULL,
     team_id INTEGER NOT NULL,
-    time TIMESTAMP NOT NULL,
-    is_successful BOOLEAN NOT NULL
+    start_time TIMESTAMP NOT NULL,
+    last_attempt_time TIMESTAMP,
+    attempt_count INTEGER NOT NULL DEFAULT(0),
+    was_success BOOLEAN NOT NULL
 );
 ALTER TABLE attempt ADD CONSTRAINT pk_attempt PRIMARY KEY (cipher_id, team_id);
 
@@ -29,7 +31,7 @@ CREATE TABLE cipher (
     cipher_game_id INTEGER NOT NULL,
     req_cipher_id INTEGER NULL,
     name VARCHAR(256) NOT NULL,
-    description VARCHAR(256) NOT NULL,
+    description TEXT NOT NULL,
     solution VARCHAR(256),
     judge VARCHAR(256),
     cipher_file VARCHAR(256),
@@ -46,7 +48,8 @@ CREATE TABLE cipher_game (
     cipher_game_id SERIAL NOT NULL,
     time_starting_cipher_id INTEGER,
     name VARCHAR(256) NOT NULL,
-    description VARCHAR(256) NOT NULL,
+    description TEXT NOT NULL,
+    image VARCHAR(256),
     visible_from TIMESTAMP NOT NULL,
     deadline_signup TIMESTAMP NOT NULL,
     deadline_event TIMESTAMP NOT NULL,
@@ -60,7 +63,7 @@ ALTER TABLE cipher_game ADD CONSTRAINT pk_cipher_game PRIMARY KEY (cipher_game_i
 CREATE TABLE hint (
     hint_id SERIAL NOT NULL,
     cipher_id INTEGER NOT NULL,
-    msg VARCHAR(256) NOT NULL,
+    msg VARCHAR(512) NOT NULL,
     img VARCHAR(256),
     hint_file VARCHAR(256),
     score_cost DOUBLE PRECISION NOT NULL,
@@ -81,7 +84,7 @@ ALTER TABLE person ADD CONSTRAINT pk_person PRIMARY KEY (person_id);
 CREATE TABLE team (
     team_id SERIAL NOT NULL,
     name VARCHAR(256) NOT NULL,
-    invite_code VARCHAR(256) NOT NULL,
+    invite_code VARCHAR(256),
     approved BOOLEAN NOT NULL
 );
 ALTER TABLE team ADD CONSTRAINT pk_team PRIMARY KEY (team_id);
@@ -130,6 +133,10 @@ ALTER TABLE team_member ADD CONSTRAINT fk_team_member_p FOREIGN KEY (person_id) 
 ALTER TABLE team_member ADD CONSTRAINT fk_team_member_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
 
 ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_h FOREIGN KEY (hint_id) REFERENCES hint (hint_id) ON DELETE CASCADE;
-ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
+ALTER TABLE hint_us
+
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO shifra_group;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO shifra_group;ed ADD CONSTRAINT fk_hint_used_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
 
 COMMIT;

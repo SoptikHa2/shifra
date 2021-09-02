@@ -6,7 +6,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss', '../auth-common.scss']
+  styleUrls: ['./login.component.scss', '../../theme/form-theme.scss']
 })
 export class LoginComponent implements OnInit {
   error?: errorMessage;

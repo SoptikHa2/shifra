@@ -27,16 +27,16 @@ export class LoggedInGuard implements CanActivate, CanActivateChild {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.all(route.url);
+    return this.all(state.url);
   }
 
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.all(childRoute.url);
+    return this.all(state.url);
   }
 
-  all(url: UrlSegment[]) {
+  all(url: string) {
     return this.authService.user.asObservable()
       .pipe(
         skipWhile(user => user == null),
@@ -44,7 +44,8 @@ export class LoggedInGuard implements CanActivate, CanActivateChild {
           if (user!.loggedIn) {
             return true;
           } else {
-            this.authService.setUrlBeforePrompting(new UrlSegmentGroup(url, {}).toString());
+            console.log(url);
+            this.authService.setUrlBeforePrompting(url);
             return this.router.createUrlTree( ['/auth/login']);
           }
         })

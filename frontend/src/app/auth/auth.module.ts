@@ -6,7 +6,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {RegisterComponent} from './register/register.component';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ReactiveFormsModule} from "@angular/forms";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {CanLogInGuard} from "../guards/can-log-in.guard";
 import {CanRegisterGuard} from "../guards/can-register.guard";

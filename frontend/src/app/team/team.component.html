@@ -1,0 +1,40 @@
+<ng-container *ngIf="teamObs | async as team; else loading">
+  <div class="flex-container team-container">
+    <div class="flex-row mat-display-3 header-text">
+      {{ team.name }}
+    </div>
+    <div class="flex-row">
+      <div class="flex-item qr-code">
+        <img alt="QR code" [src]="team.QRCode">
+      </div>
+      <div class="flex-container" style="flex: 1">
+        <div class="flex-item" style="flex-grow: 0">
+          <app-attribute label="Klíč teamu" [value]="team.invite_code" icon="vpn_key_outline"></app-attribute>
+          <app-attribute label="Pozvánkový link" [value]="team.inviteLink" icon="link"></app-attribute>
+        </div>
+        <div class="flex-item" style="flex-grow: 0">
+          <app-attribute label="Kapacita"
+                         icon="groups"
+                         [value]="team.members.length + ' / ' +team.teamMax"
+                         [canCopy]="false">
+          </app-attribute>
+        </div>
+        <div class="flex-item">
+          <app-attribute *ngFor="let teamMate of team.members"
+                         [canCopy]="false"
+                         [label]="teamMate.nickname"
+                         icon="person"></app-attribute>
+        </div>
+        <div class="flex-item">
+          <button mat-raised-button color="warn" class="leave-team-button"
+                  (click)="leaveTeam()">
+            Opustit team
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #loading class="loading">
+
+</ng-template>
