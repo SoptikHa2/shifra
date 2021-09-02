@@ -1,8 +1,5 @@
-import sys
-
 from fastapi import APIRouter, Response, Cookie
 from typing import Optional
-sys.path.append('../../')
 from logger import *
 from pydantic import BaseModel
 

@@ -1,6 +1,6 @@
 from fastapi import Response, Cookie
 
-from .user import user_management
+from api.logic import user_management
 from db_funcs import *
 from routes.cipher import Cipher, EditCipher
 

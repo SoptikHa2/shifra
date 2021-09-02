@@ -1,22 +1,11 @@
+from fastapi import Response, Cookie
 
-import sys
-
-from fastapi import APIRouter, Response, Cookie
-from typing import Optional
-
-
-from backend.api.endpoints.user import register_temp_post
-from backend.db_funcs import teamFuncs, cipherGameFuncs
-from backend.routes import Team
-
-
-sys.path.append("../../")
+from api.endpoints.user import register_temp_post
 
 from db_funcs import *
 from routes.team import EditTeam, Team
 from api.logic import user_management
 
-from routes import Person
 from logger import *
 from word_generator import *
 from base_converter import *

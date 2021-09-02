@@ -1,9 +1,6 @@
-import sys
-
 from fastapi import Response, Cookie
 
-sys.path.append("../../")
-from .user import user_management
+from api.logic import user_management
 from db_funcs import *
 from routes import *
 from logger import *
