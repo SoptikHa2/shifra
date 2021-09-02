@@ -3,8 +3,7 @@ import subprocess
 import qrcode
 import qrcode.image.svg
 from fastapi import APIRouter
-
-from starlette.responses import StreamingResponse
+from fastapi.responses import StreamingResponse
 
 router = APIRouter()
 
@@ -25,11 +24,11 @@ def genQR(teamCode: str):
     # Other cases do not interest us.
     teamCode = teamCode.replace(" ", "%20")
 
-
     img = qrcode.make('https://shifra.klubfitpp.cz/team/join/code?code=' + teamCode, image_factory = qrcode.image.svg.SvgImage)
 
     stream = io.BytesIO()
     img.save(stream)
+    stream.seek(0)
 
     # Save the image into fastapi response stream
     return StreamingResponse(stream, media_type="image/svg+xml")
