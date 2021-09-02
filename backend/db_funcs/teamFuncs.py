@@ -1,7 +1,5 @@
-import sys
 from typing import Optional
 
-sys.path.append('../')
 from .DBConn import *
 from fastapi import APIRouter
 from routes import Team, team_from_db_row, Person, person_from_db_row, EditTeam
