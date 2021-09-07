@@ -136,7 +136,14 @@ ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_h FOREIGN KEY (hint_id) REFERE
 ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
 
 
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO shifra_group;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO shifra_group;
+-- Reset permissions
+do $$
+begin
 
+if (select count(*) from pg_user where usename='shifra_group') > 0 then
+    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO shifra_group;
+    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO shifra_group;
+end if;
+
+end $$;
 COMMIT;
