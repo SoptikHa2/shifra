@@ -6,7 +6,7 @@ import {Observable} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog} from "@angular/material/dialog";
 import {AskDialogComponent} from "../dialogs/ask-dialog/ask-dialog.component";
-import {skipWhile} from "rxjs/operators";
+import {skipWhile, tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-team',
@@ -23,7 +23,7 @@ export class TeamComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.teamObs = this.teamService.getTeamById(this.route.snapshot.params['id']);
+    this.teamObs = this.teamService.getTeamById(this.route.snapshot.params['id']).pipe(tap(console.log));
   }
 
   leaveTeam() {

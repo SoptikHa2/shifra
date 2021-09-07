@@ -1,11 +1,8 @@
-import sys
 from typing import Optional
 
-sys.path.append('../')
 from .DBConn import *
 from fastapi import APIRouter
-
-from routes import Team, team_from_db_row, Person, person_from_db_row
+from routes import Team, team_from_db_row, Person, person_from_db_row, EditTeam
 from typing import Optional, List
 
 
@@ -132,3 +129,17 @@ def get_team_members(team_id: int) -> List[Person]:
         people = cur.fetchall()
         return [person_from_db_row(x) for x in people]
 
+def is_team(team_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT t.* FROM team t;", (team_id,))
+        team = cur.fetchall()
+        return bool(team)
+
+
+def edit_team(team_id: int, edits: EditTeam) -> Optional[Team]:
+    team = get_team_info(team_id)
+    if team is None:
+        return None
+
+    team.edit(edits)
+    return team

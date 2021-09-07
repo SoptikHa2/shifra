@@ -27,7 +27,11 @@
   }
 
   .qr-code {
-    background: #fafafa40;
+    background: #fafafafa;
+
+    img {
+      width: 100%;
+    }
   }
 
   .flex-item {

@@ -22,9 +22,10 @@ export class AttributeComponent implements OnInit {
 
   constructor(
     private snackBar: MatSnackBar
-  ) { }
+  ) {}
 
   ngOnInit(): void {
+    console.log(this.value);
   }
 
   showCopySnack() {

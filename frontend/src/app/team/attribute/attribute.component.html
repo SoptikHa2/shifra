@@ -13,7 +13,7 @@
   </div>
   <mat-icon *ngIf="canCopy"
             matTooltip="Zkopírovat"  matRipple
-            (click)="showCopySnack()"
+            (click)="showCopySnack()" color="accent"
             [cdkCopyToClipboard]="value!"
             class="material-icons-outlined copy">
     content_copy

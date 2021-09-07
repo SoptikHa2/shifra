@@ -15,12 +15,12 @@
         <div class="flex-item" style="flex-grow: 0">
           <app-attribute label="Kapacita"
                          icon="groups"
-                         [value]="team.teamMates.length + ' / ' +team.teamMax"
+                         [value]="team.members.length + ' / ' +team.teamMax"
                          [canCopy]="false">
           </app-attribute>
         </div>
         <div class="flex-item">
-          <app-attribute *ngFor="let teamMate of team.teamMates"
+          <app-attribute *ngFor="let teamMate of team.members"
                          [canCopy]="false"
                          [label]="teamMate.nickname"
                          icon="person"></app-attribute>
