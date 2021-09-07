@@ -90,16 +90,13 @@ def get_all_cipher_games() -> [CipherGame]:
         return [cipher_game_from_db_row(x) for x in result]
 
 
-
-def add_team(team_id: int, cipher_game_id: int):
-    with Curr_with_conn() as cur:
-        cur.execute("INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (%s, %s)", (cipher_game_id, team_id))
-    return team_id
-
 def players_team(user_id: int, game_id: int) -> Optional[int]:
     with Curr_with_conn() as cur:
         cur.execute(
-            "SELECT tm.team_id FROM team_member tm JOIN cipher_game_team cgt ON  cgt.team_id = tm.team_id AND tm.person_id = %s AND cgt.cipher_game_id = %s;",
+            "select t.* from team t "
+            "join team_member tm using (team_id) "
+            "where tm.person_id = %s "
+            "and t.cipher_game_id = %s ;",
             (user_id, game_id,))
         result = cur.fetchone()
         if result is None:
@@ -134,7 +131,7 @@ def is_visible(cipher_game_id: int) -> bool:
 def get_all_teams(cipher_game_id: int) -> [Team]:
     with Curr_with_conn() as cur:
         cur.execute(
-            "SELECT t.* FROM cipher_game_team cgt JOIN team t ON cgt.cipher_game_id = %s AND t.team_id = cgt.team_id;",
+            "SELECT t.* FROM team t where t.cipher_game_id = %s;",
             (cipher_game_id,))
         teams = cur.fetchall()
         if teams is None:

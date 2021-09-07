@@ -1,7 +1,6 @@
-
 BEGIN TRANSACTION;
 
-TRUNCATE TABLE attempt, cipher, hint, person, cipher_game, team, hint_used, cipher_game_admin, cipher_game_team, team_member CASCADE;
+TRUNCATE TABLE attempt, cipher, hint, person, cipher_game, team, hint_used, cipher_game_admin, team_member CASCADE;
 
 ALTER SEQUENCE cipher_cipher_id_seq RESTART WITH 1;
 ALTER SEQUENCE cipher_game_cipher_game_id_seq RESTART WITH 1;
@@ -126,9 +125,9 @@ VALUES (false, 'bot2', null, null, 'b''%\x1aX\xfc\x8e\xe2\xfcH\x00\xa6\x19\xc8\x
 
 -- Team data
 ------------------------------------------------------------------------------------------------------------------------
-INSERT INTO team (name, invite_code, approved) VALUES ('Mods are gay', 'We are the code', true);
-INSERT INTO team (name, invite_code, approved) VALUES ('Bots1', '', false);
-INSERT INTO team (name, invite_code, approved) VALUES ('Bots2', '', false);
+INSERT INTO team (name, cipher_game_id, invite_code, approved) VALUES ('Mods are gay', 1, 'We are the code', true);
+INSERT INTO team (name, cipher_game_id, invite_code, approved) VALUES ('Bots1', 2, '', false);
+INSERT INTO team (name, cipher_game_id, invite_code, approved) VALUES ('Bots2', 3, '', false);
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Team_person data
@@ -141,21 +140,6 @@ INSERT INTO team_member (person_id, team_id) VALUES (4,2);
 
 INSERT INTO team_member (person_id, team_id) VALUES (4,3);
 INSERT INTO team_member (person_id, team_id) VALUES (5,3);
-------------------------------------------------------------------------------------------------------------------------
-
--- Cipher_game_team data
-------------------------------------------------------------------------------------------------------------------------
-INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (1,1);
-INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (2,1);
-INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (3,1);
-INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (4,1);
-INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (5,1);
-
-INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (1,2);
-INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (2,2);
-INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (6,2);
-
-INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (4,3);
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Cipher_game_person data
