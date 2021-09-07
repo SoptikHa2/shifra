@@ -10,6 +10,7 @@ class EditTeam(BaseModel):
 
 class Team(BaseModel):
     team_id: int
+    cipher_game_id: int
     name: str
     invite_code: Optional[str]
     members: List = []
@@ -26,4 +27,4 @@ class Team(BaseModel):
 
 
 def team_from_db_row(row) -> Team:
-    return Team(team_id=row[0], name=row[1], invite_code=row[2], approved=row[3])
+    return Team(team_id=row[0], cipher_game_id=row[1], name=row[2], invite_code=row[3], approved=row[4])

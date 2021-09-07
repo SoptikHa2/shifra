@@ -58,8 +58,7 @@ def get_team_by_game_and_user(game_id: int, user_id: int) -> Optional[Team]:
     with Curr_with_conn() as cur:
         cur.execute("SELECT t.* FROM team t "
                     "JOIN team_member tm ON t.team_id = tm.team_id "
-                    "JOIN cipher_game_team cgt ON t.team_id = cgt.team_id "
-                    "WHERE tm.person_id = %s AND cgt.cipher_game_id = %s;",
+                    "WHERE tm.person_id = %s AND t.cipher_game_id = %s;",
                     (user_id, game_id,))
         result = cur.fetchone()
         if result is None:
@@ -78,7 +77,7 @@ def get_team_info(team_id: int) -> Optional[Team]:
 
 def get_game_id(team_id: int) -> int:
     with Curr_with_conn() as cur:
-        cur.execute("SELECT cgt.cipher_game_id FROM cipher_game_team cgt WHERE cgt.team_id = %s;", (team_id,))
+        cur.execute("SELECT t.cipher_game_id FROM team t WHERE t.team_id = %s;", (team_id,))
         result = cur.fetchone()[0]
 
     return int(result)
@@ -86,17 +85,14 @@ def get_game_id(team_id: int) -> int:
 
 def is_full(team_id: int) -> bool:
     with Curr_with_conn() as cur:
-        cur.execute("SELECT teammax FROM team_member JOIN cipher_game_team USING(team_id) JOIN cipher_game USING(cipher_game_id) WHERE team_id = %s", (team_id, ))
-        array_tmp = cur.fetchall()
-        number_of_members = len(array_tmp)
-
-        if number_of_members == 0:
-            return False
-
-        capacity = array_tmp[0][0]  # first record and first column (only teammax)
-        if number_of_members == capacity:
-            return True
-        return False
+        cur.execute("select t.team_id, (cg.teammax - COUNT(tm)) as remaining_capacity "
+                    "from team t "
+                    "join team_member tm using (team_id) "
+                    "join cipher_game cg using (cipher_game_id) "
+                    "where t.team_id = %s "
+                    "group by t.team_id, cg.teammax ", (team_id, ))
+        result = cur.fetchone()
+        return result[1] == 0
 
 
 def get_id_by_inv_code(inv_code: str) -> Optional[int]:
@@ -113,8 +109,8 @@ def add_invite_code(team_id: int, invite_code: str):
 
 def get_cipher_game_id_from_team(team_id: int) -> Optional[int]:
     with Curr_with_conn() as cur:
-        cur.execute("SELECT cgt.cipher_game_id FROM cipher_game_team cgt "
-                    "WHERE cgt.team_id = %s;", (team_id,))
+        cur.execute("SELECT t.cipher_game_id FROM team t "
+                    "WHERE t.team_id = %s;", (team_id,))
         result = cur.fetchone()
         if result is None:
             return None
