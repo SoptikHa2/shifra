@@ -2,7 +2,10 @@ from typing import Optional
 
 from .DBConn import *
 from fastapi import APIRouter
+from routes.stats import Stat
+from routes import CipherGame, cipher_game_from_db_row
 from routes.team import *
+from routes.stats import *
 from routes import CipherGame, cipher_game_from_db_row, EditCipherGame
 
 router = APIRouter()
@@ -74,6 +77,51 @@ def get_visible_games(user_id: Optional[int]) -> [CipherGame]:
     return [cipher_game_from_db_row(x) for x in result]
 
 
+def is_visible(cipher_game_id: int):
+    try:
+        with Curr_with_conn() as cur:
+            cur.execute("SELECT * FROM cipher_game WHERE visible_from <=  NOW() AND cipher_game_id = %s;",
+                        cipher_game_id)
+            result = cur.fetchall()
+    except:
+        return False
+    return bool(result)
+
+
+# TODO: Add stats to list, sort function...
+def get_leaderboard(cipher_game_id: int) -> [Stat]:
+    teams = get_all_teams(cipher_game_id)
+    result = [Stat(x.team_id, x.name, cipher_game_id) for x in teams]
+    result.sort()
+    return result
+
+
+def get_cipher_count(cipher_game_id: int) -> int:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT COUNT(1) FROM cipher_game cg WHERE cg.cipher_game_id = %s JOIN cipher ON cipher.cipher_game_id = cg.cipher_game_id;",
+            cipher_game_id)
+        count = cur.fetchall()[0]
+        return count
+
+
+def get_start_cipher(cipher_game_id: int) -> int:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT cg.time_starting_cipher_id FROM cipher_game cg WHERE cg.cipher_game_id = %s;", cipher_game_id)
+        id = cur.fetchall()[0]
+        return (id if id is not None else -1)
+
+
+def get_all_teams(cipher_game_id: int) -> [int]:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT t.* FROM cipher_game_team cgt WHERE cgt.cipher_game_id = %s JOIN team t ON t.team_id = cgt.team_id;",
+            cipher_game_id)
+        teams = cur.fetchall()
+        return [team_from_db_row(x) for x in teams]
+
+
 def is_staff(cipher_game_id: int, user_id: int) -> bool:
     with Curr_with_conn() as cur:
         cur.execute("SELECT * FROM cipher_game_admin ca WHERE ca.cipher_game_id = %s AND ca.person_id = %s;",
@@ -88,6 +136,12 @@ def get_all_cipher_games() -> [CipherGame]:
         cur.execute("SELECT * FROM cipher_game cg;")
         result = cur.fetchall()
         return [cipher_game_from_db_row(x) for x in result]
+
+
+def add_team(team_id: int, cipher_game_id: int):
+    with Curr_with_conn() as cur:
+        cur.execute("INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (%s, %s)", (cipher_game_id, team_id))
+    return team_id
 
 
 def players_team(user_id: int, game_id: int) -> Optional[int]:
@@ -148,10 +202,46 @@ def edit_game(cipher_game_id: int, edits: EditCipherGame):
     update_cipher_game(cipher_game_id, cipher_game)
     return cipher_game
 
+
 def is_game(cipher_game_id: int) -> bool:
     with Curr_with_conn() as cur:
         cur.execute(
-            "SELECT * FROM cipher_game WHERE cipher_game_id = %s;", (cipher_game_id, )
+            "SELECT * FROM cipher_game WHERE cipher_game_id = %s;", (cipher_game_id,)
         )
         result = cur.fetchall()
         return bool(result)
+
+
+def get_leaderboard(cipher_game_id: int) -> [Stat]:
+    teams = get_all_teams(cipher_game_id)
+    if teams is None:
+        return None
+    result = [Stat().update_info(x.team_id, x.name, cipher_game_id) for x in teams]
+    result.sort()
+    return result
+
+
+def get_cipher_count(cipher_game_id: int) -> int:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT COUNT(1) FROM cipher_game cg WHERE cg.cipher_game_id = %s JOIN cipher ON cipher.cipher_game_id = cg.cipher_game_id;",
+            cipher_game_id)
+        count = cur.fetchall()[0]
+        return count
+
+
+def get_start_cipher(cipher_game_id: int) -> int:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT cg.time_starting_cipher_id FROM cipher_game cg WHERE cg.cipher_game_id = %s;", cipher_game_id)
+        id = cur.fetchall()[0]
+        return id if id is not None else -1
+
+
+def get_all_teams(cipher_game_id: int) -> [int]:
+    with Curr_with_conn() as cur:
+        cur.execute(
+            "SELECT t.* FROM team t WHERE t.cipher_game_id = %s;", (cipher_game_id,))
+        teams = cur.fetchall()
+        return [team_from_db_row(x) for x in teams]
+
