@@ -2,7 +2,7 @@ from .DBConn import *
 from fastapi import APIRouter
 from routes import Person, person_from_db_row
 from typing import Optional
-
+from logger import *
 router = APIRouter()
 
 
@@ -56,7 +56,7 @@ def getPersonByAccessToken(access_token: str) -> Optional[Person]:
         result = cur.fetchone()
         if result is None:
             return None
-        return person_from_db_row(result)
+    return person_from_db_row(result)
 
 
 def getPersonByCredentials(username: str, password_hash: str) -> Optional[Person]:
@@ -65,7 +65,7 @@ def getPersonByCredentials(username: str, password_hash: str) -> Optional[Person
         result = cur.fetchone()
         if result is None:
             return None
-        return person_from_db_row(result)
+    return person_from_db_row(result)
 
 
 def getPersonByUsername(username: str) -> Optional[Person]:
@@ -74,4 +74,17 @@ def getPersonByUsername(username: str) -> Optional[Person]:
         result = cur.fetchone()
         if result is None:
             return None
-        return person_from_db_row(result)
+    return person_from_db_row(result)
+
+
+def joinTeam(team_id: int, person_id: int):
+    with Curr_with_conn() as cur:
+        cur.execute("INSERT INTO team_member(person_id, team_id) VALUES(%s, %s);", (person_id, team_id))
+    return team_id
+
+
+def is_registred(user_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM person where person_id = %s;", (user_id,))
+        result = cur.fetchone()
+        return bool(result)

@@ -1,3 +1,42 @@
-<div class="cipher-container">
-  <markdown [data]="text"></markdown>
-</div>
+<ng-container *ngIf="cipher">
+  <div class="mat-display-1 label">
+    {{ cipher.name }}
+  </div>
+  <div class="score-display">
+    {{ cipher.score }} Bodů
+  </div>
+  <!--<img class="main-image" *ngIf="cipher.img"
+           [src]="'assets/' + trustUrl(cipher.img)" alt="obrázek"/>
+  --> <img class="main-image" *ngIf="cipher.img"
+           src="https://picsum.photos/900" alt="obrázek"/>
+  <div class="cipher-container">
+    <markdown [data]="cipher.description" class="markdown"></markdown>
+  </div>
+  <div class="button-row" *ngIf="cipher.cipher_file">
+    <a [href]="cipher.cipher_file" target="_blank" #fileLink style="display: none"></a>
+    <button mat-raised-button color="accent" (click)="fileLink.click()">
+      <mat-icon style="margin-right: 2px;">download</mat-icon>
+      Soubor ke stažení
+    </button>
+  </div>
+  <div class="mat-display-1 hint-label"> Nápovědy </div>
+  <mat-selection-list [multiple]="false" class="hint-list"
+                      *ngIf="cipher.hints">
+    <mat-list-option *ngFor="let hint of cipher.hints"
+                   style="cursor: pointer"
+                   (click)="hintClick(hint.hint_id, cipher)">
+      <mat-icon mat-list-icon> help_outline </mat-icon>
+      <div mat-line> Nápověda </div>
+      <div mat-line> ({{ getHintCostText(hint) }}) </div>
+    </mat-list-option>
+  </mat-selection-list>
+  <mat-form-field appearance="outline" class="solution">
+    <mat-label> Řešení </mat-label>
+    <textarea rows="5" matInput></textarea>
+  </mat-form-field>
+  <div class="button-row">
+    <button mat-raised-button color="primary" (click)="makeAttempt()">
+      Odevzdat
+    </button>
+  </div>
+</ng-container>

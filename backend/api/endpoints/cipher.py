@@ -1,8 +1,8 @@
 from fastapi import Response, Cookie
 
-from .user import user_management
+from api.logic import user_management
 from db_funcs import *
-from routes import *
+from routes.cipher import Cipher, EditCipher
 
 router = APIRouter()
 
@@ -20,7 +20,7 @@ def open_cipher(cipher_id: int, response: Response, session_cookie: Optional[str
         response.status_code = 401
         return None
 
-    cipher = get_cipher(cipher_id)
+    cipher = cipherFuncs.get_cipher(cipher_id)
 
     if cipher is None:
         response.status_code = 404
@@ -48,4 +48,90 @@ def open_cipher(cipher_id: int, response: Response, session_cookie: Optional[str
     # Add hints
     cipher.hints = [h.strip() for h in get_hints_for_cipher(cipher_id)]
 
+    # TODO: Optimize, gather hint usage information during initial load
+    if team is not None:
+        for h in cipher.hints:
+            h.is_used = is_hint_used(h.hint_id, team.team_id)
+
     return cipher.strip()
+
+
+@router.post('/api/cipher')
+def create_cipher(cipher: Cipher, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Cipher]:
+    """
+        create new cipher
+        :param cipher new cipher to add
+        :return 200 Everything OK
+                401 No permission
+                404 Not existing game
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    if not is_game(cipher.cipher_game_id):
+        response.status_code = 404
+        return None
+
+    if not user.is_root and not is_staff(cipher.cipher_game_id, user.person_id):
+        response.status_code = 401
+        return None
+
+    insert_cipher(cipher.cipher_game_id, cipher)
+    return cipher
+
+
+@router.put('/api/cipher/{cipher_id}')
+def edit_cipher(cipher_id: int, edits: EditCipher, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Cipher]:
+    """
+        Edit existing cipher by staff or root
+        :param cipher_id cipher to edit
+        :param edits changes to be done
+        :return 200 Everything OK
+                401 No permission
+                404 No existing cipher
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    cipher = get_cipher(cipher_id)
+    if cipher is None:
+        response.status_code = 404
+        return None
+
+    if not user.is_root and not is_staff(cipher.cipher_game_id, user.person_id):
+        response.status_code = 401
+        return None
+
+    cipher.edit(edits)
+    update_cipher(cipher_id, cipher)
+    return cipher
+
+
+@router.delete('/api/cipher/{cipher_id}')
+def delete_cipher(cipher_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+        Delete of existing cipher by root or staff
+        :param cipher_id to delete
+        :return 200 Everything OK
+                401 No permission
+                404 Not found
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    cipher = get_cipher(cipher_id)
+    if cipher is None:
+        response.status_code = 404
+        return None
+
+    if not user.is_root and not is_staff(cipher.cipher_game_id, user.person_id):
+        response.status_code = 401
+        return None
+
+    cipherFuncs.delete_cipher(cipher_id)
