@@ -1,10 +1,3 @@
-<div class="games-header mat-display-1">
-  <div>Vítejte na stránkách šifrovačky</div>
-  <div class="join-btn">
-    <button mat-raised-button color="primary" routerLink="/lobby"> Zapojit se </button>
-  </div>
-  <mat-icon> keyboard_arrow_down </mat-icon>
-</div>
 <div class="cards-container">
   <ng-container *ngIf="gamesObs | async as games">
     <app-game-card *ngFor="let game of games" [game]="game[0]">
@@ -19,7 +12,7 @@
           POKRAČOVAT
         </button>
         <button mat-button
-                [routerLink]="['/team', game[0].cipher_game_id]">
+                [routerLink]="['/team', game[1]?.team_id, game[0].cipher_game_id]">
           MŮJ TEAM
         </button>
       </ng-container>

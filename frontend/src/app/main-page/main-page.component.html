@@ -1,0 +1,14 @@
+<div class="games-header mat-display-1">
+  <ng-container *ngIf="cipherRunning; else countdown">
+    <div>Vítejte na stránkách šifrovačky</div>
+    <div class="join-btn">
+      <button mat-raised-button color="primary" routerLink="/lobby"> Zapojit se</button>
+    </div>
+  </ng-container>
+  <ng-template #countdown>
+    <div class="logo" [innerHTML]="svgImage | async"></div>
+    <app-countdown></app-countdown>
+  </ng-template>
+  <mat-icon> keyboard_arrow_down</mat-icon>
+</div>
+<app-cipher-game-list></app-cipher-game-list>

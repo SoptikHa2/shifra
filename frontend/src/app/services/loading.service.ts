@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, throwError} from "rxjs";
-import {catchError, tap} from "rxjs/operators";
+import {catchError, delay, tap} from "rxjs/operators";
 import {environment} from "../../environments/environment";
 
 @Injectable({
@@ -27,6 +27,7 @@ export class LoadingService {
   startLoading<T>(task: Observable<T>): Observable<T> {
     ++this.TasksRunningCount;
     return task.pipe(
+      delay(1000), // todo remove
       tap((val) => {
         --this.TasksRunningCount;
       }),
