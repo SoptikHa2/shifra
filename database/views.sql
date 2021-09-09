@@ -4,7 +4,7 @@
 
 drop view if exists w_getLeaderboard;
 create view w_getLeaderboard as
-select
+select * from ( select
             -- Cipher game id
             cg.cipher_game_id,
             -- Team id
@@ -31,8 +31,12 @@ select
                                     startingAttempt.team_id = t.team_id
     left outer join hint_used hu on hu.team_id = t.team_id
     left outer join hint h on h.hint_id = hu.hint_id and h.cipher_id = c.cipher_id
-    group by t.team_id, t.name, cg.cipher_game_id, startingAttempt.start_time;
+    group by t.team_id, t.name, cg.cipher_game_id, startingAttempt.start_time ) as result
+    order by has_finished,
+             (clean_score - malus_score) desc,
+             (extract(epoch from (end_time - start_time)) + malus_time) desc;
 
+select * from w_getLeaderboard
 
 
 
