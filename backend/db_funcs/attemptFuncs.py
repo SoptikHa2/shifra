@@ -1,6 +1,9 @@
+from datetime import datetime
+from typing import Optional
+
 from fastapi import APIRouter
 
-from routes import Attempt
+from routes import Attempt, attempt_from_db_row
 from .DBConn import *
 
 # All hints are under ciphers under cipherGames
@@ -30,11 +33,11 @@ def deleteAttempt(cipher_id: int, team_id: int):
         cur.execute("DELETE FROM attempt WHERE cipher_id=%s AND team_id=%s;", (cipher_id, team_id,))
 
 
-def getAttempt(cipher_id: int, team_id):
+def getAttempt(cipher_id: int, team_id: int) -> Optional[Attempt]:
     with Curr_with_conn() as cur:
         cur.execute("SELECT * FROM attempt WHERE cipher_id=%s AND team_id=%s;", (cipher_id, team_id,))
-        result = cur.fetchall()
-    return result
+        result = cur.fetchone()
+    return None if result is None else attempt_from_db_row(result)
 
 
 def getAttempts():
@@ -42,6 +45,17 @@ def getAttempts():
         cur.execute("SELECT * FROM attempt")
         result = cur.fetchall()
     return result
+
+
+def record_attempt(cipher_id: int, team_id: int, successful: bool):
+    current_attempt = getAttempt(cipher_id, team_id)
+    if current_attempt is None:
+        insertAttempt(Attempt(cipher_id=cipher_id, team_id=team_id, start_time=datetime.now(), last_attempt_time=datetime.now(), attempt_count=1, was_success=successful))
+    else:
+        current_attempt.last_attempt_time = datetime.now()
+        current_attempt.was_success = successful
+        current_attempt.attempt_count += 1
+        updateAttempt(cipher_id, team_id, current_attempt)
 
 
 def log_cipher_view_into_attempt(cipher_id: int, team_id: int):

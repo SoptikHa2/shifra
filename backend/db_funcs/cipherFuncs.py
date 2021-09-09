@@ -92,7 +92,7 @@ def is_team_out_of_attempts(cipher_id: int, team_id: int) -> bool:
                     "(c.attempts <= 0 OR"
                     " c.attempts > a.attempt_count"
                     ");", (cipher_id, team_id))
-        return cur.fetchone()[0] > 0
+        return cur.fetchone()[0] == 0
 
 
 def is_team_cooldown_limited(cipher_id: int, team_id: int) -> bool:
@@ -101,6 +101,5 @@ def is_team_cooldown_limited(cipher_id: int, team_id: int) -> bool:
                     "JOIN cipher c ON c.cipher_id = a.cipher_id "
                     "WHERE a.cipher_id = %s AND a.team_id = %s AND "
                     "(a.last_attempt_time IS NULL OR "
-                    "(a.last_attempt_time + (c.cooldown * interval '1 second') < now())"
-                    ")", (cipher_id, team_id))
-        return cur.fetchone()[0] > 0
+                    "now() > (a.last_attempt_time + (c.cooldown * interval '1 second')))", (cipher_id, team_id))
+        return cur.fetchone()[0] == 0

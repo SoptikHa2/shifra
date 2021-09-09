@@ -93,22 +93,25 @@ def send_attempt(cipher_id: int, solution_post: CipherAttempt, response: Respons
         response.status_code = 403
         return None
 
-    if is_cipher_solved(cipher_id, team.team_id):
-        response.status_code = 200
-        return None
+    if attemptFuncs.getAttempt(cipher_id, team.team_id) is not None:
+        if is_cipher_solved(cipher_id, team.team_id):
+            response.status_code = 200
+            return None
 
-    if is_team_out_of_attempts(cipher_id, team.team_id):
-        response.status_code = 423
-        return None
+        if is_team_out_of_attempts(cipher_id, team.team_id):
+            response.status_code = 423
+            return None
 
-    if is_team_cooldown_limited(cipher_id, team.team_id):
-        response.status_code = 420
-        return None
+        if is_team_cooldown_limited(cipher_id, team.team_id):
+            response.status_code = 420
+            return None
 
     # Judge answer
     if cipher_management.is_cipher_solution_correct(cipher, solution_post.answer):
+        record_attempt(cipher.cipher_id, team.team_id, True)
         response.status_code = 202
     else:
+        record_attempt(cipher.cipher_id, team.team_id, False)
         response.status_code = 417
 
     return None
