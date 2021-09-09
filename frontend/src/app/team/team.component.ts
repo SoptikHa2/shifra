@@ -6,7 +6,10 @@ import {Observable} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog} from "@angular/material/dialog";
 import {AskDialogComponent} from "../dialogs/ask-dialog/ask-dialog.component";
-import {skipWhile, tap} from "rxjs/operators";
+import {map, mergeMap, skipWhile, tap} from "rxjs/operators";
+import {Cipher} from "../model/cipher";
+import {CipherService} from "../services/cipher.service";
+import {GameService} from "../services/game.service";
 
 @Component({
   selector: 'app-team',
@@ -18,12 +21,17 @@ export class TeamComponent implements OnInit {
 
   constructor(
     private teamService: TeamService,
+    private gameService: GameService,
     private route: ActivatedRoute,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    this.teamObs = this.teamService.getTeamById(this.route.snapshot.params['id']).pipe(tap(console.log));
+    this.teamObs = this.teamService.getTeamById(this.route.snapshot.params['id'])
+      .pipe(mergeMap(team => {
+        return this.gameService.getGameById(this.route.snapshot.params['cipherId'])
+          .pipe(map(game => ({...team, teamMax: game.teammax})));
+      }))
   }
 
   leaveTeam() {

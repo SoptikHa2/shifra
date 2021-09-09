@@ -176,7 +176,7 @@ export class AuthService {
    */
   userInfo() {
     this.loadingService.startLoading(this.evaluatePersonResponse(this.http.get<Person>(environment.backendUrl + '/api/auth/userInfo')))
-      .subscribe(user => this.user.next(user));
+      .subscribe(user => this.user.next(user), () => {});
   }
 
   getError() {
