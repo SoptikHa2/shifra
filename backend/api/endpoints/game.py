@@ -20,7 +20,7 @@ def get_leaderboard(cipher_game_id: int, response: Response, session_cookie: Opt
     """
 
     user = user_management.get_user_by_token(session_cookie)
-    if not is_visible(cipher_game_id) or not is_staff(cipher_game_id, user.person_id) or not user.is_root:
+    if not is_visible(cipher_game_id) and not is_staff(cipher_game_id, user.person_id) and not user.is_root:
         response.status_code = 401
         return None
 
