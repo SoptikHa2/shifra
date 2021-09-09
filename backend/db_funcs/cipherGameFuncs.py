@@ -2,10 +2,7 @@ from typing import Optional
 
 from .DBConn import *
 from fastapi import APIRouter
-from routes.stats import Stat
-from routes import CipherGame, cipher_game_from_db_row
 from routes.team import *
-from routes.stats import *
 from routes import CipherGame, cipher_game_from_db_row, EditCipherGame
 
 router = APIRouter()
@@ -86,40 +83,6 @@ def is_visible(cipher_game_id: int):
     except:
         return False
     return bool(result)
-
-
-# TODO: Add stats to list, sort function...
-def get_leaderboard(cipher_game_id: int) -> [Stat]:
-    teams = get_all_teams(cipher_game_id)
-    result = [Stat(x.team_id, x.name, cipher_game_id) for x in teams]
-    result.sort()
-    return result
-
-
-def get_cipher_count(cipher_game_id: int) -> int:
-    with Curr_with_conn() as cur:
-        cur.execute(
-            "SELECT COUNT(1) FROM cipher_game cg WHERE cg.cipher_game_id = %s JOIN cipher ON cipher.cipher_game_id = cg.cipher_game_id;",
-            cipher_game_id)
-        count = cur.fetchall()[0]
-        return count
-
-
-def get_start_cipher(cipher_game_id: int) -> int:
-    with Curr_with_conn() as cur:
-        cur.execute(
-            "SELECT cg.time_starting_cipher_id FROM cipher_game cg WHERE cg.cipher_game_id = %s;", cipher_game_id)
-        id = cur.fetchall()[0]
-        return (id if id is not None else -1)
-
-
-def get_all_teams(cipher_game_id: int) -> [int]:
-    with Curr_with_conn() as cur:
-        cur.execute(
-            "SELECT t.* FROM cipher_game_team cgt WHERE cgt.cipher_game_id = %s JOIN team t ON t.team_id = cgt.team_id;",
-            cipher_game_id)
-        teams = cur.fetchall()
-        return [team_from_db_row(x) for x in teams]
 
 
 def is_staff(cipher_game_id: int, user_id: int) -> bool:
@@ -212,36 +175,13 @@ def is_game(cipher_game_id: int) -> bool:
         return bool(result)
 
 
-def get_leaderboard(cipher_game_id: int) -> [Stat]:
-    teams = get_all_teams(cipher_game_id)
-    if teams is None:
-        return None
-    result = [Stat().update_info(x.team_id, x.name, cipher_game_id) for x in teams]
-    result.sort()
+def get_leaderboard(cipher_game_id: int):
+    """
+    :return: Tuple containing cipher_game_id, team_id, clean_score, start_time, end_time, malus_score, malus_time, has_finished
+    """
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM w_getLeaderboard WHERE cipher_game_id = %s;", (cipher_game_id,))
+        result = cur.fetchall()
     return result
 
-
-def get_cipher_count(cipher_game_id: int) -> int:
-    with Curr_with_conn() as cur:
-        cur.execute(
-            "SELECT COUNT(1) FROM cipher_game cg WHERE cg.cipher_game_id = %s JOIN cipher ON cipher.cipher_game_id = cg.cipher_game_id;",
-            cipher_game_id)
-        count = cur.fetchall()[0]
-        return count
-
-
-def get_start_cipher(cipher_game_id: int) -> int:
-    with Curr_with_conn() as cur:
-        cur.execute(
-            "SELECT cg.time_starting_cipher_id FROM cipher_game cg WHERE cg.cipher_game_id = %s;", cipher_game_id)
-        id = cur.fetchall()[0]
-        return id if id is not None else -1
-
-
-def get_all_teams(cipher_game_id: int) -> [int]:
-    with Curr_with_conn() as cur:
-        cur.execute(
-            "SELECT t.* FROM team t WHERE t.cipher_game_id = %s;", (cipher_game_id,))
-        teams = cur.fetchall()
-        return [team_from_db_row(x) for x in teams]
 

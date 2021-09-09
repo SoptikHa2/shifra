@@ -66,7 +66,7 @@ CREATE TABLE hint (
     msg VARCHAR(512) NOT NULL,
     img VARCHAR(256),
     hint_file VARCHAR(256),
-    score_cost DOUBLE PRECISION NOT NULL,
+    score_cost INTEGER NOT NULL,
     time_cost INTEGER NOT NULL
 );
 ALTER TABLE hint ADD CONSTRAINT pk_hint PRIMARY KEY (hint_id);
