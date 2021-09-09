@@ -20,7 +20,7 @@ import {MatDialogModule} from "@angular/material/dialog";
   declarations: [
     AppComponent,
     MenuComponent,
-    AskDialogComponent
+    AskDialogComponent,
   ],
     imports: [
         BrowserModule,

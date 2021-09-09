@@ -49,30 +49,22 @@ export class QRComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.qrCodeReader = new Html5Qrcode("reader");
-
-    Html5Qrcode.getCameras().then((devices: CameraDevice[]) => {
-      this.cameras = devices;
-      if (this.cameras && this.cameras.length) {
-        const fps = 10;
-        const qrbox = 250;
-        const aspectRatio = 1;
-        this.qrCodeReader.start(
-          { facingMode: "environment" },
-          { fps, qrbox, aspectRatio },
-          (text: any) => {
-            this.router.navigate(['/team/join/code'], {queryParams: {code: text.split('=').pop()}})
-              .then()
-              .catch(err => {
-                if (!environment.production) console.error(err);
-              })
-          }
-        ).then(console.log).catch((err: any) => {
+    const fps = 10;
+    const qrbox = 250;
+    const aspectRatio = 1;
+    this.qrCodeReader.start(
+      {facingMode: "environment"},
+      {fps, qrbox, aspectRatio},
+      (text: any) => {
+        this.router.navigate(['/team/join/code'], {queryParams: {code: text.split('=').pop()}})
+          .then()
+          .catch(err => {
             if (!environment.production) console.error(err);
           })
-      }
-    }).catch((err: any) => {
-      if (!environment.production) console.error(err);
-    })
+      }).then(console.error)
+      .catch((err: any) => {
+        if (!environment.production) console.error(err);
+      })
   }
 
   ngOnDestroy() {

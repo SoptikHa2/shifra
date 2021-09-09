@@ -1,28 +1,48 @@
 from fastapi import Response, Cookie
+from typing import Optional
 
 from api.logic import user_management
 from db_funcs import *
 from routes import *
 from logger import *
+
 router = APIRouter()
+
+
+@router.get('/api/leaderboard/{cipher_game_id}')
+def get_leaderboard(cipher_game_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+	Shows leaderboard of specified game
+
+	:param cipher_game_id: Game id to use
+	:return 200 everything is OK
+	        401 no permissions to see leaderboard
+    """
+
+    user = user_management.get_user_by_token(session_cookie)
+    if not is_visible(cipher_game_id) and not is_staff(cipher_game_id, user.person_id) and not user.is_root:
+        response.status_code = 401
+        return None
+
+    return cipherGameFuncs.get_leaderboard(cipher_game_id)
 
 
 @router.get("/api/game/{cipher_game_id}")
 def get_game_by_id(cipher_game_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
     """
-        Try show information about given game
+	Try show information about given game
 
-        :param cipher_game_id: Game id to use
-        :return 200 Everything was OK
-                401 No permissions
-                404 Game doesn't exists
+	:param cipher_game_id: Game id to use
+	:return 200 Everything was OK
+	        401 No permissions
+	        404 Game doesn't exists
     """
-
     user = user_management.get_user_by_token(session_cookie)
     game = cipherGameFuncs.get_cipher_game(cipher_game_id)
     if game is None:
         response.status_code = 404
-        logger.info(get_game_by_id.__name__ + " /api/game/" + str(cipher_game_id) + " (GET) / ERROR CODE " + str(response.status_code) + ": cipher game " + str(cipher_game_id) + " does not exist")
+        logger.info(get_game_by_id.__name__ + " /api/game/" + str(cipher_game_id) + " (GET) / ERROR CODE " + str(
+            response.status_code) + ": cipher game " + str(cipher_game_id) + " does not exist")
         return None
 
     if is_visible(cipher_game_id) or (user is not None and is_staff(cipher_game_id, user.person_id)) or (
@@ -31,7 +51,8 @@ def get_game_by_id(cipher_game_id: int, response: Response, session_cookie: Opti
         return game.strip()
     else:
         response.status_code = 401
-        logger.warning(get_game_by_id.__name__ + " /api/game/" + str(cipher_game_id) + " (GET) / ERROR CODE " + str(response.status_code))
+        logger.warning(get_game_by_id.__name__ + " /api/game/" + str(cipher_game_id) + " (GET) / ERROR CODE " + str(
+            response.status_code))
         return None
 
 
@@ -106,10 +127,10 @@ def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(Non
 @router.post('/api/game')
 def create_game(cipher_game: CipherGame, response: Response, session_cookie: Optional[str] = Cookie(None)):
     """
-        Creating game
-        :param cipher_game ciphergame to create
-        :return 200 Everything OK
-                401 Not authorized
+	Creating game
+	:param cipher_game ciphergame to create
+	:return 200 Everything OK
+	        401 Not authorized
     """
     user = user_management.get_user_by_token(session_cookie)
     if user is None:
@@ -126,10 +147,10 @@ def create_game(cipher_game: CipherGame, response: Response, session_cookie: Opt
 @router.post('/api/game/{cipher_game_id}/set_admin/{user_id}')
 def set_admin(cipher_game_id: int, user_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
     """
-        Add new admin of game
-        :param user_id id of new admin
-        :return 200 Everything OK
-                401 No permission
+	Add new admin of game
+	:param user_id id of new admin
+	:return 200 Everything OK
+	        401 No permission
     """
     user = user_management.get_user_by_token(session_cookie)
     if user is None:
@@ -149,17 +170,20 @@ def set_admin(cipher_game_id: int, user_id: int, response: Response, session_coo
         return None
 
     set_game_admin(cipher_game_id, user_id)
+    return None
+
+
 @router.get('/api/leaderboard/{cipher_game_id}')
 def get_leaderboard(cipher_game_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
     """
-        Shows leaderboard of specified game
-        :param cipher_game_id: Game id to use
-        :return 200 everything is OK
-                401 no permissions to see leaderboard
+	Shows leaderboard of specified game
+	:param cipher_game_id: Game id to use
+	:return 200 everything is OK
+	        401 no permissions to see leaderboard
     """
 
     user = user_management.get_user_by_token(session_cookie)
-    if is_visible(cipher_game_id) or is_staff(cipher_game_id, user.person_id) or user.is_root:
+    if is_visible(cipher_game_id) or (user is not None and (is_staff(cipher_game_id, user.person_id) or user.is_root)):
         return cipherGameFuncs.get_leaderboard(cipher_game_id)
     else:
         response.status_code = 401
@@ -169,10 +193,10 @@ def get_leaderboard(cipher_game_id: int, response: Response, session_cookie: Opt
 @router.get('/api/game/{cipher_game_id}/teams')
 def get_teams_in_game(cipher_game_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
     """
-        Show all teams registered in game with specified id
-        :param cipher_game_id: Game id to use
-        :return 200 everything is OK
-                401 not visible game
+	Show all teams registered in game with specified id
+	:param cipher_game_id: Game id to use
+	:return 200 everything is OK
+	        401 not visible game
     """
     user = user_management.get_user_by_token(session_cookie)
 
@@ -187,15 +211,16 @@ def get_teams_in_game(cipher_game_id: int, response: Response, session_cookie: O
     teams_in_game = cipherGameFuncs.get_all_teams(cipher_game_id)
     return teams_in_game
 
+
 @router.put('/api/game/{cipher_game_id}')
 def edit_game(cipher_game_id: int, cipher_game_edits: EditCipherGame, response: Response,
               session_cookie: Optional[str] = Cookie(None)) -> Optional[CipherGame]:
     """
-        Edit of existing game
-        :param cipher_game_id id of game to edit
-        :param cipher_game edits on game
+	Edit of existing game
+	:param cipher_game_id id of game to edit
+	:param cipher_game edits on game
     :return 200 Everything OK
-                401 Not authorized
+	        401 Not authorized
     """
     user = user_management.get_user_by_token(session_cookie)
     if user is None:
@@ -209,12 +234,13 @@ def edit_game(cipher_game_id: int, cipher_game_edits: EditCipherGame, response: 
     edited_game = cipherGameFuncs.edit_game(cipher_game_id, cipher_game_edits)
     return edited_game
 
+
 @router.delete('/api/game/{cipher_game_id}')
 def delete_game(cipher_game_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
     """
-        Delete game if user is root
-        :return 200 Everything OK
-                401 not root
+	Delete game if user is root
+	:return 200 Everything OK
+	        401 not root
     """
     user = user_management.get_user_by_token(session_cookie)
     if user is None:

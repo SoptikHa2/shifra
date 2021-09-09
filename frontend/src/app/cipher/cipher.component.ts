@@ -34,6 +34,7 @@ export class CipherComponent implements OnInit {
   }
 
   getHintCostText(hint: Hint) {
+    if (hint.is_used) return 'Otevřená';
     if (hint.score_cost && hint.time_cost)
       return `-${hint.score_cost} bodů, -${hint.time_cost} sekund`;
     if (hint.score_cost)
