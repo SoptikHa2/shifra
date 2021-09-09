@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Response, Cookie
 
 from api.logic import user_management
-from routes.hint import *
 from db_funcs import *
 
 router = APIRouter()
