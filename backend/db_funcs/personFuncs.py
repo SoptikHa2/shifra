@@ -1,10 +1,7 @@
-import sys
-
 from .DBConn import *
 from fastapi import APIRouter
 from routes import Person, person_from_db_row
 from typing import Optional
-sys.path.append('../')
 from logger import *
 router = APIRouter()
 
