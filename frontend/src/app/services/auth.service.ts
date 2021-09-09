@@ -5,6 +5,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, map, tap} from "rxjs/operators";
 import {environment} from "../../environments/environment";
 import {Router} from "@angular/router";
+import {LoadingService} from "./loading.service";
 
 export type userModel = {
   loggedIn: boolean;
@@ -29,6 +30,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
+    private loadingService: LoadingService,
     private router: Router
   ) {
     this.userInfo();
@@ -57,7 +59,7 @@ export class AuthService {
         }
         return throwError(err);
       }));
-    const userObs = this.evaluatePersonResponse(result);
+    const userObs = this.loadingService.startLoading(this.evaluatePersonResponse(result));
 
     return userObs.pipe(
       tap(u => this.user.next(u)),
@@ -77,7 +79,7 @@ export class AuthService {
     }
 
     const result = this.http.get<boolean>(environment.backendUrl + '/api/auth/checkUsernameAvailability', {params: {username}})
-    return result.toPromise();
+    return this.loadingService.startLoading(result).toPromise();
   }
 
   /**
@@ -91,7 +93,7 @@ export class AuthService {
     }
 
     const result = this.http.post<Person>(environment.backendUrl + '/api/auth/temporaryRegister', {username});
-    const userObs = this.evaluatePersonResponse(result);
+    const userObs = this.loadingService.startLoading(this.evaluatePersonResponse(result));
     return userObs.pipe(
       tap(u => this.user.next(u)),
       map(u => u.loggedIn)
@@ -125,7 +127,7 @@ export class AuthService {
           return throwError(err);
         })
       );
-    const userObs = this.evaluatePersonResponse(result)
+    const userObs = this.loadingService.startLoading(this.evaluatePersonResponse(result));
     return userObs.pipe(
       tap(u => this.user.next(u)),
       map(u => u.loggedIn)
@@ -141,7 +143,7 @@ export class AuthService {
       return new Promise(() => false);
     }
 
-    return this.transformToSuccessObservable(
+    const obs = this.transformToSuccessObservable(
       this.http.post(environment.backendUrl + '/api/auth/logout', {})
         .pipe(
           tap(() => {
@@ -149,7 +151,9 @@ export class AuthService {
             this.promptToLogin();
           }),
         )
-    ).toPromise();
+    );
+
+    return this.loadingService.startLoading(obs).toPromise();
   }
 
   promptToLogin(sw: boolean = true) {
@@ -171,7 +175,7 @@ export class AuthService {
    * get info about already logged user
    */
   userInfo() {
-    this.evaluatePersonResponse(this.http.get<Person>(environment.backendUrl + '/api/auth/userInfo'))
+    this.loadingService.startLoading(this.evaluatePersonResponse(this.http.get<Person>(environment.backendUrl + '/api/auth/userInfo')))
       .subscribe(user => this.user.next(user));
   }
 

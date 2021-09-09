@@ -48,6 +48,7 @@ def get_cipher(cipher_id: int) -> Optional[Cipher]:
     with Curr_with_conn() as cur:
         cur.execute("SELECT * FROM cipher WHERE cipher_id = %s;", (cipher_id,))
         result = cur.fetchone()
+
     if result is None:
         return None
     return cipher_from_db_row(result)

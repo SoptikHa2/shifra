@@ -31,7 +31,7 @@ CREATE TABLE cipher (
     cipher_game_id INTEGER NOT NULL,
     req_cipher_id INTEGER NULL,
     name VARCHAR(256) NOT NULL,
-    description VARCHAR(256) NOT NULL,
+    description TEXT NOT NULL,
     solution VARCHAR(256),
     judge VARCHAR(256),
     cipher_file VARCHAR(256),
@@ -48,7 +48,8 @@ CREATE TABLE cipher_game (
     cipher_game_id SERIAL NOT NULL,
     time_starting_cipher_id INTEGER,
     name VARCHAR(256) NOT NULL,
-    description VARCHAR(256) NOT NULL,
+    description TEXT NOT NULL,
+    image VARCHAR(256),
     visible_from TIMESTAMP NOT NULL,
     deadline_signup TIMESTAMP NOT NULL,
     deadline_event TIMESTAMP NOT NULL,
@@ -62,7 +63,7 @@ ALTER TABLE cipher_game ADD CONSTRAINT pk_cipher_game PRIMARY KEY (cipher_game_i
 CREATE TABLE hint (
     hint_id SERIAL NOT NULL,
     cipher_id INTEGER NOT NULL,
-    msg VARCHAR(256) NOT NULL,
+    msg VARCHAR(512) NOT NULL,
     img VARCHAR(256),
     hint_file VARCHAR(256),
     score_cost DOUBLE PRECISION NOT NULL,
@@ -82,6 +83,7 @@ ALTER TABLE person ADD CONSTRAINT pk_person PRIMARY KEY (person_id);
 
 CREATE TABLE team (
     team_id SERIAL NOT NULL,
+    cipher_game_id SERIAL NOT NULL,
     name VARCHAR(256) NOT NULL,
     invite_code VARCHAR(256),
     approved BOOLEAN NOT NULL
@@ -93,12 +95,6 @@ CREATE TABLE cipher_game_admin (
     person_id INTEGER NOT NULL
 );
 ALTER TABLE cipher_game_admin ADD CONSTRAINT pk_cipher_game_admin PRIMARY KEY (cipher_game_id, person_id);
-
-CREATE TABLE cipher_game_team (
-    cipher_game_id INTEGER NOT NULL,
-    team_id INTEGER NOT NULL
-);
-ALTER TABLE cipher_game_team ADD CONSTRAINT pk_cipher_game_team PRIMARY KEY (cipher_game_id, team_id);
 
 CREATE TABLE team_member (
     person_id INTEGER NOT NULL,
@@ -122,11 +118,10 @@ ALTER TABLE cipher_game ADD CONSTRAINT fk_cipher_game_cipher FOREIGN KEY (time_s
 
 ALTER TABLE hint ADD CONSTRAINT fk_hint_cipher FOREIGN KEY (cipher_id) REFERENCES cipher (cipher_id) ON DELETE CASCADE;
 
+ALTER TABLE team ADD CONSTRAINT  fk_team_cipher_game FOREIGN KEY  (cipher_game_id) REFERENCES cipher_game (cipher_game_id) ON DELETE CASCADE;
+
 ALTER TABLE cipher_game_admin ADD CONSTRAINT fk_cipher_game_admin_cg FOREIGN KEY (cipher_game_id) REFERENCES cipher_game (cipher_game_id) ON DELETE CASCADE;
 ALTER TABLE cipher_game_admin ADD CONSTRAINT fk_cipher_game_admin_p FOREIGN KEY (person_id) REFERENCES person (person_id) ON DELETE CASCADE;
-
-ALTER TABLE cipher_game_team ADD CONSTRAINT fk_cipher_game_team_cg FOREIGN KEY (cipher_game_id) REFERENCES cipher_game (cipher_game_id) ON DELETE CASCADE;
-ALTER TABLE cipher_game_team ADD CONSTRAINT fk_cipher_game_team_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
 
 ALTER TABLE team_member ADD CONSTRAINT fk_team_member_p FOREIGN KEY (person_id) REFERENCES person (person_id) ON DELETE CASCADE;
 ALTER TABLE team_member ADD CONSTRAINT fk_team_member_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
@@ -134,4 +129,15 @@ ALTER TABLE team_member ADD CONSTRAINT fk_team_member_t FOREIGN KEY (team_id) RE
 ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_h FOREIGN KEY (hint_id) REFERENCES hint (hint_id) ON DELETE CASCADE;
 ALTER TABLE hint_used ADD CONSTRAINT fk_hint_used_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
 
+
+-- Reset permissions
+do $$
+begin
+
+if (select count(*) from pg_user where usename='shifra_group') > 0 then
+    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO shifra_group;
+    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO shifra_group;
+end if;
+
+end $$;
 COMMIT;

@@ -9,10 +9,11 @@
          [cdkCopyToClipboard]="value!">
       {{ value }}
     </div>
+    <div class="block-copy" *ngIf="!canCopy"></div>
   </div>
   <mat-icon *ngIf="canCopy"
             matTooltip="Zkopírovat"  matRipple
-            (click)="showCopySnack()"
+            (click)="showCopySnack()" color="accent"
             [cdkCopyToClipboard]="value!"
             class="material-icons-outlined copy">
     content_copy

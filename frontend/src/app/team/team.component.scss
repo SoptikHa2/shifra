@@ -27,7 +27,11 @@
   }
 
   .qr-code {
-    background: #fafafa40;
+    background: #fafafafa;
+
+    img {
+      width: 100%;
+    }
   }
 
   .flex-item {
@@ -92,5 +96,9 @@
       padding: 64px 32px;
     }
   }
+}
 
+.leave-team-button {
+  width: 100%;
+  height: 64px;
 }
