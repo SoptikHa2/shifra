@@ -1,4 +1,4 @@
-from typing import Optional
+from datetime import datetime
 
 from .DBConn import *
 from fastapi import APIRouter
@@ -148,10 +148,35 @@ def edit_game(cipher_game_id: int, edits: EditCipherGame):
     update_cipher_game(cipher_game_id, cipher_game)
     return cipher_game
 
+
 def is_game(cipher_game_id: int) -> bool:
     with Curr_with_conn() as cur:
         cur.execute(
-            "SELECT * FROM cipher_game WHERE cipher_game_id = %s;", (cipher_game_id, )
+            "SELECT * FROM cipher_game WHERE cipher_game_id = %s;", (cipher_game_id,)
         )
         result = cur.fetchall()
         return bool(result)
+
+
+class Leaderboard(BaseModel):
+    cipher_game_id: int
+    team_id: int
+    clean_score: int
+    start_time: datetime
+    end_time: datetime
+    malus_score: int
+    malus_time_seconds: int
+    has_finished: bool
+
+
+def get_leaderboard(cipher_game_id: int) -> [Leaderboard]:
+    """
+    :return: Tuple containing cipher_game_id, team_id, clean_score, start_time, end_time, malus_score, malus_time, has_finished
+    """
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM w_getLeaderboard WHERE cipher_game_id = %s;", (cipher_game_id,))
+        result = cur.fetchall()
+    return [
+        Leaderboard(cipher_game_id=r[0], team_id=r[1], clean_score=r[2], start_time=r[3], end_time=r[4], malus_score=r[5], malus_time_seconds=r[6], has_finished=r[7])
+        for r in result
+        ]
