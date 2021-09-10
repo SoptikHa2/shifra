@@ -7,7 +7,7 @@ import {Hint} from "../model/hint";
 import {DomSanitizer} from "@angular/platform-browser";
 import {MatDialog} from "@angular/material/dialog";
 import {AskDialogComponent} from "../dialogs/ask-dialog/ask-dialog.component";
-import {skipWhile, switchMap, tap} from "rxjs/operators";
+import {delay, skipWhile, switchMap, tap} from "rxjs/operators";
 import {HintDialogComponent} from "./hint-dialog/hint-dialog.component";
 
 @Component({
@@ -19,6 +19,10 @@ export class CipherComponent implements OnInit {
   cipherObs: Observable<Cipher>;
   cipher: Cipher | undefined;
   cipherId: number;
+  solution: string = '';
+  error?: string;
+
+  submitting = false;
 
   constructor(
     private cipherService: CipherService,
@@ -30,7 +34,7 @@ export class CipherComponent implements OnInit {
     this.cipherObs = this.cipherService.getCipher(this.cipherId);
     this.cipherObs.subscribe(cipher => {
       this.cipher = cipher;
-    })
+    });
   }
 
   getHintCostText(hint: Hint) {
@@ -87,6 +91,14 @@ export class CipherComponent implements OnInit {
   }
 
   makeAttempt() {
-
+    this.submitting = true;
+    this.cipherService.makeAttempt(this.cipherId, this.solution)
+      .subscribe(() => {
+        // todo: handle success
+        this.submitting = false;
+      }, err => {
+        this.error = err;
+        this.submitting = false;
+      })
   }
 }
