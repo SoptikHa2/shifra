@@ -83,3 +83,23 @@ def get_cipher_by_hint(hint_id: int) -> Optional[Cipher]:
         return None
     return cipher_from_db_row(result)
 
+
+def is_team_out_of_attempts(cipher_id: int, team_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT COUNT(*) FROM attempt a "
+                    "JOIN cipher c ON c.cipher_id = a.cipher_id "
+                    "WHERE a.cipher_id = %s AND a.team_id = %s AND"
+                    "(c.attempts <= 0 OR"
+                    " c.attempts > a.attempt_count"
+                    ");", (cipher_id, team_id))
+        return cur.fetchone()[0] == 0
+
+
+def is_team_cooldown_limited(cipher_id: int, team_id: int) -> bool:
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT COUNT(*) FROM attempt a "
+                    "JOIN cipher c ON c.cipher_id = a.cipher_id "
+                    "WHERE a.cipher_id = %s AND a.team_id = %s AND "
+                    "(a.last_attempt_time IS NULL OR "
+                    "now() > (a.last_attempt_time + (c.cooldown * interval '1 second')))", (cipher_id, team_id))
+        return cur.fetchone()[0] == 0
