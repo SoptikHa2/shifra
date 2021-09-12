@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {LoggedInGuard} from "./guards/logged-in.guard";
 
 const routes: Routes = [
-  { path: '', redirectTo: 'game', pathMatch: "full"},
+  {
+    path: '',
+    loadChildren: () => import('./main-page/main-page.module').then(m => m.MainPageModule)
+  },
   {
     path: 'lobby',
     loadChildren: () => import('./main-menu/main-menu.module').then(m => m.MainMenuModule)

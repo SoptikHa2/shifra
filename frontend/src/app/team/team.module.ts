@@ -38,7 +38,7 @@ const routes: Routes = [
     component: CodeComponent
   },
   {
-    path: ':id',
+    path: ':id/:cipherId',
     component: TeamComponent, // todo: add is team participant Guard
   }
 ]

@@ -4,8 +4,6 @@ import {Game} from "../../model/game";
 import {Observable} from "rxjs";
 import {Team} from "../../model/team";
 import {map} from "rxjs/operators";
-import {MatDialog} from "@angular/material/dialog";
-import {AskDialogComponent} from "../../dialogs/ask-dialog/ask-dialog.component";
 
 @Component({
   selector: 'app-cipher-game-list',

@@ -78,4 +78,3 @@ def edit_hint(hint_id: int, edits: EditHint, response: Response, session_cookie:
     hint.edit(edits)
     updateHint(hint_id, hint)
     return hint
-

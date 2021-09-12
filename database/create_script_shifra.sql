@@ -66,7 +66,7 @@ CREATE TABLE hint (
     msg VARCHAR(512) NOT NULL,
     img VARCHAR(256),
     hint_file VARCHAR(256),
-    score_cost DOUBLE PRECISION NOT NULL,
+    score_cost INTEGER NOT NULL,
     time_cost INTEGER NOT NULL
 );
 ALTER TABLE hint ADD CONSTRAINT pk_hint PRIMARY KEY (hint_id);
@@ -83,6 +83,7 @@ ALTER TABLE person ADD CONSTRAINT pk_person PRIMARY KEY (person_id);
 
 CREATE TABLE team (
     team_id SERIAL NOT NULL,
+    cipher_game_id SERIAL NOT NULL,
     name VARCHAR(256) NOT NULL,
     invite_code VARCHAR(256),
     approved BOOLEAN NOT NULL
@@ -94,12 +95,6 @@ CREATE TABLE cipher_game_admin (
     person_id INTEGER NOT NULL
 );
 ALTER TABLE cipher_game_admin ADD CONSTRAINT pk_cipher_game_admin PRIMARY KEY (cipher_game_id, person_id);
-
-CREATE TABLE cipher_game_team (
-    cipher_game_id INTEGER NOT NULL,
-    team_id INTEGER NOT NULL
-);
-ALTER TABLE cipher_game_team ADD CONSTRAINT pk_cipher_game_team PRIMARY KEY (cipher_game_id, team_id);
 
 CREATE TABLE team_member (
     person_id INTEGER NOT NULL,
@@ -123,11 +118,10 @@ ALTER TABLE cipher_game ADD CONSTRAINT fk_cipher_game_cipher FOREIGN KEY (time_s
 
 ALTER TABLE hint ADD CONSTRAINT fk_hint_cipher FOREIGN KEY (cipher_id) REFERENCES cipher (cipher_id) ON DELETE CASCADE;
 
+ALTER TABLE team ADD CONSTRAINT  fk_team_cipher_game FOREIGN KEY  (cipher_game_id) REFERENCES cipher_game (cipher_game_id) ON DELETE CASCADE;
+
 ALTER TABLE cipher_game_admin ADD CONSTRAINT fk_cipher_game_admin_cg FOREIGN KEY (cipher_game_id) REFERENCES cipher_game (cipher_game_id) ON DELETE CASCADE;
 ALTER TABLE cipher_game_admin ADD CONSTRAINT fk_cipher_game_admin_p FOREIGN KEY (person_id) REFERENCES person (person_id) ON DELETE CASCADE;
-
-ALTER TABLE cipher_game_team ADD CONSTRAINT fk_cipher_game_team_cg FOREIGN KEY (cipher_game_id) REFERENCES cipher_game (cipher_game_id) ON DELETE CASCADE;
-ALTER TABLE cipher_game_team ADD CONSTRAINT fk_cipher_game_team_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
 
 ALTER TABLE team_member ADD CONSTRAINT fk_team_member_p FOREIGN KEY (person_id) REFERENCES person (person_id) ON DELETE CASCADE;
 ALTER TABLE team_member ADD CONSTRAINT fk_team_member_t FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;

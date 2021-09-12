@@ -1,4 +1,4 @@
-from typing import Optional
+from datetime import datetime
 
 from .DBConn import *
 from fastapi import APIRouter
@@ -90,16 +90,13 @@ def get_all_cipher_games() -> [CipherGame]:
         return [cipher_game_from_db_row(x) for x in result]
 
 
-
-def add_team(team_id: int, cipher_game_id: int):
-    with Curr_with_conn() as cur:
-        cur.execute("INSERT INTO cipher_game_team (cipher_game_id, team_id) VALUES (%s, %s)", (cipher_game_id, team_id))
-    return team_id
-
 def players_team(user_id: int, game_id: int) -> Optional[int]:
     with Curr_with_conn() as cur:
         cur.execute(
-            "SELECT tm.team_id FROM team_member tm JOIN cipher_game_team cgt ON  cgt.team_id = tm.team_id AND tm.person_id = %s AND cgt.cipher_game_id = %s;",
+            "select t.* from team t "
+            "join team_member tm using (team_id) "
+            "where tm.person_id = %s "
+            "and t.cipher_game_id = %s ;",
             (user_id, game_id,))
         result = cur.fetchone()
         if result is None:
@@ -134,7 +131,7 @@ def is_visible(cipher_game_id: int) -> bool:
 def get_all_teams(cipher_game_id: int) -> [Team]:
     with Curr_with_conn() as cur:
         cur.execute(
-            "SELECT t.* FROM cipher_game_team cgt JOIN team t ON cgt.cipher_game_id = %s AND t.team_id = cgt.team_id;",
+            "SELECT t.* FROM team t where t.cipher_game_id = %s;",
             (cipher_game_id,))
         teams = cur.fetchall()
         if teams is None:
@@ -151,10 +148,35 @@ def edit_game(cipher_game_id: int, edits: EditCipherGame):
     update_cipher_game(cipher_game_id, cipher_game)
     return cipher_game
 
+
 def is_game(cipher_game_id: int) -> bool:
     with Curr_with_conn() as cur:
         cur.execute(
-            "SELECT * FROM cipher_game WHERE cipher_game_id = %s;", (cipher_game_id, )
+            "SELECT * FROM cipher_game WHERE cipher_game_id = %s;", (cipher_game_id,)
         )
         result = cur.fetchall()
         return bool(result)
+
+
+class Leaderboard(BaseModel):
+    cipher_game_id: int
+    team_id: int
+    clean_score: int
+    start_time: datetime
+    end_time: datetime
+    malus_score: int
+    malus_time_seconds: int
+    has_finished: bool
+
+
+def get_leaderboard(cipher_game_id: int) -> [Leaderboard]:
+    """
+    :return: Tuple containing cipher_game_id, team_id, clean_score, start_time, end_time, malus_score, malus_time, has_finished
+    """
+    with Curr_with_conn() as cur:
+        cur.execute("SELECT * FROM w_getLeaderboard WHERE cipher_game_id = %s;", (cipher_game_id,))
+        result = cur.fetchall()
+    return [
+        Leaderboard(cipher_game_id=r[0], team_id=r[1], clean_score=r[2], start_time=r[3], end_time=r[4], malus_score=r[5], malus_time_seconds=r[6], has_finished=r[7])
+        for r in result
+        ]

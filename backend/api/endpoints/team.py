@@ -135,6 +135,7 @@ def create_team(cipher_game_id: int, team_name: str, response: Response, session
     team = Team
     team.name = team_name
     team.approved = False
+    team.cipher_game_id = cipher_game_id
 
     team_id = teamFuncs.insertTeam(team)
 

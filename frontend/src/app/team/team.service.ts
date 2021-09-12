@@ -5,6 +5,7 @@ import {Observable, of, throwError} from "rxjs";
 import {Team} from "../model/team";
 import {Injectable} from "@angular/core";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {LoadingService} from "../services/loading.service";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class TeamService {
 
   constructor(
     private http: HttpClient,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private loadingService: LoadingService
   ) { }
 
   createTeam(name: string, cipher_game_id: number) : Observable<boolean> {
@@ -28,7 +30,7 @@ export class TeamService {
   }
 
   getTeamById(id: number): Observable<Team> {
-    return this.http.get<Team>(`${environment.backendUrl}/api/team/${id}`)
+    const teamObs = this.http.get<Team>(`${environment.backendUrl}/api/team/${id}`)
       .pipe(
         map(team => ({
           ...team,
@@ -36,6 +38,8 @@ export class TeamService {
           inviteLink: `${environment.frontendUrl}/team/join?code=${team.invite_code}`
         })),
       );
+
+    return this.loadingService.startLoading(teamObs);
   }
 
   private getQRCodeLink(code: string): SafeUrl {

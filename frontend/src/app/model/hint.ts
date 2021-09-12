@@ -5,4 +5,5 @@ export interface Hint {
   hint_file?: string;
   score_cost?: number;
   time_cost?: number;
+  is_used?: boolean;
 }
