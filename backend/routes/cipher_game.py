@@ -8,6 +8,7 @@ class EditCipherGame(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     visible_from: Optional[datetime] = None
+    starts_at: Optional[datetime] = None
     deadline_signup: Optional[datetime] = None
     deadline_event: Optional[datetime] = None
     capacity: Optional[int] = None
@@ -23,6 +24,7 @@ class CipherGame(BaseModel):
     description: str
     image: Optional[str] = None
     visible_from: datetime
+    starts_at: datetime
     deadline_signup: datetime
     deadline_event: datetime
     capacity: Optional[int] = None
@@ -40,6 +42,7 @@ class CipherGame(BaseModel):
         self.name = edits.name if edits.name is not None else self.name
         self.description = edits.description if edits.description is not None else self.description
         self.visible_from = edits.visible_from if edits.visible_from is not None else self.visible_from
+        self.starts_at = edits.starts_at if edits.starts_at is not None else self.starts_at
         self.deadline_signup = edits.deadline_signup if edits.deadline_signup is not None else self.deadline_signup
         self.deadline_event = edits.deadline_event if edits.deadline_event is not None else self.deadline_event
         self.capacity = edits.capacity if edits.capacity is not None else self.capacity
@@ -50,5 +53,5 @@ class CipherGame(BaseModel):
 
 def cipher_game_from_db_row(row) -> CipherGame:
     return CipherGame(cipher_game_id=row[0], cipher_id_to_start_timer=row[1], name=row[2], description=row[3], image=row[4],
-                      visible_from=row[5], deadline_signup=row[6], deadline_event=row[7], capacity=row[8],
-                      teammax=row[9], password=row[10], autoapprove=row[11])
+                      visible_from=row[5], starts_at=row[6], deadline_signup=row[7], deadline_event=row[8], capacity=row[9],
+                      teammax=row[10], password=row[11], autoapprove=row[12])

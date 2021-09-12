@@ -1,9 +1,10 @@
+from datetime import datetime
 from typing import Optional
 
 from fastapi import APIRouter
 
-from routes import Cipher, cipher_from_db_row
-from . import get_cipher_game_id_from_team
+from routes import Cipher, cipher_from_db_row, Team, CipherGame
+from . import get_cipher_game_id_from_team, teamFuncs, cipherGameFuncs
 from .DBConn import *
 
 router = APIRouter()
@@ -66,6 +67,16 @@ def is_cipher_solved(cipher_id: int, team_id: int) -> bool:
 def is_cipher_visible_to_team(cipher: Cipher, team_id: int, team_cipher_game_id: int) -> bool:
     # If team is not signed up into this, cipher is not visible.
     if cipher.cipher_game_id != team_cipher_game_id:
+        return False
+
+    # If team is not approved, no ciphers can be seen
+    team: Team = teamFuncs.get_team_info(team_id)
+    if not team.approved:
+        return False
+
+    # If event has not started yet, cipher is not visible
+    ciphergame: CipherGame = cipherGameFuncs.get_ciphergame(team_cipher_game_id)
+    if ciphergame.starts_at > datetime.now():
         return False
 
     # Check for requirements
