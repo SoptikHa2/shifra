@@ -9,13 +9,24 @@ from typing import Optional, List
 router = APIRouter()
 
 
-def insertTeam(newTeam: Team):
+def insertTeam(new_team: Team, creator_user_id: int):
     with Curr_with_conn() as cur:
+        # Check if given team is already existing
+        cur.execute("select COUNT(*) from team t "
+                    "join team_member tm using (team_id)"
+                    "where t.cipher_game_id = %s and"
+                    "      tm.person_id = %s;", (new_team.cipher_game_id, creator_user_id))
+        count = cur.fetchone()[0]
+        if count > 0:
+            raise Exception("Team with this user in ciphergame %s already exists" % new_team.cipher_game_id)
 
-        cur.execute("INSERT INTO team (name, approved) VALUES(%s, %s) RETURNING team_id;",
-                    (newTeam.name, newTeam.approved))
+        cur.execute("INSERT INTO team (cipher_game_id, name, invite_code, approved) VALUES(%s, %s, %s, %s) RETURNING team_id;",
+                    (new_team.cipher_game_id, new_team.name, new_team.invite_code, new_team.approved))
 
         team_id = cur.fetchone()[0]
+
+        # Add user to the team
+        cur.execute("insert into team_member (team_id, person_id) values (%s, %s)", (team_id, creator_user_id))
     return team_id
 
 
@@ -30,13 +41,6 @@ def deleteTeam(team_id: int):
     with Curr_with_conn() as cur:
         cur.execute("DELETE FROM team WHERE team_id = %s;", (team_id,))
     return team_id
-
-
-def getTeam(team_id: int):
-    with Curr_with_conn() as cur:
-        cur.execute("SELECT * FROM team WHERE team_id = %s;", (team_id,))
-        result = cur.fetchall()
-    return result
 
 
 def getTeams():
