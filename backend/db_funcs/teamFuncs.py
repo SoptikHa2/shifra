@@ -43,13 +43,6 @@ def deleteTeam(team_id: int):
     return team_id
 
 
-def getTeam(team_id: int):
-    with Curr_with_conn() as cur:
-        cur.execute("SELECT * FROM team WHERE team_id = %s;", (team_id,))
-        result = cur.fetchall()
-    return result
-
-
 def getTeams():
     with Curr_with_conn() as cur:
         cur.execute("SELECT * FROM team;")
