@@ -7,7 +7,7 @@ import {Hint} from "../model/hint";
 import {DomSanitizer} from "@angular/platform-browser";
 import {MatDialog} from "@angular/material/dialog";
 import {AskDialogComponent} from "../dialogs/ask-dialog/ask-dialog.component";
-import {delay, skipWhile, switchMap, tap} from "rxjs/operators";
+import {delay, map, skipWhile, switchMap, tap} from "rxjs/operators";
 import {HintDialogComponent} from "./hint-dialog/hint-dialog.component";
 
 @Component({
@@ -31,7 +31,8 @@ export class CipherComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.cipherId = this.route.snapshot.params['id'];
-    this.cipherObs = this.cipherService.getCipher(this.cipherId);
+    this.cipherObs = this.cipherService.getCipher(this.cipherId)
+      .pipe(map(this.trustUrl.bind(this)));
     this.cipherObs.subscribe(cipher => {
       this.cipher = cipher;
     });
@@ -86,8 +87,8 @@ export class CipherComponent implements OnInit {
         })).subscribe();
   }
 
-  trustUrl(url: string) {
-    return this.domSanitizer.bypassSecurityTrustUrl(url);
+  trustUrl(cipher: Cipher) {
+    return {...cipher, img: this.domSanitizer.bypassSecurityTrustUrl(cipher.img as string)};
   }
 
   makeAttempt() {

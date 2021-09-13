@@ -5,10 +5,7 @@
   <div class="score-display">
     {{ cipher.score }} Bodů
   </div>
-  <!--<img class="main-image" *ngIf="cipher.img"
-           [src]="'assets/' + trustUrl(cipher.img)" alt="obrázek"/>
-  --> <img class="main-image" *ngIf="cipher.img"
-           src="https://picsum.photos/900" alt="obrázek"/>
+  <img class="main-image" *ngIf="cipher.img" [src]="cipher.img" alt="obrázek"/>
   <div class="cipher-container">
     <markdown [data]="cipher.description" class="markdown"></markdown>
   </div>

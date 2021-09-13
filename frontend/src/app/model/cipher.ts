@@ -1,4 +1,5 @@
 import {Hint} from "./hint";
+import {SafeUrl} from "@angular/platform-browser";
 
 export interface Cipher {
   cipher_id?: number;
@@ -7,7 +8,7 @@ export interface Cipher {
   name: string;
   description: string;
   cipher_file?: string;
-  img?: string;
+  img?: string | SafeUrl;
   success_msg: string;
   cooldown: number;
   attempts?: number;

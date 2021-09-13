@@ -1,6 +1,6 @@
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {catchError, map, tap} from "rxjs/operators";
+import {catchError, map} from "rxjs/operators";
 import {Observable, of, throwError} from "rxjs";
 import {Team} from "../model/team";
 import {Injectable} from "@angular/core";
@@ -18,8 +18,9 @@ export class TeamService {
     private loadingService: LoadingService
   ) { }
 
-  createTeam(name: string, cipher_game_id: number) : Observable<boolean> {
-    return this.http.post(`${environment.backendUrl}/api/team`, {name, cipher_game_id})
+  createTeam(team_name: string, cipher_game_id: number) : Observable<boolean> {
+    return this.http.post(`${environment.backendUrl}/api/team/create`, {},
+      {params: {cipher_game_id, team_name}})
       .pipe(
         map(() => true),
         catchError(err => {
