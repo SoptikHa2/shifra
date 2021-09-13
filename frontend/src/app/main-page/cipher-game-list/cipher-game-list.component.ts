@@ -4,6 +4,7 @@ import {Game} from "../../model/game";
 import {Observable} from "rxjs";
 import {Team} from "../../model/team";
 import {map} from "rxjs/operators";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-cipher-game-list',
@@ -14,13 +15,20 @@ export class CipherGameListComponent implements OnInit {
   gamesObs: Observable<[Game, Team | null][] | null>;
 
   constructor(
-    private gameService: GameService
+    private gameService: GameService,
+    private domSanitizer: DomSanitizer
   ) {
     this.gamesObs = this.gameService.getGames()
-      .pipe(map(games => [
-        ...games!.filter(val => val[1] != null),
-        ...games!.filter(val => val[1] == null)
-        ]));
+      .pipe(
+        map(games => [
+          ...games!.filter(val => val[1] != null),
+          ...games!.filter(val => val[1] == null)
+        ]),
+        map(games => games.map(game => {
+          if (!game[0].image) return game;
+          game[0].image = this.domSanitizer.bypassSecurityTrustUrl(game[0].image as string);
+          return game;
+        })));
   }
 
   ngOnInit(): void {}
