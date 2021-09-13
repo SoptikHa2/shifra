@@ -75,7 +75,7 @@ def is_cipher_visible_to_team(cipher: Cipher, team_id: int, team_cipher_game_id:
         return False
 
     # If event has not started yet, cipher is not visible
-    ciphergame: CipherGame = cipherGameFuncs.get_ciphergame(team_cipher_game_id)
+    ciphergame: CipherGame = cipherGameFuncs.get_cipher_game(team_cipher_game_id)
     if ciphergame.starts_at > datetime.now():
         return False
 
