@@ -31,11 +31,11 @@ export class CreateTeamComponent implements OnInit {
   createTeam() {
     const id = this.route.snapshot.params['id'];
     this.teamService.createTeam(this.teamName.value, id)
-      .subscribe((success) => {
-        if (success) {
-          this.router.navigate([`/team/${id}`]).then();
+      .subscribe((team_id) => {
+        if (team_id) {
+          this.router.navigate([`/team/${team_id}/${id}`]).then();
         }
-      });
+      }, () => {});
   }
 
   teamNameErrorMessage() {
