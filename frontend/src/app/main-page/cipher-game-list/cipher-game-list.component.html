@@ -5,7 +5,6 @@
         <button mat-button [routerLink]="['/team/create', game[0].cipher_game_id]">
           VYTVOŘIT TEAM
         </button>
-        <button mat-button> DETAIL </button>
       </ng-container>
       <ng-container *ngIf="game[1]">
         <button mat-button [routerLink]="['/cipher/visible', game[0].cipher_game_id]">
@@ -16,6 +15,7 @@
           MŮJ TEAM
         </button>
       </ng-container>
+      <button mat-button [routerLink]="['/game/detail', game[0].cipher_game_id]"> DETAIL </button>
     </app-game-card>
   </ng-container>
   <div class="card-placeholder"></div>

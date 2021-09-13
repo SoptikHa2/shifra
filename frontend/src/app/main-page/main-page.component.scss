@@ -1,3 +1,9 @@
+:host {
+  display: block;
+  position: relative;
+  top: -64px;
+}
+
 .logo::ng-deep {
 
   &* {
@@ -24,7 +30,6 @@
   justify-content: center;
   align-items: center;
   padding: 0 16px;
-  margin-top: -64px;
 
   div {
     text-align: center;
@@ -43,4 +48,19 @@
 
 .join-btn {
   margin-top: 32px;
+}
+
+.how-to-join div {
+  margin: 32px 0 8px;
+}
+
+.how-to-join {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  button {
+    height: 48px;
+    margin-bottom: 32px;
+  }
 }

@@ -1,0 +1,23 @@
+<div class="flex-container">
+  <ng-container *ngIf="gameObs | async as game">
+    <div class="mat-display-1 name">
+      {{ game.name }}
+    </div>
+    <div class="flex-item">
+      <app-attribute
+        [value]="(game.deadline_signup | date)!"
+        [canCopy]="false" icon="schedule" label="Datum uzavření registrací"
+      ></app-attribute>
+    </div>
+    <div class="flex-item">
+      <app-attribute
+        [value]="game.teammax.toString()"
+        [canCopy]="false" icon="persons" label="Maximální počet členů teamu"
+      ></app-attribute>
+    </div>
+    <div class="flex-item">
+      <div class="popis-label"> Popis: </div>
+      <markdown [data]="game.description"></markdown>
+    </div>
+  </ng-container>
+</div>
