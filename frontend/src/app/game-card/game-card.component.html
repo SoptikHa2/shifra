@@ -6,11 +6,11 @@
   <mat-card-content>
     <div style="display: flex; align-items: center; margin-bottom: 16px">
       <mat-icon class="material-icons-outlined" style="margin-right: 18px"> schedule </mat-icon>
-      Otevřeno do: <br/> {{ game!.deadline_signup | date : 'longDate' }}
+      Začíná: <br/> {{ game!.deadline_signup | date : 'longDate' }}
     </div>
     <div style="display: flex; align-items: center; margin-bottom: 16px">
       <mat-icon class="material-icons-outlined" style="margin-right: 18px"> groups </mat-icon>
-      Obsazenost: <br/> {{ '0 /' + game!.teammax }}
+      kapacita teamu: <br/> {{ game!.teammax }}
     </div>
   </mat-card-content>
   <mat-card-actions>
