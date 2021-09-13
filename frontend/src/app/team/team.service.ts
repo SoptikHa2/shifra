@@ -18,14 +18,13 @@ export class TeamService {
     private loadingService: LoadingService
   ) { }
 
-  createTeam(team_name: string, cipher_game_id: number) : Observable<boolean> {
-    return this.http.post(`${environment.backendUrl}/api/team/create`, {},
+  createTeam(team_name: string, cipher_game_id: number) : Observable<number> {
+    return this.http.post<number>(`${environment.backendUrl}/api/team/create`, {},
       {params: {cipher_game_id, team_name}})
       .pipe(
-        map(() => true),
         catchError(err => {
           if (!environment.production) console.error(err);
-          return of(false);
+          return throwError(err);
         })
       );
   }
