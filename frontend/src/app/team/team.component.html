@@ -1,4 +1,4 @@
-<ng-container *ngIf="teamObs | async as team; else loading">
+<ng-container *ngIf="teamObs | async as team">
   <div class="flex-container team-container">
     <div class="flex-row mat-display-3 header-text">
       {{ team.name }}
@@ -25,7 +25,7 @@
                          [label]="teamMate.nickname"
                          icon="person"></app-attribute>
         </div>
-        <div class="flex-item">
+        <div class="flex-item" *ngIf="false">  <!-- todo: implementovat -->
           <button mat-raised-button color="warn" class="leave-team-button"
                   (click)="leaveTeam()">
             Opustit team
@@ -35,6 +35,3 @@
     </div>
   </div>
 </ng-container>
-<ng-template #loading class="loading">
-
-</ng-template>
