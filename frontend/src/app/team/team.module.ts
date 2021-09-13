@@ -13,11 +13,11 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {MatRippleModule} from "@angular/material/core";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
-import { AttributeComponent } from './attribute/attribute.component';
 import {LoggedInGuard} from "../guards/logged-in.guard";
 import { JoinComponent } from './join/join.component';
 import { QRComponent } from './join/qr/qr.component';
 import { CodeComponent } from './join/code/code.component';
+import {AttributeModule} from "../attribute/attribute.module";
 
 const routes: Routes = [
   {
@@ -47,7 +47,6 @@ const routes: Routes = [
   declarations: [
     CreateTeamComponent,
     TeamComponent,
-    AttributeComponent,
     JoinComponent,
     QRComponent,
     CodeComponent
@@ -61,9 +60,8 @@ const routes: Routes = [
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    ClipboardModule,
     MatRippleModule,
-    MatSnackBarModule
+    AttributeModule
   ],
   providers: [
     TeamService

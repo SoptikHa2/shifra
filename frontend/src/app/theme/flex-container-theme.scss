@@ -1,0 +1,33 @@
+.flex-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-item {
+  flex: 1 1 0;
+  border-radius: 5px;
+  box-sizing: border-box;
+  border: 2px solid #fafafa;
+  margin: 8px;
+  padding: 24px 32px;
+
+  img {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .flex-item {
+    min-width: 100%;
+    margin: 8px 0;
+  }
+
+  .flex-row {
+    flex-wrap: wrap;
+  }
+}
