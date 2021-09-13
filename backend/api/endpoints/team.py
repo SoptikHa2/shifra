@@ -125,33 +125,21 @@ def create_team(cipher_game_id: int, team_name: str, response: Response, session
         logger.info(create_team.__name__ + " /api/createteam " + str(response.status_code) + ": user does not exist")
         return None
 
-    given_cipher = cipherGameFuncs.get_cipher_game(cipher_game_id)
+    given_ciphergame = cipherGameFuncs.get_cipher_game(cipher_game_id)
 
-    if given_cipher is None:
+    if given_ciphergame is None:
         response.status_code = 404
         logger.info(create_team.__name__ + " /api/createteam " + str(response.status_code) + ": cipher game " + str(cipher_game_id) + " does not exist")
         return None
 
-    team = Team
-    team.name = team_name
-    team.approved = False
-    team.cipher_game_id = cipher_game_id
-
-    team_id = teamFuncs.insertTeam(team)
-
     wg = word_generator()
-    con = converter()
-    random_string = con.dec_to_36(team_id) + wg.get_word() + wg.get_word()
-
-    teamFuncs.add_invite_code(team_id, random_string)
+    invite_code = wg.get_word() + " " + wg.get_word() + " " + wg.get_word()
+    team = Team(team_id=-1, name=team_name, approved=given_ciphergame.autoapprove, cipher_game_id=cipher_game_id, invite_code = invite_code)
 
     try:
-        cipherGameFuncs.add_team(team_id, cipher_game_id)
-
+        team_id = teamFuncs.insertTeam(team, user.person_id)
     except:
         response.status_code = 409
-        logger.info(create_team.__name__ + " /api/createteam " + str(response.status_code)
-                   + ": combination (team_id, cipher_game_id) (" + str(team_id) + ", " + str(cipher_game_id) + ") already exists")
         return None
 
     response.status_code = 200

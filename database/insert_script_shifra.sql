@@ -10,32 +10,32 @@ ALTER SEQUENCE team_team_id_seq RESTART WITH 1;
 
 -- Cipher game data
 ------------------------------------------------------------------------------------------------------------------------
-INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
-VALUES (null, 'CipherGame1', 'First cipher', '2021-10-10 16:30', '2021-10-20 23:59', '2021-10-22 23:59', 200, 4,
+INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, starts_at, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
+VALUES (null, 'CipherGame1', 'First cipher', '2021-10-10 16:30', '2021-10-10 17:30', '2021-10-20 23:59', '2021-10-22 23:59', 200, 4,
  'code1', true);
 
-INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
-VALUES (null, 'CipherGame2', 'Cipher 2', '2021-12-10 00:00', '2021-12-12 23:59', '2021-12-31 23:59', 500, 2,
+INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, starts_at, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
+VALUES (null, 'CipherGame2', 'Cipher 2', '2021-12-10 00:00', '2021-10-10 17:30', '2021-12-12 23:59', '2021-12-31 23:59', 500, 2,
  'code2', false);
 
-INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
-VALUES (null, 'CipherGame3', 'Cipher 3', '2021-10-10 16:30', '2021-10-20 23:59', '2021-10-22 23:59', 300, 4,
+INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, starts_at, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
+VALUES (null, 'CipherGame3', 'Cipher 3', '2021-10-10 16:30', '2021-10-10 17:30', '2021-10-20 23:59', '2021-10-22 23:59', 300, 4,
  'code3', true);
 
-INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
-VALUES (null, 'CipherGame4', 'Cipher 4', '2021-10-10 16:30', '2021-10-20 23:59', '2021-10-22 23:59', 400, 4,
+INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, starts_at, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
+VALUES (null, 'CipherGame4', 'Cipher 4', '2021-10-10 16:30', '2021-10-10 17:30', '2021-10-20 23:59', '2021-10-22 23:59', 400, 4,
  'code4', false);
 
-INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
-VALUES (null, 'CipherGame5', 'Cipher 5', '2021-10-10 16:30', '2021-10-20 23:59', '2021-10-22 23:59', 100, 4,
+INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, starts_at, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
+VALUES (null, 'CipherGame5', 'Cipher 5', '2021-10-10 16:30', '2021-10-10 17:30', '2021-10-20 23:59', '2021-10-22 23:59', 100, 4,
 'code5', false);
 
-INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
-VALUES (null, 'Dejvicka sifrovacka', 'What do you expect me to say', '2021-10-10 16:30', '2021-10-20 23:59', '2021-10-22 23:59', 200, 4,
+INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, starts_at, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
+VALUES (null, 'Dejvicka sifrovacka', 'What do you expect me to say', '2021-10-10 16:30', '2021-10-10 17:30', '2021-10-20 23:59', '2021-10-22 23:59', 200, 4,
  'code6', true);
 
-INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
-VALUES (null, 'FIT', 'Biggest cipher game of them all', '2020-9-21 00:00', '2021-04-20 23:59', '2023-06-30 23:59', 800, 1,
+INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, starts_at, deadline_signup, deadline_event, capacity, teammax, password, autoapprove)
+VALUES (null, 'FIT', 'Biggest cipher game of them all', '2020-9-21 00:00', '2021-10-10 17:30', '2021-04-20 23:59', '2023-06-30 23:59', 800, 1,
  'code7', false);
 ------------------------------------------------------------------------------------------------------------------------
 
