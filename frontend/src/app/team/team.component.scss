@@ -1,101 +1,32 @@
-::ng-deep {
-  :host {
-    display: block;
+.header-text {
+  justify-content: center;
+}
+
+.team-container {
+  max-width: calc(100% - 32px);
+  margin: 64px 16px 0;
+}
+
+.qr-code {
+  background: #fafafafa;
+
+  img {
     width: 100%;
-    height: 100%;
-    padding: 64px 16px;
-    box-sizing: border-box;
   }
+}
 
-  .header-text {
-    justify-content: center;
+.team-attribute {
+  align-items: center;
+  position: relative;
+
+  mat-icon {
+    width: 32px;
+    height: 32px;
   }
+}
 
-  .team-container {
-    max-width: calc(100% - 32px);
-    margin: 64px 16px 0;
-  }
-
-  .flex-container {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .flex-row {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .qr-code {
-    background: #fafafafa;
-
-    img {
-      width: 100%;
-    }
-  }
-
-  .flex-item {
-    flex: 1 1 0;
-    border-radius: 5px;
-    box-sizing: border-box;
-    border: 2px solid #fafafa;
-    margin: 8px;
-
-    img {
-      max-width: 100%;
-    }
-  }
-
-  .team-attribute {
-    align-items: center;
-    position: relative;
-
-    mat-icon {
-      width: 32px;
-      height: 32px;
-    }
-  }
-
-  .attr-ico {
-    margin-right: 24px;
-    font-size: 32px;
-  }
-
-  app-attribute:not(:last-child) .team-attribute {
-    margin-bottom: 32px;
-  }
-
-  .copy {
-    align-self: center;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    box-sizing: border-box;
-    font-size: 16px !important;
-    position: absolute;
-    right: 0;
-    top: 0;
-    margin: 4px;
-  }
-
-  .flex-item:not(.qr-code) {
-    padding: 24px 32px;
-  }
-
-  @media screen and (max-width: 560px) {
-    .flex-item {
-      min-width: 100%;
-      margin: 8px 0;
-    }
-
-    .flex-row {
-      flex-wrap: wrap;
-    }
-
-    :host {
-      padding: 64px 32px;
-    }
-  }
+.qr-code {
+  padding: unset;
 }
 
 .leave-team-button {

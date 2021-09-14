@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  backendUrl: "https://shifra.klubfitpp.cz",
-  frontendUrl: "https://shifra.klubfitpp.cz"
+  backendUrl: window.location.hostname,
+  frontendUrl: window.location.hostname
 };

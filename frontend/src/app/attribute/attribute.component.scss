@@ -1,0 +1,56 @@
+.attribute-value {
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  min-width: 0;
+  flex: 1;
+}
+
+@media screen and (max-width: 560px) {
+  .attribute-value {
+    max-width: 160px;
+  }
+}
+
+.block-copy {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.team-attribute {
+  align-items: center;
+  position: relative;
+
+  mat-icon {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.attr-ico {
+  margin-right: 24px;
+  font-size: 32px;
+}
+
+.copy {
+  align-self: center;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  font-size: 16px !important;
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 4px;
+}
+
+:host:not(:last-child) .team-attribute {
+  margin-bottom: 32px;
+}
+
+

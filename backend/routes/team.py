@@ -17,7 +17,7 @@ class Team(BaseModel):
     approved: bool
 
     def strip(self):
-        self.invite_code = None
+        #self.invite_code = None
         return self
 
     def edit(self, edits: EditTeam):

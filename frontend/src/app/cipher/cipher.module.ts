@@ -13,15 +13,19 @@ import {MatInputModule} from "@angular/material/input";
 import {MatListModule} from "@angular/material/list";
 import { HintDialogComponent } from './hint-dialog/hint-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
+import {LoggedInGuard} from "../guards/logged-in.guard";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 const routes: Routes = [
   {
     path: ':id',
-    component: CipherComponent
+    component: CipherComponent,
+    canActivate: [LoggedInGuard] // todo add 'can see' guard
   },
   {
     path: 'visible/:id',
-    component: CipherListComponent
+    component: CipherListComponent,
+    canActivate: [LoggedInGuard] // todo add can see guard
   }
 ]
 
@@ -42,7 +46,8 @@ const routes: Routes = [
         MatFormFieldModule,
         MatInputModule,
         MatListModule,
-        MatDialogModule
+        MatDialogModule,
+        MatProgressSpinnerModule
     ]
 })
 export class CipherModule { }

@@ -2,15 +2,15 @@
   <mat-card-header>
     <mat-card-title>{{ game!.name }}</mat-card-title>
   </mat-card-header>
-  <img mat-card-image src="https://picsum.photos/250/150">
+  <img *ngIf="game && game.image" mat-card-image [src]="game.image" alt="image">
   <mat-card-content>
     <div style="display: flex; align-items: center; margin-bottom: 16px">
       <mat-icon class="material-icons-outlined" style="margin-right: 18px"> schedule </mat-icon>
-      Otevřeno do: <br/> {{ game!.deadline_signup | date : 'longDate' }}
+      Začíná: <br/> {{ game!.deadline_signup | date : 'longDate' }}
     </div>
     <div style="display: flex; align-items: center; margin-bottom: 16px">
       <mat-icon class="material-icons-outlined" style="margin-right: 18px"> groups </mat-icon>
-      Obsazenost: <br/> {{ '0 /' + game!.teammax }}
+      kapacita teamu: <br/> {{ game!.teammax }}
     </div>
   </mat-card-content>
   <mat-card-actions>

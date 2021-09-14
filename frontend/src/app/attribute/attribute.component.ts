@@ -1,11 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Team} from "../../model/team";
+import {Team} from "../model/team";
 
 @Component({
   selector: 'app-attribute',
   templateUrl: './attribute.component.html',
-  styleUrls: ['./attribute.component.scss']
+  styleUrls: ['./attribute.component.scss', '../theme/flex-container-theme.scss']
 })
 export class AttributeComponent implements OnInit {
   @Input('value')
