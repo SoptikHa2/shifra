@@ -38,9 +38,11 @@ export class TeamComponent implements OnInit {
       .pipe(skipWhile(res => !res))
       .subscribe(res => {
         if (res) {
-          alert("implementovat!")
-          // todo: leave team (missing api)
+          const teamId = this.route.snapshot.params['id'];
+          this.teamService.leaveTeam(teamId);
         }
+      }, () => {
+        alert('Nastala chyba na straně serveru. Zkuste prosím později!');
       });
   }
 }
