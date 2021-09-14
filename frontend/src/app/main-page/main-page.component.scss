@@ -1,3 +1,9 @@
+:host {
+  display: block;
+  position: relative;
+  top: -64px;
+}
+
 .logo::ng-deep {
 
   &* {
@@ -10,6 +16,12 @@
   }
 }
 
+@keyframes upDownMove {
+  0% {bottom: 32px}
+  20% {bottom: 24px}
+  100% {bottom: 32px}
+}
+
 .games-header {
   display: flex;
   position: relative;
@@ -18,7 +30,6 @@
   justify-content: center;
   align-items: center;
   padding: 0 16px;
-  margin-top: -64px;
 
   div {
     text-align: center;
@@ -26,15 +37,30 @@
 
   mat-icon {
     position: absolute;
-    bottom: 32px;
     left: 50%;
     transform: translateX(-50%);
     width: 36px;
     height: 36px;
     font-size: 36px;
+    animation: upDownMove .7s ease-out infinite;
   }
 }
 
 .join-btn {
   margin-top: 32px;
+}
+
+.how-to-join div {
+  margin: 32px 0 8px;
+}
+
+.how-to-join {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  button {
+    height: 48px;
+    margin-bottom: 32px;
+  }
 }

@@ -26,8 +26,9 @@ export class LoadingService {
 
   startLoading<T>(task: Observable<T>): Observable<T> {
     ++this.TasksRunningCount;
+    if (environment.production)
+      task = task.pipe(delay(1000));
     return task.pipe(
-      delay(1000), // todo remove
       tap((val) => {
         --this.TasksRunningCount;
       }),

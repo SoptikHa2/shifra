@@ -3,18 +3,15 @@ import {TeamService} from "./team.service";
 import {Team} from "../model/team";
 import {ActivatedRoute} from "@angular/router";
 import {Observable} from "rxjs";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog} from "@angular/material/dialog";
 import {AskDialogComponent} from "../dialogs/ask-dialog/ask-dialog.component";
 import {map, mergeMap, skipWhile, tap} from "rxjs/operators";
-import {Cipher} from "../model/cipher";
-import {CipherService} from "../services/cipher.service";
 import {GameService} from "../services/game.service";
 
 @Component({
   selector: 'app-team',
   templateUrl: './team.component.html',
-  styleUrls: ['./team.component.scss']
+  styleUrls: ['./team.component.scss', '../theme/flex-container-theme.scss']
 })
 export class TeamComponent implements OnInit {
   teamObs?: Observable<Team>;
@@ -41,9 +38,11 @@ export class TeamComponent implements OnInit {
       .pipe(skipWhile(res => !res))
       .subscribe(res => {
         if (res) {
-          alert("implementovat!")
-          // todo: leave team (missing api)
+          const teamId = this.route.snapshot.params['id'];
+          this.teamService.leaveTeam(teamId);
         }
+      }, () => {
+        alert('Nastala chyba na straně serveru. Zkuste prosím později!');
       });
   }
 }

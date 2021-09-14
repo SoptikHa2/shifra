@@ -5,10 +5,7 @@
   <div class="score-display">
     {{ cipher.score }} Bodů
   </div>
-  <!--<img class="main-image" *ngIf="cipher.img"
-           [src]="'assets/' + trustUrl(cipher.img)" alt="obrázek"/>
-  --> <img class="main-image" *ngIf="cipher.img"
-           src="https://picsum.photos/900" alt="obrázek"/>
+  <img class="main-image" *ngIf="cipher.img" [src]="cipher.img" alt="obrázek"/>
   <div class="cipher-container">
     <markdown [data]="cipher.description" class="markdown"></markdown>
   </div>
@@ -32,11 +29,17 @@
   </mat-selection-list>
   <mat-form-field appearance="outline" class="solution">
     <mat-label> Řešení </mat-label>
-    <textarea rows="5" matInput></textarea>
+    <textarea rows="5" matInput [(ngModel)]="solution"></textarea>
   </mat-form-field>
+  <div class="error" *ngIf="error">
+    {{ error }}
+  </div>
   <div class="button-row">
-    <button mat-raised-button color="primary" (click)="makeAttempt()">
-      Odevzdat
+    <button mat-raised-button color="primary" (click)="makeAttempt()" [disabled]="submitting">
+      <ng-container *ngIf="!submitting; else spinner"> Odevzdat </ng-container>
+      <ng-template #spinner>
+        <mat-spinner style="margin: 5px auto" [diameter]="36"></mat-spinner>
+      </ng-template>
     </button>
   </div>
 </ng-container>

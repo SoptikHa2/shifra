@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Cipher} from "../model/cipher";
-import {Observable, throwError} from "rxjs";
+import {Observable, of, throwError} from "rxjs";
 import {catchError} from "rxjs/operators";
 import {Hint} from "../model/hint";
 import {LoadingService} from "./loading.service";
@@ -14,24 +14,35 @@ export class CipherService {
   constructor(
     private http: HttpClient,
     private loadingService: LoadingService
-  ) { }
+  ) {
+  }
 
-  getVisibleCiphers(gameId: number) : Observable<Cipher[]> {
+  getVisibleCiphers(gameId: number): Observable<Cipher[]> {
     return this.loadingService.startLoading(
       this.http.get<Cipher[]>(environment.backendUrl + `/api/game/${gameId}/ciphers`)
-      .pipe(catchError(this.handleError)));
+        .pipe(catchError(this.handleError)));
   }
 
   getCipher(id: number) {
     return this.loadingService.startLoading(
       this.http.get<Cipher>(environment.backendUrl + `/api/cipher/${id}`)
-      .pipe(catchError(this.handleError)));
+        .pipe(catchError(this.handleError)));
   }
 
   makeAttempt(cipherId: number, answer: string) {
     return this.loadingService.startLoading(
-      this.http.post(environment.backendUrl + `/api/cipher/${cipherId}/attempt`,
-        {answer}));
+      this.http.post(environment.backendUrl + `/api/cipher/${cipherId}/attempt`, {answer}, {observe: 'response'})
+        .pipe(catchError((err: HttpErrorResponse) => {
+          if (err.status == 417) {
+            return throwError('Špatná odpověď!');
+          }
+
+          if (err.status >= 500) {
+            return throwError('Stala se chyba na straně serveru! Prosím kontaktujte nejbližšího organizátora.');
+          }
+
+          return throwError('Stala se neočekávaná chyba, zkuste prosím přenačíst stránku. V případě problému kontaktujte organizátora.');
+        })));
   }
 
   openHint(id: number): Observable<Hint> {

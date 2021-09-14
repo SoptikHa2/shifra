@@ -1,4 +1,4 @@
-<ng-container *ngIf="teamObs | async as team; else loading">
+<ng-container *ngIf="teamObs | async as team">
   <div class="flex-container team-container">
     <div class="flex-row mat-display-3 header-text">
       {{ team.name }}
@@ -35,6 +35,3 @@
     </div>
   </div>
 </ng-container>
-<ng-template #loading class="loading">
-
-</ng-template>

@@ -5,6 +5,11 @@
   margin: 16px;
 }
 
+img[mat-card-image] {
+  height: 256px;
+  object-fit: cover;
+}
+
 @media only screen and (min-width: 700px)  {
   :host {
     max-width: 450px;
