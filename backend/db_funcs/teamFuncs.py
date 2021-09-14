@@ -58,6 +58,11 @@ def is_in_team(team_id: int, user_id: int) -> bool:
         return result[0] > 0
 
 
+def leave_team(team_id: int, user_id: int):
+    with Curr_with_conn() as cur:
+        cur.execute("DELETE FROM team_member tm WHERE tm.team_id = %s AND tm.person_id = %s;", (team_id, user_id))
+
+
 def get_team_by_game_and_user(game_id: int, user_id: int) -> Optional[Team]:
     with Curr_with_conn() as cur:
         cur.execute("SELECT t.* FROM team t "
