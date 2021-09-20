@@ -26,8 +26,8 @@ export class LoadingService {
 
   startLoading<T>(task: Observable<T>): Observable<T> {
     ++this.TasksRunningCount;
-    if (environment.production)
-      task = task.pipe(delay(1000));
+    if (!environment.production)
+      task = task.pipe(delay(300));
     return task.pipe(
       tap((val) => {
         --this.TasksRunningCount;
