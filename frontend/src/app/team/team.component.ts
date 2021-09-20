@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {TeamService} from "./team.service";
 import {Team} from "../model/team";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {AskDialogComponent} from "../dialogs/ask-dialog/ask-dialog.component";
@@ -19,6 +19,7 @@ export class TeamComponent implements OnInit {
   constructor(
     private teamService: TeamService,
     private gameService: GameService,
+    private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog
   ) { }
@@ -35,12 +36,17 @@ export class TeamComponent implements OnInit {
     this.dialog.open(AskDialogComponent,
       {data: {text: 'Opravdu chcete opustit team?'}})
       .afterClosed()
-      .pipe(skipWhile(res => !res))
-      .subscribe(res => {
-        if (res) {
-          const teamId = this.route.snapshot.params['id'];
-          this.teamService.leaveTeam(teamId);
-        }
+      .pipe(
+        skipWhile(res => !res),
+        mergeMap(res => {
+          if (res) {
+            const teamId = this.route.snapshot.params['id'];
+            return this.teamService.leaveTeam(teamId);
+          }
+          return res;
+        }))
+      .subscribe(() => {
+        this.router.navigate(['/']).then();
       }, () => {
         alert('Nastala chyba na straně serveru. Zkuste prosím později!');
       });
