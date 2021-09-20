@@ -7,7 +7,7 @@
   </ng-container>
   <ng-template #countdown>
     <div class="logo" [innerHTML]="svgImage | async"></div>
-    <app-countdown></app-countdown>
+    <app-countdown (countDownEnd)="countDownEnded()"></app-countdown>
   </ng-template>
   <mat-icon class="down"> keyboard_arrow_down</mat-icon>
 </div>
@@ -15,7 +15,6 @@
   <button mat-raised-button color="primary" [routerLink]="['/team/join']">
     Přidat se k teamu
   </button>
-
-  <div class="mat-display-1"> Vytvořit team: </div>
+  <div class="mat-display-1"> Šifrovačky: </div>
 </div>
-<app-cipher-game-list></app-cipher-game-list>
+<app-cipher-game-list [cipherRunning]="cipherRunning"></app-cipher-game-list>

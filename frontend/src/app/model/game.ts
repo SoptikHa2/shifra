@@ -12,4 +12,5 @@ export interface Game {
   capacity: number;
   teammax: number;
   teamId: number | null;
+  signup: boolean;
 }

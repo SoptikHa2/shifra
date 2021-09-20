@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {GameService} from "../../services/game.service";
 import {Game} from "../../model/game";
-import {Observable} from "rxjs";
+import {Observable, timer} from "rxjs";
 import {Team} from "../../model/team";
-import {map} from "rxjs/operators";
+import {map, mergeMap, shareReplay, tap} from "rxjs/operators";
 import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
@@ -12,6 +12,9 @@ import {DomSanitizer} from "@angular/platform-browser";
   styleUrls: ['./cipher-game-list.component.scss']
 })
 export class CipherGameListComponent implements OnInit {
+  @Input()
+  cipherRunning: boolean = false;
+
   gamesObs: Observable<[Game, Team | null][] | null>;
 
   constructor(
@@ -28,7 +31,16 @@ export class CipherGameListComponent implements OnInit {
           if (!game[0].image) return game;
           game[0].image = this.domSanitizer.bypassSecurityTrustUrl(game[0].image as string);
           return game;
-        })));
+        })),
+        mergeMap(games => {
+          return timer(0, 1000).pipe(map(() => {
+            return games.map(game => {
+              game[0].signup = new Date(game[0].deadline_signup) >= new Date();
+              return game;
+            });
+          }));
+        })
+      );
   }
 
   ngOnInit(): void {}
