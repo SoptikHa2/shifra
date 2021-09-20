@@ -4,6 +4,10 @@
       {{ game.name }}
     </div>
     <div class="flex-item">
+      <div class="popis-label"> Popis: </div>
+      <markdown [data]="game.description"></markdown>
+    </div>
+    <div class="flex-item">
       <app-attribute
         [value]="(game.deadline_signup | date)!"
         [canCopy]="false" icon="schedule" label="Datum uzavření registrací"
@@ -15,9 +19,13 @@
         [canCopy]="false" icon="persons" label="Maximální počet členů teamu"
       ></app-attribute>
     </div>
-    <div class="flex-item">
-      <div class="popis-label"> Popis: </div>
-      <markdown [data]="game.description"></markdown>
-    </div>
+    <ng-container *ngIf="!game.teamId; else hasTeam">
+      <button mat-raised-button color="primary" routerLink="/team/join"> Přidat se k teamu </button>
+      <button mat-raised-button color="primary" [routerLink]="['/team/create', game.cipher_game_id]"> Založit team </button>
+    </ng-container>
+    <ng-template #hasTeam>
+      <button mat-raised-button color="primary" [routerLink]="['/cipher/visible', game.cipher_game_id]"> Pokračovat </button>
+      <button mat-raised-button color="primary" [routerLink]="['/team', game?.teamId, game.cipher_game_id]"> Můj team </button>
+    </ng-template>
   </ng-container>
 </div>
