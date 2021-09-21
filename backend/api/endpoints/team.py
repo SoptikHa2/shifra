@@ -173,36 +173,30 @@ def join_team(inv_code: str, response: Response, username_cred: Optional[registe
         :return 404 NOT FOUND if team does not exist
         :return 409 CONFLICT if user with given username already exists
     """
+    team_id = teamFuncs.get_id_by_inv_code(inv_code)
+    
+    if team_id is None:
+        response.status_code = 404
+        logger.info(join_team.__name__ + " /api/team/join " + str(response.status_code) + ": team does not exist")
+        return None
+    if teamFuncs.is_full(team_id):
+        response.status_code = 409
+        logger.info(join_team.__name__ + " /api/team/join - full team " + str(team_id))
+        return None
 
-    try:
+    user = user_management.get_user_by_token(session_cookie)
 
-        team_id = teamFuncs.get_id_by_inv_code(inv_code)
-        if team_id is None:
-            response.status_code = 404
-            logger.info(join_team.__name__ + " /api/team/join " + str(response.status_code) + ": team does not exist")
-            return None
-        if teamFuncs.is_full(team_id):
+    if user is None:
+        new_user = user_management.create_temporary_user(username_cred.username)
+        if new_user is None:
             response.status_code = 409
-            logger.info(join_team.__name__ + " /api/team/join - full team " + str(team_id))
+            logger.info(join_team.__name__ + " /api/team/join " + str(response.status_code) + ": user already exists - " + username_cred.username)
             return None
-
-        user = user_management.get_user_by_token(session_cookie)
-
-        if user is None:
-            new_user = user_management.create_temporary_user(username_cred.username)
-            if new_user is None:
-                response.status_code = 409
-                logger.info(join_team.__name__ + " /api/team/join " + str(response.status_code) + ": user already exists - " + username_cred.username)
-                return None
-            response.status_code = 200
-            joinTeam(team_id, new_user.person_id)
-            return team_id
-
         response.status_code = 200
-        joinTeam(team_id, user.person_id)
+        joinTeam(team_id, new_user.person_id)
         return team_id
 
-    except:
-        response.status_code = 409
-        logger.info(join_team.__name__ + " /api/team/join " + str(response.status_code) + ": user is already in the team (user_id, team_id)- (" + str(user.person_id) + ", " + str(team_id) + ")")
-        return None
+    response.status_code = 200
+    joinTeam(team_id, user.person_id)
+    return team_id
+

@@ -96,7 +96,7 @@ def is_full(team_id: int) -> bool:
     with Curr_with_conn() as cur:
         cur.execute("select t.team_id, (cg.teammax - COUNT(tm)) as remaining_capacity "
                     "from team t "
-                    "join team_member tm using (team_id) "
+                    "left join team_member tm using (team_id) "
                     "join cipher_game cg using (cipher_game_id) "
                     "where t.team_id = %s "
                     "group by t.team_id, cg.teammax ", (team_id, ))
