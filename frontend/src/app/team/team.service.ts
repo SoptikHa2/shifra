@@ -58,7 +58,7 @@ export class TeamService {
   }
 
   leaveTeam(team_id: number) {
-    return this.http.delete(`/api/team/leave/${team_id}`)
+    return this.http.delete(`${environment.backendUrl}/api/team/leave/${team_id}`)
       .pipe(
         catchError((err) => {
           if (!environment.production) console.error(err);
