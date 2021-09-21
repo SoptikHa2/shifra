@@ -28,4 +28,7 @@ export class MainPageComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  countDownEnded() {
+    this.cipherRunning = true;
+  }
 }

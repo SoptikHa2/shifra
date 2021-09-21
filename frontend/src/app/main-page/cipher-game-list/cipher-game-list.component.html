@@ -7,12 +7,12 @@
         </button>
       </ng-container>
       <ng-container *ngIf="game[1]">
-        <button mat-button [routerLink]="['/cipher/visible', game[0].cipher_game_id]">
+        <button mat-button [routerLink]="['/cipher/visible', game[0].cipher_game_id]" [disabled]="game[0].signup">
           POKRAČOVAT
         </button>
         <button mat-button
                 [routerLink]="['/team', game[1]?.team_id, game[0].cipher_game_id]">
-          MŮJ TEAM
+            MŮJ TEAM
         </button>
       </ng-container>
       <button mat-button [routerLink]="['/game/detail', game[0].cipher_game_id]"> DETAIL </button>
