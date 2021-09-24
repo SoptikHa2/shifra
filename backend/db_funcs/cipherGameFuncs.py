@@ -11,13 +11,13 @@ router = APIRouter()
 def insert_cipher_game(newCipherGame: CipherGame) -> int:
     with Curr_with_conn() as cur:
         cur.execute(
-            "INSERT INTO cipher_game (time_starting_cipher_id, name, description, visible_from, deadline_signup, "
-            "deadline_event, capacity, teammax, password, autoapprove) VALUES (%s, %s, %s, %s, %s, %s, "
-            "%s, %s, %s, %s) RETURNING cipher_game_id;",
+            "INSERT INTO cipher_game (time_starting_cipher_id, name, description, image, visible_from, deadline_signup, "
+            "starts_at, deadline_event, capacity, teammax, password, autoapprove) VALUES (%s, %s, %s, %s, %s, %s, "
+            "%s, %s, %s, %s, %s, %s) RETURNING cipher_game_id;",
             (newCipherGame.cipher_id_to_start_timer, newCipherGame.name, newCipherGame.description,
-             newCipherGame.visible_from,
-             newCipherGame.deadline_signup, newCipherGame.deadline_event, newCipherGame.capacity, newCipherGame.teammax,
-             newCipherGame.password, newCipherGame.autoapprove))
+             newCipherGame.image, newCipherGame.visible_from, newCipherGame.deadline_signup,
+             newCipherGame.starts_at, newCipherGame.deadline_event, newCipherGame.capacity,
+             newCipherGame.teammax, newCipherGame.password, newCipherGame.autoapprove))
         cipher_game_id = cur.fetchone()[0]
     return cipher_game_id
 
