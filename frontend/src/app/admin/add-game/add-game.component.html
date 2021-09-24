@@ -1,0 +1,69 @@
+<form [formGroup]="gameFormControl" (ngSubmit)="createGame()">
+  <mat-form-field appearance="outline">
+    <mat-label> Název šifrovačky</mat-label>
+    <input matInput formControlName="name">
+  </mat-form-field>
+
+  <mat-form-field (click)="picker1.open()" color="primary"
+                  appearance="outline">
+    <mat-label> Konec zápisu</mat-label>
+    <input matInput [matDatepicker]="picker1" formControlName="deadline_signup">
+    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+    <mat-datepicker color="accent" #picker1></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field (click)="picker2.open()" color="primary"
+                  appearance="outline">
+    <mat-label> Viditelné od</mat-label>
+    <input matInput [matDatepicker]="picker2" formControlName="visible_from">
+    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+    <mat-datepicker color="accent" #picker2></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field (click)="picker3.open()" color="primary"
+                  appearance="outline">
+    <mat-label> Začíná</mat-label>
+    <input matInput [matDatepicker]="picker3" formControlName="starts_at">
+    <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+    <mat-datepicker color="accent" #picker3></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field (click)="picker.open()" color="primary"
+                  appearance="outline">
+    <mat-label> Konec eventu</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="deadline_event">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker color="accent" #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field color="primary" appearance="outline">
+    <mat-label> Kapacita</mat-label>
+    <input type="number" matInput formControlName="capacity"/>
+  </mat-form-field>
+
+  <mat-form-field color="primary" appearance="outline">
+    <mat-label> Maximální počet členů teamu</mat-label>
+    <input type="number" matInput formControlName="teammax"/>
+  </mat-form-field>
+
+  <mat-form-field color="primary" appearance="outline">
+    <mat-label> Heslo</mat-label>
+    <input type="password" matInput formControlName="password"/>
+  </mat-form-field>
+
+  <mat-checkbox formControlName="autoapprove">
+    Auto approve
+  </mat-checkbox>
+
+  <mat-form-field appearance="outline" class="cipher-description">
+    <mat-label> Popisek</mat-label>
+    <textarea #markdownInput matInput rows="10" formControlName="description">
+    </textarea>
+  </mat-form-field>
+  <div class="markdown-preview" *ngIf="markdownInput.value">
+    <markdown [data]="markdownInput.value"></markdown>
+  </div>
+  <button type="submit" mat-raised-button color="primary" [disabled]="!gameFormControl.valid">
+    Přidat hru
+  </button>
+</form>
