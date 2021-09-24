@@ -7,6 +7,7 @@ export interface Game {
   image: string | SafeUrl;
   description: string;
   visible_from: Date;
+  starts_at: Date;
   deadline_signup: Date;
   deadline_event: Date;
   capacity: number;
