@@ -1,0 +1,62 @@
+<form *ngIf="gameCiphersObs | async as ciphers"
+      [formGroup]="cipherFormGroup"
+      (ngSubmit)="createCipher()">
+
+  <mat-form-field appearance="outline">
+    <mat-label> Název</mat-label>
+    <input matInput type="text" formControlName="name">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label> Požadovaná šifra k odemčení</mat-label>
+    <mat-select formControlName="req_cipher_id">
+      <mat-option [value]="null"> Žádná </mat-option>
+      <mat-option *ngFor="let cipher of ciphers" [value]="cipher.cipher_id">
+        {{ cipher.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label> Popisek</mat-label>
+    <textarea matInput formControlName="description" #description rows="10"></textarea>
+  </mat-form-field>
+
+  <div *ngIf="description.value" class="markdown-preview">
+    <markdown [data]="description.value"></markdown>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label> Řešení </mat-label>
+    <textarea matInput formControlName="solution" rows="5"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label> Správa po vyřešení  </mat-label>
+    <input type="text" matInput formControlName="success_msg">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label> Cooldown </mat-label>
+    <input type="text" matInput formControlName="cooldown">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label> Počet pokusů </mat-label>
+    <input type="number" matInput formControlName="attempts">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label> Skóre za Šifru </mat-label>
+    <input type="number" matInput formControlName="score">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label> Referenční řešení </mat-label>
+    <textarea rows="5" matInput formControlName="reference_solution"> </textarea>
+  </mat-form-field>
+
+  <button type="submit" mat-raised-button color="primary" [disabled]="!cipherFormGroup.valid">
+    Vytvořit šifru
+  </button>
+</form>

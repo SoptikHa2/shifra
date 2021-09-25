@@ -5,7 +5,7 @@ import {GameService} from "../../services/admin/game.service";
 @Component({
   selector: 'app-add-game',
   templateUrl: './add-game.component.html',
-  styleUrls: ['./add-game.component.scss']
+  styleUrls: ['./add-game.component.scss', '../admin-form-theme.scss']
 })
 export class AddGameComponent implements OnInit {
 

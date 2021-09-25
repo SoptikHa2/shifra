@@ -13,11 +13,16 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {CipherService} from "../services/admin/cipher.service";
 import {GameService} from "../services/admin/game.service";
 import { AddGameComponent } from './add-game/add-game.component';
+import { AddCipherComponent } from './add-cipher/add-cipher.component';
 
 const routes: Routes = [
   {
     path: 'add-game',
     component: AddGameComponent
+  },
+  {
+    path: 'add-cipher-to-game/:id',
+    component: AddCipherComponent
   },
   {
     path: '',
@@ -28,7 +33,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AdminComponent,
-    AddGameComponent
+    AddGameComponent,
+    AddCipherComponent
   ],
   imports: [
     CommonModule,

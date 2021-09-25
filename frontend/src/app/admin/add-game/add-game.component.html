@@ -57,8 +57,7 @@
 
   <mat-form-field appearance="outline" class="cipher-description">
     <mat-label> Popisek</mat-label>
-    <textarea #markdownInput matInput rows="10" formControlName="description">
-    </textarea>
+    <textarea #markdownInput matInput rows="10" formControlName="description"></textarea>
   </mat-form-field>
   <div class="markdown-preview" *ngIf="markdownInput.value">
     <markdown [data]="markdownInput.value"></markdown>
