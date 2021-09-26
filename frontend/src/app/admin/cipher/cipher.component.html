@@ -1,0 +1,13 @@
+<ng-container *ngIf="cipherObs | async as cipher">
+  <div class="mat-display-1">
+    {{ cipher.name }}
+  </div>
+
+  <mat-selection-list [multiple]="false">
+    <mat-list-option *ngFor="let hint of cipher.hints"
+                     [value]="hint.hint_id" [routerLink]="['/admin', 'hint', hint.hint_id]">
+      <div mat-line> {{ hint.msg!.substr(0, 50) }} </div>
+      <div mat-line> {{ hint.time_cost }} s {{ hint.score_cost }} bodů </div>
+    </mat-list-option>
+  </mat-selection-list>
+</ng-container>
