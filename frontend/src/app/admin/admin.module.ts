@@ -14,6 +14,10 @@ import {CipherService} from "../services/admin/cipher.service";
 import {GameService} from "../services/admin/game.service";
 import { AddGameComponent } from './add-game/add-game.component';
 import { AddCipherComponent } from './add-cipher/add-cipher.component';
+import { CipherComponent } from './cipher/cipher.component';
+import {MatListModule} from "@angular/material/list";
+import { HintComponent } from './hint/hint.component';
+import { AddHintComponent } from './add-hint/add-hint.component';
 
 const routes: Routes = [
   {
@@ -25,6 +29,14 @@ const routes: Routes = [
     component: AddCipherComponent
   },
   {
+    path: 'cipher/:id',
+    component: CipherComponent
+  },
+  {
+    path: 'hint/:id',
+    component: HintComponent
+  },
+  {
     path: '',
     component: AdminComponent
   },
@@ -34,7 +46,10 @@ const routes: Routes = [
   declarations: [
     AdminComponent,
     AddGameComponent,
-    AddCipherComponent
+    AddCipherComponent,
+    CipherComponent,
+    HintComponent,
+    AddHintComponent
   ],
   imports: [
     CommonModule,
@@ -47,6 +62,7 @@ const routes: Routes = [
     MatCheckboxModule,
     MatSelectModule,
     ReactiveFormsModule,
+    MatListModule,
   ],
   providers: [
     CipherService,
