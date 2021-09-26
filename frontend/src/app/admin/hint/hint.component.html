@@ -1,0 +1,24 @@
+<ng-container *ngIf="hintObs | async as hint">
+  Popisek
+  <br><br>
+  <markdown [data]="hint.msg"></markdown>
+  <hr>
+  Cena:
+  <br><br>
+  <div> {{ hint.time_cost }} vteřin </div>
+  <div> {{ hint.score_cost }} bodů </div>
+  <hr>
+  Obrázek
+  <br><br>
+  <img [src]="hint.img" alt="není :("/>
+  <hr>
+  <a mat-button color="primary" [href]="hint.hint_file" target="_blank"> Soubor ke stažení </a>
+</ng-container>
+<br><br><br>
+
+<button mat-raised-button color="primary" [routerLink]="['hint/add-hint']" [queryParams]="{edit: ''}">
+  Upravit
+</button>
+<button mat-raised-button color="warn" style="margin-left: 8px" (click)="deleteHint()">
+  Smazat
+</button>
