@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {CipherService} from "../../services/cipher.service";
 import {Hint} from "../../model/hint";
 import {Observable} from "rxjs";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {HintService} from "../../services/admin/hint.service";
 
 @Component({
@@ -16,6 +16,7 @@ export class HintComponent implements OnInit {
   constructor(
     private cipherService: CipherService,
     private hintService: HintService,
+    private router: Router,
     private route: ActivatedRoute
   ) {
     this.hintObs = cipherService.openHint(this.route.snapshot.params['id']);
@@ -25,7 +26,9 @@ export class HintComponent implements OnInit {
   }
 
   deleteHint() {
-    this.hintService.deleteHint(this.route.snapshot.params['id']).subscribe(() => {}, () => {
+    this.hintService.deleteHint(this.route.snapshot.params['id']).subscribe((cipherId: number) => {
+      this.router.navigate(['/admin', 'cipher', cipherId]).then();
+    }, () => {
       alert('nezdařilo se!');
     });
   }
