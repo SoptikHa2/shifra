@@ -48,7 +48,7 @@ def get_game_by_id(cipher_game_id: int, response: Response, session_cookie: Opti
     if is_visible(cipher_game_id) or (user is not None and is_staff(cipher_game_id, user.person_id)) or (
             user is not None and user.is_root):
         response.status_code = 200
-        return game.strip()
+        return game
     else:
         response.status_code = 401
         logger.warning(get_game_by_id.__name__ + " /api/game/" + str(cipher_game_id) + " (GET) / ERROR CODE " + str(
