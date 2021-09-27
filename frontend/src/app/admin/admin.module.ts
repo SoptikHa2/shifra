@@ -37,6 +37,10 @@ const routes: Routes = [
     component: HintComponent
   },
   {
+    path: 'add-hint',
+    component: AddHintComponent
+  },
+  {
     path: '',
     component: AdminComponent
   },
