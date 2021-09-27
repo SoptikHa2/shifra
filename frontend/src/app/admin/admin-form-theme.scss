@@ -21,9 +21,14 @@ mat-form-field {
   box-sizing: border-box;
 }
 
-button {
+button[type=submit] {
   margin: 8px;
   height: 64px;
   width: calc(100% - 16px);
   box-sizing: border-box;
+}
+
+.file-input {
+  margin: 16px 8px;
+  button { width: 200px; margin-right: 8px }
 }
