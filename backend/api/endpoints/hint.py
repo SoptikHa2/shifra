@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Response, Cookie
 
 from api.logic import user_management
+from api.logic.file_management import upload_file
 from db_funcs import *
 
 router = APIRouter()
@@ -102,7 +103,13 @@ def create_hint(hint: Hint, response: Response, session_cookie: Optional[str] = 
         response.status_code = 401
         return None
 
-    insertHint(hint)
+    if hint.img:
+        hint.img = upload_file(hint.img)
+
+    if hint.hint_file:
+        hint.hint_file = upload_file(hint.hint_file)
+
+    hint.hint_id = insertHint(hint)
     return hint
 
 
@@ -130,4 +137,5 @@ def delete_hint(hint_id: int, response: Response, session_cookie: Optional[str] 
         return None
 
     deleteHint(hint_id)
+    return cipher.cipher_id
 

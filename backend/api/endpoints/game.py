@@ -1,7 +1,7 @@
-from fastapi import Response, Cookie
-from typing import Optional
+from fastapi import Response, Cookie, Request
 
 from api.logic import user_management
+from api.logic.file_management import upload_file
 from db_funcs import *
 from routes import *
 from logger import *
@@ -125,7 +125,7 @@ def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(Non
 
 
 @router.post('/api/game')
-def create_game(cipher_game: CipherGame, response: Response, session_cookie: Optional[str] = Cookie(None)):
+def create_game(cipher_game: CipherGame, response: Response, request: Request, session_cookie: Optional[str] = Cookie(None)):
     """
 	Creating game
 	:param cipher_game ciphergame to create
@@ -139,6 +139,9 @@ def create_game(cipher_game: CipherGame, response: Response, session_cookie: Opt
     if not user.is_root:
         response.status_code = 401
         return None
+
+    if cipher_game.image:
+        cipher_game.image = upload_file(cipher_game.image)
 
     game_id = insert_cipher_game(cipher_game)
     return game_id

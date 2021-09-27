@@ -139,7 +139,7 @@ def create_cipher(cipher: Cipher, response: Response, session_cookie: Optional[s
         response.status_code = 401
         return None
 
-    insert_cipher(cipher.cipher_game_id, cipher)
+    cipher.cipher_id = insert_cipher(cipher.cipher_game_id, cipher)
     return cipher
 
 
