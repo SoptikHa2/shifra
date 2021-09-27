@@ -1,4 +1,5 @@
 import {SafeUrl} from "@angular/platform-browser";
+import {Cipher} from "./cipher";
 
 export interface Game {
   cipher_game_id: number;
@@ -14,4 +15,5 @@ export interface Game {
   teammax: number;
   teamId: number | null;
   signup: boolean;
+  ciphers: Cipher[] | undefined;
 }

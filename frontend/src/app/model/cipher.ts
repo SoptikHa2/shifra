@@ -15,5 +15,7 @@ export interface Cipher {
   score: number;
   reference_solution?: string;
   solved: boolean;
+  solution?: string;
+  judge?: string;
   hints: Hint[]
 }
