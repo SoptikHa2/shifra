@@ -18,6 +18,9 @@ import { CipherComponent } from './cipher/cipher.component';
 import {MatListModule} from "@angular/material/list";
 import { HintComponent } from './hint/hint.component';
 import { AddHintComponent } from './add-hint/add-hint.component';
+import {CipherExistsGuard} from "../guards/cipher-exists.guard";
+import {MatIconModule} from "@angular/material/icon";
+import { GameComponent } from './game/game.component';
 
 const routes: Routes = [
   {
@@ -25,7 +28,11 @@ const routes: Routes = [
     component: AddGameComponent
   },
   {
-    path: 'add-cipher-to-game/:id',
+    path: 'game/:id',
+    component: GameComponent
+  },
+  {
+    path: 'add-cipher/:id',
     component: AddCipherComponent
   },
   {
@@ -37,8 +44,9 @@ const routes: Routes = [
     component: HintComponent
   },
   {
-    path: 'add-hint',
-    component: AddHintComponent
+    path: 'add-hint/:id',
+    component: AddHintComponent,
+    canActivate: [CipherExistsGuard]
   },
   {
     path: '',
@@ -53,7 +61,8 @@ const routes: Routes = [
     AddCipherComponent,
     CipherComponent,
     HintComponent,
-    AddHintComponent
+    AddHintComponent,
+    GameComponent
   ],
   imports: [
     CommonModule,
@@ -67,6 +76,7 @@ const routes: Routes = [
     MatSelectModule,
     ReactiveFormsModule,
     MatListModule,
+    MatIconModule,
   ],
   providers: [
     CipherService,
