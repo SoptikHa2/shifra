@@ -1,0 +1,26 @@
+<form [formGroup]="hintFormGroup" (ngSubmit)="submitted()">
+  <mat-form-field appearance="outline">
+    <mat-label> Text nápovědy </mat-label>
+    <textarea matInput rows="5" formControlName="msg" #msg></textarea>
+  </mat-form-field>
+  <ng-container *ngIf="msg.value">
+    <div class="markdown-preview">
+      <markdown [data]="msg.value"></markdown>
+    </div>
+    <br>
+  </ng-container>
+
+  <mat-form-field appearance="outline">
+    <mat-label> Cena (body) </mat-label>
+    <input matInput type="number" formControlName="score_cost"/>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label> Cena (časová penalta) </mat-label>
+    <input matInput type="number" formControlName="time_cost"/>
+  </mat-form-field>
+
+  <button mat-raised-button type="submit" color="primary">
+    {{ id != null ? 'Upravit' : 'Přidat' }}
+  </button>
+</form>
