@@ -1,4 +1,4 @@
-<form [formGroup]="gameFormControl" (ngSubmit)="createGame()">
+<form [formGroup]="gameFormControl" (ngSubmit)="createOrUpdateGame()">
   <mat-form-field appearance="outline">
     <mat-label> Název šifrovačky</mat-label>
     <input matInput formControlName="name">
@@ -62,7 +62,19 @@
   <div class="markdown-preview" *ngIf="markdownInput.value">
     <markdown [data]="markdownInput.value"></markdown>
   </div>
+
+  <div class="file-input">
+    <button type="button" mat-raised-button (click)="image.click()" color="primary">
+      Vybrat Obrázek
+    </button>
+    {{ imageName }}
+  </div>
+
   <button type="submit" mat-raised-button color="primary" [disabled]="!gameFormControl.valid">
     Přidat hru
   </button>
 </form>
+
+<div style="display: none">
+  <input type="file" #image [multiple]="false" (change)="imageChanged($event)"/>
+</div>

@@ -16,4 +16,6 @@ export interface Game {
   teamId: number | null;
   signup: boolean;
   ciphers: Cipher[] | undefined;
+  password: string;
+  autoapprove: boolean;
 }

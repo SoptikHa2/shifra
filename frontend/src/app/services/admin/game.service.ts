@@ -12,7 +12,11 @@ export class GameService {
   ) { }
 
   addGame(game: Game) {
-    return this.http.post(`${environment.backendUrl}/api/game`, game);
+    return this.http.post<number>(`${environment.backendUrl}/api/game`, game);
+  }
+
+  updateGame(game: Game) {
+    return this.http.put<Game>(`${environment.backendUrl}/api/game/${game.cipher_game_id}`, game);
   }
 
   getCiphers(gameId: number) {
