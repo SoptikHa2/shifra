@@ -17,10 +17,10 @@ export class HintService {
   }
 
   deleteHint(hintId: number) {
-    return this.http.delete(`${environment.backendUrl}/api/hint/${hintId}`);
+    return this.http.delete<number>(`${environment.backendUrl}/api/hint/${hintId}`);
   }
 
   addHint(newHint: Hint) {
-    return this.http.post(`${environment.backendUrl}/api/hint`, newHint);
+    return this.http.post<Hint>(`${environment.backendUrl}/api/hint`, newHint);
   }
 }
