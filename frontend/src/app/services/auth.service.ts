@@ -6,6 +6,7 @@ import {catchError, map, tap} from "rxjs/operators";
 import {environment} from "../../environments/environment";
 import {Router} from "@angular/router";
 import {LoadingService} from "./loading.service";
+import {DomSanitizer} from "@angular/platform-browser";
 
 export type userModel = {
   loggedIn: boolean;
@@ -31,6 +32,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private loadingService: LoadingService,
+    private domSanitizer: DomSanitizer,
     private router: Router
   ) {
     this.userInfo();
@@ -166,7 +168,7 @@ export class AuthService {
   }
 
   returnFromPromotedLogin() {
-    this.router.navigate([this.urlBeforePromting]).then(() => {
+    this.router.navigateByUrl(this.urlBeforePromting).then(() => {
       this.urlBeforePromting = "/";
     });
   }
