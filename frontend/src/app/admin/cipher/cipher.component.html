@@ -3,11 +3,26 @@
     {{ cipher.name }}
   </div>
 
+  <div style="font-size: 24px"> Nápovědy </div>
+  <br>
   <mat-selection-list [multiple]="false">
     <mat-list-option *ngFor="let hint of cipher.hints"
                      [value]="hint.hint_id" [routerLink]="['/admin', 'hint', hint.hint_id]">
+      <mat-icon mat-list-icon> read_more </mat-icon>
       <div mat-line> {{ hint.msg!.substr(0, 50) }} </div>
       <div mat-line> {{ hint.time_cost }} s {{ hint.score_cost }} bodů </div>
+    </mat-list-option>
+    <mat-list-option [routerLink]="['/admin', 'add-hint', cipher.cipher_id]">
+      <mat-icon mat-list-icon> add_circle_outline </mat-icon>
+      <div mat-line> Přidat nápovědu </div>
+    </mat-list-option>
+    <mat-list-option [routerLink]="['/admin', 'add-cipher', cipher.cipher_game_id]" [queryParams]="{edit: cipher.cipher_id}">
+      <mat-icon mat-list-icon class="material-icons-outlined"> edit </mat-icon>
+      <div mat-line> Upravit </div>
+    </mat-list-option>
+    <mat-list-option [routerLink]="['/admin', 'game', cipher.cipher_game_id]">
+      <mat-icon mat-list-icon> navigate_before </mat-icon>
+      <div mat-line> Zpět ke hře </div>
     </mat-list-option>
   </mat-selection-list>
 </ng-container>
