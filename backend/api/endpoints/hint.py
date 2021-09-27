@@ -78,3 +78,56 @@ def edit_hint(hint_id: int, edits: EditHint, response: Response, session_cookie:
     hint.edit(edits)
     updateHint(hint_id, hint)
     return hint
+
+
+@router.post('/api/hint')
+def create_hint(hint: Hint, response: Response, session_cookie: Optional[str] = Cookie(None)) -> Optional[Hint]:
+    """
+        create hint for existing cipher
+        :param hint new created hint
+        :param response 200 Everything OK
+                        401 Not authorized
+                        404 Not existing cipher
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    cipher = get_cipher(hint.cipher_id)
+    if cipher is None:
+        response.status_code = 404
+        return None
+
+    if not is_staff(cipher.cipher_game_id, user.person_id) and not user.is_root:
+        response.status_code = 401
+        return None
+
+    insertHint(hint)
+    return hint
+
+
+@router.delete('/api/hint/{hint_id}')
+def delete_hint(hint_id: int, response: Response, session_cookie: Optional[str] = Cookie(None)):
+    """
+        delete existing hint if authorized
+        :param hint_id hint to be deleted
+        :param response -> 200 Everything OK
+                        -> 401 Not Authorized
+                        -> 404 Not existing hint
+    """
+    user = user_management.get_user_by_token(session_cookie)
+    if user is None:
+        response.status_code = 401
+        return None
+
+    cipher = get_cipher_by_hint(hint_id)
+    if not is_staff(cipher.cipher_game_id, user.person_id) and not user.is_root:
+        response.status_code = 401
+        return None
+
+    if getHint(hint_id) is None:
+        response.status_code = 404
+        return None
+
+    deleteHint(hint_id)
