@@ -79,7 +79,7 @@ export class AddCipherComponent implements OnInit {
       this.adminCipherService.addCipher(this.route.snapshot.params['id'], this.cipherFormGroup.value)
         .subscribe(cipher => {
           this.router.navigate(['/admin', 'cipher', cipher.cipher_id]).then();
-        }, (err) => {
+        }, err => {
           alert('nastala chyba');
           console.error(err);
         })

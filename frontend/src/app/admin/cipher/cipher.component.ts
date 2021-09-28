@@ -4,7 +4,7 @@ import {Observable, of} from "rxjs";
 import {Cipher} from "../../model/cipher";
 import {ActivatedRoute} from "@angular/router";
 import {map, mergeAll, mergeMap, reduce} from "rxjs/operators";
-import {flatMap} from "rxjs/internal/operators";
+import {flatMap} from "rxjs/operators";
 import {Hint} from "../../model/hint";
 
 @Component({
@@ -26,7 +26,7 @@ export class CipherComponent implements OnInit {
         return of(hints)
           .pipe(
             mergeAll(),
-            flatMap(hints => hints),
+            flatMap(hints => hints), // todo: remove deprecadated
             reduce((acc: Hint[], next) => [...acc, next], []),
             map(hints => ({...cipher, hints: hints}))
           )
