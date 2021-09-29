@@ -119,8 +119,9 @@ def register(credentials: register_post, response: Response, session_cookie: Opt
             return None
         else:
             response.status_code = 201
-            new_user.strip()
-            return new_user
+            response.set_cookie(key='session_cookie', value=new_user.session_cookie, secure=True,
+                                httponly=True, max_age=COOKIE_TIMEOUT, samesite='Strict')
+            return new_user.strip()
     else:
         # User already exists, check if it is temp account
         if logged_in_user.mail is not None and logged_in_user.password is not None:
