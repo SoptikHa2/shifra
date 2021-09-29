@@ -1,0 +1,15 @@
+<ng-container *ngIf="gameObs | async as game">
+  <div class="mat-display-1"> {{ game.name }} </div>
+  <mat-selection-list [multiple]="false">
+    <mat-list-option *ngFor="let cipher of game.ciphers"
+                     [routerLink]="['/admin', 'cipher', cipher.cipher_id]">
+      <mat-icon mat-list-icon> extension </mat-icon>
+      <div mat-line> {{ cipher.name }} </div>
+      <div mat-line> {{ cipher.score }} bodů </div>
+    </mat-list-option>
+    <mat-list-option [routerLink]="['/admin', 'add-cipher', game.cipher_game_id]">
+      <mat-icon mat-list-icon> add_circle_outline </mat-icon>
+      <div mat-line> Přidat šifru </div>
+    </mat-list-option>
+  </mat-selection-list>
+</ng-container>

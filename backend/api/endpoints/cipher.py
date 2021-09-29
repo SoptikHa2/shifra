@@ -56,7 +56,10 @@ def open_cipher(cipher_id: int, response: Response, session_cookie: Optional[str
         for h in cipher.hints:
             h.is_used = is_hint_used(h.hint_id, team.team_id)
 
-    return cipher.strip()
+    if permission_override:
+        return cipher
+    else:
+        return cipher.strip()
 
 
 @router.post("/api/cipher/{cipher_id}/attempt")
@@ -139,7 +142,7 @@ def create_cipher(cipher: Cipher, response: Response, session_cookie: Optional[s
         response.status_code = 401
         return None
 
-    insert_cipher(cipher.cipher_game_id, cipher)
+    cipher.cipher_id = insert_cipher(cipher.cipher_game_id, cipher)
     return cipher
 
 

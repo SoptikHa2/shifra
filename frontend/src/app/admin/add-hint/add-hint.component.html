@@ -1,0 +1,45 @@
+<form [formGroup]="hintFormGroup" (ngSubmit)="submitted()">
+  <mat-form-field appearance="outline">
+    <mat-label> Text nápovědy </mat-label>
+    <textarea matInput rows="5" formControlName="msg" #msg></textarea>
+  </mat-form-field>
+  <ng-container *ngIf="msg.value">
+    <div class="markdown-preview">
+      <markdown [data]="msg.value"></markdown>
+    </div>
+    <br>
+  </ng-container>
+
+  <mat-form-field appearance="outline">
+    <mat-label> Cena (body) </mat-label>
+    <input matInput type="number" formControlName="score_cost"/>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label> Cena (časová penalta) </mat-label>
+    <input matInput type="number" formControlName="time_cost"/>
+  </mat-form-field>
+
+  <div class="file-input">
+    <button type="button" mat-raised-button (click)="image.click()" color="primary">
+      Vybrat Obrázek
+    </button>
+    {{ imageName }}
+  </div>
+
+  <div class="file-input">
+    <button type="button" mat-raised-button (click)="file.click()" color="primary">
+      Vybrat Soubor
+    </button>
+    {{ fileName }}
+  </div>
+
+  <button mat-raised-button type="submit" color="primary">
+    {{ id != null ? 'Upravit' : 'Přidat' }}
+  </button>
+</form>
+
+<div style="display: none">
+  <input type="file" #file  [multiple]="false" (change)="fileChanged($event)"/>
+  <input type="file" #image [multiple]="false" (change)="imageChanged($event)"/>
+</div>

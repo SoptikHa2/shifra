@@ -1,7 +1,7 @@
-from fastapi import Response, Cookie
-from typing import Optional
+from fastapi import Response, Cookie, Request
 
 from api.logic import user_management
+from api.logic.file_management import upload_file
 from db_funcs import *
 from routes import *
 from logger import *
@@ -39,16 +39,22 @@ def get_game_by_id(cipher_game_id: int, response: Response, session_cookie: Opti
     """
     user = user_management.get_user_by_token(session_cookie)
     game = cipherGameFuncs.get_cipher_game(cipher_game_id)
+
     if game is None:
         response.status_code = 404
         logger.info(get_game_by_id.__name__ + " /api/game/" + str(cipher_game_id) + " (GET) / ERROR CODE " + str(
             response.status_code) + ": cipher game " + str(cipher_game_id) + " does not exist")
         return None
 
-    if is_visible(cipher_game_id) or (user is not None and is_staff(cipher_game_id, user.person_id)) or (
-            user is not None and user.is_root):
+    permission_override = (user is not None and user.is_root) or \
+        (user is not None and is_staff(cipher_game_id, user.person_id))
+
+    if permission_override or is_visible(cipher_game_id):
         response.status_code = 200
-        return game.strip()
+        if permission_override:
+            return game
+        else:
+            return game.strip()
     else:
         response.status_code = 401
         logger.warning(get_game_by_id.__name__ + " /api/game/" + str(cipher_game_id) + " (GET) / ERROR CODE " + str(
@@ -125,7 +131,7 @@ def get_all_games(response: Response, session_cookie: Optional[str] = Cookie(Non
 
 
 @router.post('/api/game')
-def create_game(cipher_game: CipherGame, response: Response, session_cookie: Optional[str] = Cookie(None)):
+def create_game(cipher_game: CipherGame, response: Response, request: Request, session_cookie: Optional[str] = Cookie(None)):
     """
 	Creating game
 	:param cipher_game ciphergame to create
@@ -139,6 +145,9 @@ def create_game(cipher_game: CipherGame, response: Response, session_cookie: Opt
     if not user.is_root:
         response.status_code = 401
         return None
+
+    if cipher_game.image:
+        cipher_game.image = upload_file(cipher_game.image)
 
     game_id = insert_cipher_game(cipher_game)
     return game_id

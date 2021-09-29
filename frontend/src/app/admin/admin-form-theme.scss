@@ -1,0 +1,34 @@
+:host {
+  display: block;
+  padding: 32px 64px;
+}
+
+.markdown-preview {
+  box-sizing: border-box;
+  margin: 8px;
+  padding: 16px 12px;
+  border: 2px solid #aaaaaa;
+  border-radius: 5px;
+}
+
+mat-checkbox {
+  margin: 8px 16px 20px;
+}
+
+mat-form-field {
+  display: block;
+  margin: 8px;
+  box-sizing: border-box;
+}
+
+button[type=submit] {
+  margin: 8px;
+  height: 64px;
+  width: calc(100% - 16px);
+  box-sizing: border-box;
+}
+
+.file-input {
+  margin: 16px 8px;
+  button { width: 200px; margin-right: 8px }
+}
