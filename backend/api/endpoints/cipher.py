@@ -1,6 +1,7 @@
 from fastapi import Response, Cookie
 
 from api.logic import user_management, cipher_management
+from api.logic.file_management import upload_file
 from db_funcs import *
 from routes.cipher import Cipher, EditCipher
 
@@ -141,6 +142,12 @@ def create_cipher(cipher: Cipher, response: Response, session_cookie: Optional[s
     if not user.is_root and not is_staff(cipher.cipher_game_id, user.person_id):
         response.status_code = 401
         return None
+
+    if cipher.img:
+        cipher.img = upload_file(cipher.img)
+
+    if cipher.cipher_file:
+        cipher.cipher_file = upload_file(cipher.cipher_file)
 
     cipher.cipher_id = insert_cipher(cipher.cipher_game_id, cipher)
     return cipher
