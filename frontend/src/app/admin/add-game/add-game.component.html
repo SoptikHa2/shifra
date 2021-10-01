@@ -20,20 +20,16 @@
     <mat-datepicker color="accent" #picker2></mat-datepicker>
   </mat-form-field>
 
-  <mat-form-field (click)="picker3.open()" color="primary"
+  <mat-form-field color="primary"
                   appearance="outline">
     <mat-label> Začíná</mat-label>
-    <input matInput [matDatepicker]="picker3" formControlName="starts_at">
-    <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-    <mat-datepicker color="accent" #picker3></mat-datepicker>
+    <input matInput type="datetime-local" formControlName="starts_at">
   </mat-form-field>
 
-  <mat-form-field (click)="picker.open()" color="primary"
+  <mat-form-field color="primary"
                   appearance="outline">
     <mat-label> Konec eventu</mat-label>
-    <input matInput [matDatepicker]="picker" formControlName="deadline_event">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker color="accent" #picker></mat-datepicker>
+    <input matInput type="datetime-local" formControlName="deadline_event">
   </mat-form-field>
 
   <mat-form-field color="primary" appearance="outline">

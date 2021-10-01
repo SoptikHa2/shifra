@@ -30,27 +30,28 @@ export class AddGameComponent implements OnInit {
       deadline_event: new FormControl('', [Validators.required]),
       capacity: new FormControl('', [Validators.required]),
       teammax: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
+      password: new FormControl(''),
       autoapprove: new FormControl(false, [Validators.required]),
-      image: new FormControl('' , [Validators.required])
+      image: new FormControl('')
     });
 
-    this.gameService.getGameById(this.route.snapshot.queryParams['edit']).subscribe(game => {
-      this.gameFormControl.setValue({
-        name: game.name,
-        description: game.description,
-        visible_from: game.visible_from,
-        starts_at: game.starts_at,
-        deadline_signup: game.deadline_signup,
-        deadline_event: game.deadline_event,
-        capacity: game.capacity,
-        teammax: game.teammax,
-        password: game.password,
-        autoapprove: game.autoapprove,
-        image: game.image ? game.image : ''
-      });
-      this.game = game;
-    }, () => alert('chyba'))
+    if (this.route.snapshot.queryParams['edit'] != null)
+      this.gameService.getGameById(this.route.snapshot.queryParams['edit']).subscribe(game => {
+        this.gameFormControl.setValue({
+          name: game.name,
+          description: game.description,
+          visible_from: game.visible_from,
+          starts_at: game.starts_at,
+          deadline_signup: game.deadline_signup,
+          deadline_event: game.deadline_event,
+          capacity: game.capacity,
+          teammax: game.teammax,
+          password: game.password,
+          autoapprove: game.autoapprove,
+          image: game.image ? game.image : ''
+        });
+        this.game = game;
+      }, () => alert('chyba'))
   }
 
   ngOnInit(): void {

@@ -47,8 +47,8 @@ export class TeamService {
       `${environment.backendUrl}/api/generateTeamJoinQR/${code}`);
   }
 
-  joinTeam(invite_code: string): Observable<number> {
-    return this.http.post<number>(`${environment.backendUrl}/api/team/join`, {invite_code})
+  joinTeam(inv_code: string, username: string): Observable<number> {
+    return this.http.post<number>(`${environment.backendUrl}/api/team/join`, {username}, {params: {inv_code}})
       .pipe(
         catchError((err) => {
           if (!environment.production) console.error(err);

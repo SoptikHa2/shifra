@@ -58,7 +58,7 @@ export class CodeComponent implements OnInit {
 
 
   joinTeam() {
-    this.teamService.joinTeam(this.codeControl.value)
+    this.teamService.joinTeam(this.codeControl.value, this.usernameControl.value)
       .subscribe((teamId) => {
         this.router.navigate(['/team', teamId])
           .then()

@@ -36,6 +36,15 @@ export class CipherService {
           if (err.status == 417) {
             return throwError('Špatná odpověď!');
           }
+          if (err.status == 420) {
+            return throwError('Zpomal, odevzdáváš příliš rychle!');
+          }
+          if (err.status == 423) {
+            return throwError('Pokusy byly již vyčerpány!');
+          }
+          if (err.status == 202) {
+            return of(null);
+          }
 
           if (err.status >= 500) {
             return throwError('Stala se chyba na straně serveru! Prosím kontaktujte nejbližšího organizátora.');

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import {GameService} from "../../services/admin/game.service";
 import {Observable} from "rxjs";
@@ -16,6 +16,7 @@ export class AddCipherComponent implements OnInit {
   cipherFormGroup: FormGroup;
   gameCiphersObs: Observable<Cipher[]>
   imageName: string | undefined;
+  fileName: string | undefined;
   cipher: Cipher | undefined;
 
   constructor(
@@ -36,28 +37,30 @@ export class AddCipherComponent implements OnInit {
       attempts: new FormControl('', [Validators.required]),
       score: new FormControl('', [Validators.required]),
       reference_solution: new FormControl('', [Validators.required]),
-      img: new FormControl('', [Validators.required])
+      img: new FormControl(''),
+      cipher_file: new FormControl('')
     });
 
     this.gameCiphersObs = this.gameService.getCiphers(this.route.snapshot.params['id']);
 
-    this.cipherService.getCipher(this.route.snapshot.queryParams['edit'])
-      .subscribe((cipher: Cipher) => {
-        this.cipherFormGroup.setValue({
-          name: cipher.name,
-          req_cipher_id: cipher.req_cipher_id,
-          description: cipher.description,
-          solution: cipher.solution,
-          judge: cipher.judge,
-          success_msg: cipher.success_msg,
-          cooldown: cipher.cooldown,
-          attempts: cipher.attempts,
-          score: cipher.score,
-          reference_solution: cipher.reference_solution,
-          img: cipher.img
-        });
-        this.cipher = cipher;
-      }, () => alert('chyba'));
+    if (this.route.snapshot.queryParams['edit'] != null)
+      this.cipherService.getCipher(this.route.snapshot.queryParams['edit'])
+        .subscribe((cipher: Cipher) => {
+          this.cipherFormGroup.setValue({
+            name: cipher.name,
+            req_cipher_id: cipher.req_cipher_id,
+            description: cipher.description,
+            solution: cipher.solution,
+            judge: cipher.judge,
+            success_msg: cipher.success_msg,
+            cooldown: cipher.cooldown,
+            attempts: cipher.attempts,
+            score: cipher.score,
+            reference_solution: cipher.reference_solution,
+            img: cipher.img
+          });
+          this.cipher = cipher;
+        }, () => alert('chyba'));
   }
 
   ngOnInit(): void {
@@ -93,6 +96,11 @@ export class AddCipherComponent implements OnInit {
 
   imageChanged(event: any) {
     this.updateFile(event, this.cipherFormGroup.get('img')!);
+    this.imageName = event.target.files[0].name;
+  }
+
+  fileChanged(event: any) {
+    this.updateFile(event, this.cipherFormGroup.get('cipher_file')!);
     this.imageName = event.target.files[0].name;
   }
 }

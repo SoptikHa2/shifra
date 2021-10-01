@@ -63,6 +63,13 @@
     {{ imageName }}
   </div>
 
+  <div class="file-input">
+    <button type="button" mat-raised-button (click)="file.click()" color="primary">
+      Vybrat Obrázek
+    </button>
+    {{ fileName }}
+  </div>
+
   <button type="submit" mat-raised-button color="primary" [disabled]="!cipherFormGroup.valid">
     Vytvořit šifru
   </button>
@@ -70,4 +77,5 @@
 
 <div style="display: none">
   <input type="file" #image [multiple]="false" (change)="imageChanged($event)"/>
+  <input type="file" #file [multiple]="false" (change)="fileChanged($event)"/>
 </div>

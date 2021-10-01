@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {CipherService} from "../services/cipher.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Observable, of} from "rxjs";
 import {Cipher} from "../model/cipher";
 import {Hint} from "../model/hint";
@@ -28,6 +28,7 @@ export class CipherComponent implements OnInit {
     private cipherService: CipherService,
     private domSanitizer: DomSanitizer,
     private dialog: MatDialog,
+    private router: Router,
     private route: ActivatedRoute
   ) {
     this.cipherId = this.route.snapshot.params['id'];
@@ -95,7 +96,7 @@ export class CipherComponent implements OnInit {
     this.submitting = true;
     this.cipherService.makeAttempt(this.cipherId, this.solution)
       .subscribe(() => {
-        // todo: handle success
+        this.router.navigate(['game', this.cipher?.cipher_game_id]).then();
         this.submitting = false;
       }, err => {
         this.error = err;
